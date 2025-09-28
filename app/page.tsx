@@ -35,7 +35,7 @@ export default function Home() {
           {isSignedIn ? (
             <div className="max-w-2xl mx-auto">
               <h2 className="text-4xl font-bold text-gray-900 mb-6">
-                Welcome to your FlowDay Dashboard! 🎉
+                Welcome to your FlowDay Dashboard!
               </h2>
               <p className="text-xl text-gray-600 mb-8">
                 You&apos;re successfully authenticated with Clerk.js
