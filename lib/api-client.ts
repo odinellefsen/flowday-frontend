@@ -37,7 +37,7 @@ export interface TodayTodosResponse {
 class ApiClient {
   private baseUrl: string
 
-  constructor(baseUrl: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000') {
+  constructor(baseUrl: string = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3030') {
     this.baseUrl = baseUrl
   }
 
@@ -87,14 +87,10 @@ export const apiClient = new ApiClient()
 export function useApiClient() {
   const { getToken } = useAuth()
 
-  const makeAuthenticatedRequest = async <T>(
-    apiCall: (token: string | null) => Promise<ApiResponse<T>>
-  ): Promise<ApiResponse<T>> => {
-    const token = await getToken()
-    return apiCall(token)
-  }
-
   return {
-    getTodayTodos: () => makeAuthenticatedRequest(apiClient.getTodayTodos),
+    getTodayTodos: async (): Promise<ApiResponse<TodayTodosResponse>> => {
+      const token = await getToken()
+      return apiClient.getTodayTodos(token)
+    },
   }
 }
