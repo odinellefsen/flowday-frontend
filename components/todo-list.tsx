@@ -1,7 +1,7 @@
 'use client'
 
-import { useQuery } from '@tanstack/react-query'
-import { useApiClient, type TodoItem } from '@/lib/api-client'
+import { useTodayTodos } from '@/src/hooks/useQueries'
+import type { TodoItem } from '@/src/lib/api/client-api'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -121,13 +121,7 @@ function TodoListSkeleton() {
 }
 
 export function TodoList() {
-  const apiClient = useApiClient()
-  
-  const { data, isLoading, error } = useQuery({
-    queryKey: ['todos', 'today'],
-    queryFn: apiClient.getTodayTodos,
-    refetchInterval: 1000 * 60 * 5, // Refetch every 5 minutes
-  })
+  const { data, isLoading, error } = useTodayTodos()
 
   if (isLoading) {
     return (
@@ -162,8 +156,8 @@ export function TodoList() {
     )
   }
 
-  const todos = data?.data?.todos || []
-  const counts = data?.data?.counts || { total: 0, completed: 0, remaining: 0, overdue: 0 }
+  const todos = data?.todos || []
+  const counts = data?.counts || { total: 0, completed: 0, remaining: 0, overdue: 0 }
 
   return (
     <div className="space-y-6 animate-fade-in">

@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -29,7 +28,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { useApiClient, type CreateTodoRequest } from '@/lib/api-client'
+import { useCreateTodo } from '@/src/hooks/useQueries'
+import type { CreateTodoRequest } from '@/src/lib/api/client-api'
 
 // Form validation schema based on API documentation
 const createTodoSchema = z.object({
@@ -48,8 +48,7 @@ interface CreateTodoFormProps {
 
 export function CreateTodoForm({ children }: CreateTodoFormProps) {
   const [open, setOpen] = useState(false)
-  const queryClient = useQueryClient()
-  const apiClient = useApiClient()
+  const createTodoMutation = useCreateTodo()
 
   const form = useForm<CreateTodoFormData>({
     resolver: zodResolver(createTodoSchema),
@@ -59,47 +58,43 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     },
   })
 
-  const createTodoMutation = useMutation({
-    mutationFn: async (data: CreateTodoFormData) => {
-      // Convert datetime-local format to ISO string if scheduledFor is provided
-      let scheduledFor: string | undefined = undefined
-      if (data.scheduledFor && typeof data.scheduledFor === 'string' && data.scheduledFor.trim() !== '') {
-        // datetime-local gives us "YYYY-MM-DDTHH:mm" format in LOCAL time
-        // We need to preserve the exact date/time the user selected
-        // Use the proper timezone-aware conversion
-        const localDate = new Date(data.scheduledFor + ':00') // Add seconds
-        const offset = localDate.getTimezoneOffset() * 60000 // Get timezone offset in ms
-        const utcDate = new Date(localDate.getTime() - offset) // Adjust for timezone
-        scheduledFor = utcDate.toISOString()
-      }
+  const handleCreateTodo = async (data: CreateTodoFormData) => {
+    // Convert datetime-local format to ISO string if scheduledFor is provided
+    let scheduledFor: string | undefined = undefined
+    if (data.scheduledFor && typeof data.scheduledFor === 'string' && data.scheduledFor.trim() !== '') {
+      // datetime-local gives us "YYYY-MM-DDTHH:mm" format in LOCAL time
+      // We need to preserve the exact date/time the user selected
+      // Use the proper timezone-aware conversion
+      const localDate = new Date(data.scheduledFor + ':00') // Add seconds
+      const offset = localDate.getTimezoneOffset() * 60000 // Get timezone offset in ms
+      const utcDate = new Date(localDate.getTime() - offset) // Adjust for timezone
+      scheduledFor = utcDate.toISOString()
+    }
 
-      const todoData: CreateTodoRequest = {
-        description: data.description,
-        ...(scheduledFor && { scheduledFor }),
-      }
-        
-      // Validate the data before sending
-      if (!todoData.description || todoData.description.trim().length === 0) {
-        throw new Error('Description is required')
-      }
+    const todoData: CreateTodoRequest = {
+      description: data.description,
+      ...(scheduledFor && { scheduledFor }),
+    }
       
-      if (todoData.description.length > 250) {
-        throw new Error('Description must be less than 250 characters')
+    // Validate the data before sending
+    if (!todoData.description || todoData.description.trim().length === 0) {
+      throw new Error('Description is required')
+    }
+    
+    if (todoData.description.length > 250) {
+      throw new Error('Description must be less than 250 characters')
+    }
+    
+    if (todoData.scheduledFor) {
+      // Validate that it's a valid ISO datetime string
+      const date = new Date(todoData.scheduledFor)
+      if (isNaN(date.getTime())) {
+        throw new Error('Invalid scheduled date format')
       }
-      
-      if (todoData.scheduledFor) {
-        // Validate that it's a valid ISO datetime string
-        const date = new Date(todoData.scheduledFor)
-        if (isNaN(date.getTime())) {
-          throw new Error('Invalid scheduled date format')
-        }
-      }
-      
-      return apiClient.createTodo(todoData)
-    },
-    onSuccess: () => {
-      // Invalidate and refetch today's todos
-      queryClient.invalidateQueries({ queryKey: ['todos', 'today'] })
+    }
+    
+    try {
+      await createTodoMutation.mutateAsync(todoData)
       setOpen(false)
       form.reset({
         description: '',
@@ -108,18 +103,17 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
       toast.success('Task created successfully! 🎉', {
         description: 'Your new task has been added to today\'s schedule.',
       })
-    },
-    onError: (error) => {
+    } catch (error) {
       console.error('Failed to create todo:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       toast.error('Failed to create task', {
         description: `Error: ${errorMessage}. Please check the console for more details.`,
       })
-    },
-  })
+    }
+  }
 
   const onSubmit = (data: CreateTodoFormData) => {
-    createTodoMutation.mutate(data)
+    handleCreateTodo(data)
   }
 
   const formatDateTimeLocal = (date: Date) => {
