@@ -6,8 +6,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Button } from '@/components/ui/button'
-import { Clock, CheckCircle2, AlertCircle, Calendar, Plus } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3 } from 'lucide-react'
 import { CreateTodoForm } from './create-todo-form'
+import { DomainDrawer } from './domain-drawer'
 
 function TodoItemCard({ todo }: { todo: TodoItem }) {
   const getUrgencyColor = (urgency: TodoItem['urgency']) => {
@@ -236,12 +237,25 @@ export function TodoList() {
         </Card>
       )}
 
-      {/* Floating Action Button */}
-      <div className="fixed bottom-6 right-6 z-50 animate-scale-in">
+      {/* Floating Action Buttons */}
+      <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 animate-scale-in">
+        {/* Domain Drawer Button */}
+        <DomainDrawer>
+          <Button
+            size="lg"
+            variant="secondary"
+            className="h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+          >
+            <Grid3X3 className="h-5 w-5" />
+            <span className="sr-only">Explore domains</span>
+          </Button>
+        </DomainDrawer>
+        
+        {/* Create Todo Button */}
         <CreateTodoForm>
           <Button
             size="lg"
-            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
+            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 fab-pulse"
           >
             <Plus className="h-6 w-6" />
             <span className="sr-only">Create new task</span>

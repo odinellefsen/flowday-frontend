@@ -1,0 +1,164 @@
+'use client'
+
+import { useState } from 'react'
+import { 
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { 
+  UtensilsCrossed, 
+  Dumbbell, 
+  GraduationCap, 
+  ArrowRight,
+  Sparkles
+} from 'lucide-react'
+
+interface Domain {
+  id: string
+  name: string
+  description: string
+  icon: React.ReactNode
+  implemented: boolean
+  comingSoon?: boolean
+}
+
+const domains: Domain[] = [
+  {
+    id: 'food',
+    name: 'Food',
+    description: 'Manage recipes, meals, and nutrition tracking',
+    icon: <UtensilsCrossed className="h-6 w-6" />,
+    implemented: true,
+  },
+  {
+    id: 'fitness',
+    name: 'Fitness',
+    description: 'Track workouts, exercises, and fitness goals',
+    icon: <Dumbbell className="h-6 w-6" />,
+    implemented: false,
+    comingSoon: true,
+  },
+  {
+    id: 'school',
+    name: 'School',
+    description: 'Organize assignments, courses, and study schedules',
+    icon: <GraduationCap className="h-6 w-6" />,
+    implemented: false,
+    comingSoon: true,
+  },
+]
+
+interface DomainDrawerProps {
+  children: React.ReactNode
+}
+
+export function DomainDrawer({ children }: DomainDrawerProps) {
+  const [open, setOpen] = useState(false)
+
+  const handleDomainClick = (domain: Domain) => {
+    if (!domain.implemented) {
+      // Show coming soon message
+      alert(`${domain.name} domain is coming soon! 🚀`)
+      return
+    }
+
+    // For now, just show a message for the food domain
+    if (domain.id === 'food') {
+      alert('Food domain is implemented! Navigation will be added in the next update.')
+    }
+    
+    setOpen(false)
+  }
+
+  return (
+    <Drawer open={open} onOpenChange={setOpen}>
+      <DrawerTrigger asChild>
+        {children}
+      </DrawerTrigger>
+      <DrawerContent className="max-h-[85vh]">
+        <div className="mx-auto w-full max-w-sm">
+          <DrawerHeader className="text-center">
+            <DrawerTitle className="flex items-center justify-center gap-2">
+              <Sparkles className="h-5 w-5" />
+              Explore Domains
+            </DrawerTitle>
+            <DrawerDescription>
+              Choose a domain to manage your daily activities
+            </DrawerDescription>
+          </DrawerHeader>
+          
+          <div className="p-4 pb-0 space-y-3">
+            {domains.map((domain, index) => (
+              <button
+                key={domain.id}
+                onClick={() => handleDomainClick(domain)}
+                disabled={!domain.implemented}
+                className={`
+                  w-full p-4 rounded-lg border text-left transition-all duration-200 animate-slide-up
+                  ${domain.implemented 
+                    ? 'hover:bg-accent hover:border-accent-foreground/20 cursor-pointer hover:scale-[1.02]' 
+                    : 'opacity-60 cursor-not-allowed bg-muted/30'
+                  }
+                  ${domain.implemented 
+                    ? 'border-border' 
+                    : 'border-dashed border-muted-foreground/30'
+                  }
+                `}
+                style={{ animationDelay: `${index * 100}ms` }}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className={`
+                      p-2 rounded-md 
+                      ${domain.implemented 
+                        ? 'bg-primary/10 text-primary' 
+                        : 'bg-muted text-muted-foreground'
+                      }
+                    `}>
+                      {domain.icon}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-semibold text-sm">{domain.name}</h3>
+                        {domain.implemented && (
+                          <Badge variant="default" className="text-xs px-2 py-0">
+                            Available
+                          </Badge>
+                        )}
+                        {domain.comingSoon && (
+                          <Badge variant="outline" className="text-xs px-2 py-0">
+                            Coming Soon
+                          </Badge>
+                        )}
+                      </div>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {domain.description}
+                      </p>
+                    </div>
+                  </div>
+                  {domain.implemented && (
+                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
+                  )}
+                </div>
+              </button>
+            ))}
+          </div>
+
+          <DrawerFooter>
+            <DrawerClose asChild>
+              <Button variant="outline">Close</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </div>
+      </DrawerContent>
+    </Drawer>
+  )
+}
