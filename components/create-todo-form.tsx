@@ -37,7 +37,7 @@ const createTodoSchema = z.object({
     .string()
     .min(1, 'Description is required')
     .max(250, 'Description must be less than 250 characters'),
-  scheduledFor: z.string().optional(),
+  scheduledFor: z.string().optional().or(z.undefined()),
 })
 
 type CreateTodoFormData = z.infer<typeof createTodoSchema>
@@ -55,7 +55,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     resolver: zodResolver(createTodoSchema),
     defaultValues: {
       description: '',
-      scheduledFor: '',
+      scheduledFor: undefined, // Use undefined instead of empty string
     },
   })
 
@@ -63,18 +63,21 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     mutationFn: async (data: CreateTodoFormData) => {
       // Convert datetime-local format to ISO string if scheduledFor is provided
       let scheduledFor: string | undefined = undefined
-      if (data.scheduledFor && data.scheduledFor.trim() !== '') {
-        // datetime-local gives us "YYYY-MM-DDTHH:mm" format
-        // We need to convert it to a full ISO datetime string
-        const localDate = new Date(data.scheduledFor)
-        scheduledFor = localDate.toISOString()
+      if (data.scheduledFor && typeof data.scheduledFor === 'string' && data.scheduledFor.trim() !== '') {
+        // datetime-local gives us "YYYY-MM-DDTHH:mm" format in LOCAL time
+        // We need to preserve the exact date/time the user selected
+        // Use the proper timezone-aware conversion
+        const localDate = new Date(data.scheduledFor + ':00') // Add seconds
+        const offset = localDate.getTimezoneOffset() * 60000 // Get timezone offset in ms
+        const utcDate = new Date(localDate.getTime() - offset) // Adjust for timezone
+        scheduledFor = utcDate.toISOString()
       }
 
       const todoData: CreateTodoRequest = {
         description: data.description,
         ...(scheduledFor && { scheduledFor }),
       }
-      
+        
       // Validate the data before sending
       if (!todoData.description || todoData.description.trim().length === 0) {
         throw new Error('Description is required')
@@ -98,7 +101,10 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
       // Invalidate and refetch today's todos
       queryClient.invalidateQueries({ queryKey: ['todos', 'today'] })
       setOpen(false)
-      form.reset()
+      form.reset({
+        description: '',
+        scheduledFor: undefined,
+      })
       toast.success('Task created successfully! 🎉', {
         description: 'Your new task has been added to today\'s schedule.',
       })
@@ -126,15 +132,10 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
   }
 
   const setQuickTime = (hours: number, minutes: number = 0) => {
-    const now = new Date()
     const scheduledDate = new Date()
     scheduledDate.setHours(hours, minutes, 0, 0)
     
-    // If the time has passed today, schedule for tomorrow
-    if (scheduledDate <= now) {
-      scheduledDate.setDate(scheduledDate.getDate() + 1)
-    }
-    
+    // Always schedule for today - let the user decide if they want tomorrow
     form.setValue('scheduledFor', formatDateTimeLocal(scheduledDate))
   }
 
@@ -240,7 +241,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={() => form.setValue('scheduledFor', '')}
+                              onClick={() => form.setValue('scheduledFor', undefined)}
                               className="text-xs text-muted-foreground hover:text-foreground"
                             >
                               <X className="h-3 w-3 mr-1" />
@@ -252,7 +253,10 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
                     </div>
                   </FormControl>
                   <FormDescription className="text-xs text-muted-foreground">
-                    Leave empty to create an unscheduled task
+                    {field.value ? 
+                      `Scheduled for ${new Date(field.value).toLocaleString()}` : 
+                      'Leave empty to create an unscheduled task'
+                    }
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
