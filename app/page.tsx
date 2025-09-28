@@ -3,10 +3,49 @@
 import { useAuth, useUser } from '@clerk/nextjs'
 import { SignInButton, SignUpButton, UserButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Home() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, isLoaded } = useAuth()
   const { user } = useUser()
+
+  // Show loading state while Clerk is initializing
+  if (!isLoaded) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6 max-w-2xl">
+          {/* Header Skeleton */}
+          <header className="flex justify-between items-center mb-8">
+            <Skeleton className="h-8 w-24" />
+            <div className="flex items-center gap-2 sm:gap-4">
+              <Skeleton className="h-8 w-20" />
+              <Skeleton className="h-8 w-8 rounded-full" />
+            </div>
+          </header>
+
+          {/* Main Content Skeleton */}
+          <main>
+            <div className="text-center space-y-6">
+              <div className="space-y-4">
+                <Skeleton className="h-10 w-64 mx-auto" />
+                <Skeleton className="h-6 w-48 mx-auto" />
+              </div>
+              
+              <div className="bg-card rounded-lg border p-6 sm:p-8 space-y-4">
+                <Skeleton className="h-8 w-32 mx-auto" />
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-3/4 mx-auto" />
+                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pt-2">
+                  <Skeleton className="h-10 w-24" />
+                  <Skeleton className="h-10 w-24" />
+                </div>
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-background">
