@@ -118,5 +118,38 @@
   }
   body {
     @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+  
+  /* Mobile-first responsive container */
+  .container {
+    @apply w-full mx-auto px-4;
+  }
+  
+  /* Smooth transitions for theme switching */
+  * {
+    transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out, color 0.2s ease-in-out;
+  }
+  
+  /* Ensure proper touch targets on mobile */
+  button, [role="button"], input, select, textarea {
+    @apply min-h-[44px] min-w-[44px];
+  }
+  
+  /* Better focus visibility */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-ring;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  /* Better text rendering */
+  body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 }
