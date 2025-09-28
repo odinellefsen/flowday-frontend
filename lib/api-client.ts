@@ -85,6 +85,8 @@ class ApiClient {
 
     if (token) {
       headers.Authorization = `Bearer ${token}`
+    } else {
+      console.warn('No authentication token provided')
     }
 
     try {
@@ -111,7 +113,7 @@ class ApiClient {
   }
 
   async createTodo(token: string | null, todoData: CreateTodoRequest): Promise<ApiResponse<CreateTodoResponse>> {
-    return this.makeRequest<CreateTodoResponse>('/api/todo/', token, {
+    return this.makeRequest<CreateTodoResponse>('/api/todo', token, {
       method: 'POST',
       body: JSON.stringify(todoData),
     })

@@ -61,10 +61,37 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
 
   const createTodoMutation = useMutation({
     mutationFn: async (data: CreateTodoFormData) => {
+      // Convert datetime-local format to ISO string if scheduledFor is provided
+      let scheduledFor: string | undefined = undefined
+      if (data.scheduledFor && data.scheduledFor.trim() !== '') {
+        // datetime-local gives us "YYYY-MM-DDTHH:mm" format
+        // We need to convert it to a full ISO datetime string
+        const localDate = new Date(data.scheduledFor)
+        scheduledFor = localDate.toISOString()
+      }
+
       const todoData: CreateTodoRequest = {
         description: data.description,
-        scheduledFor: data.scheduledFor || undefined,
+        ...(scheduledFor && { scheduledFor }),
       }
+      
+      // Validate the data before sending
+      if (!todoData.description || todoData.description.trim().length === 0) {
+        throw new Error('Description is required')
+      }
+      
+      if (todoData.description.length > 250) {
+        throw new Error('Description must be less than 250 characters')
+      }
+      
+      if (todoData.scheduledFor) {
+        // Validate that it's a valid ISO datetime string
+        const date = new Date(todoData.scheduledFor)
+        if (isNaN(date.getTime())) {
+          throw new Error('Invalid scheduled date format')
+        }
+      }
+      
       return apiClient.createTodo(todoData)
     },
     onSuccess: () => {
@@ -78,8 +105,9 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     },
     onError: (error) => {
       console.error('Failed to create todo:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       toast.error('Failed to create task', {
-        description: 'Please try again. If the problem persists, check your connection.',
+        description: `Error: ${errorMessage}. Please check the console for more details.`,
       })
     },
   })
