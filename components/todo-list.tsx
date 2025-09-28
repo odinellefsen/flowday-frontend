@@ -5,7 +5,9 @@ import { useApiClient, type TodoItem } from '@/lib/api-client'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Clock, CheckCircle2, AlertCircle, Calendar } from 'lucide-react'
+import { Button } from '@/components/ui/button'
+import { Clock, CheckCircle2, AlertCircle, Calendar, Plus } from 'lucide-react'
+import { CreateTodoForm } from './create-todo-form'
 
 function TodoItemCard({ todo }: { todo: TodoItem }) {
   const getUrgencyColor = (urgency: TodoItem['urgency']) => {
@@ -47,7 +49,7 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
   }
 
   return (
-    <Card className={`transition-all duration-200 ${todo.completed ? 'opacity-60' : ''}`}>
+    <Card className={`transition-all duration-200 animate-slide-up ${todo.completed ? 'opacity-60' : ''}`}>
       <CardContent className="p-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
@@ -164,14 +166,24 @@ export function TodoList() {
   const counts = data?.data?.counts || { total: 0, completed: 0, remaining: 0, overdue: 0 }
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 animate-fade-in">
       {/* Summary Card */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
-            Today&apos;s Tasks
-          </CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Calendar className="h-5 w-5" />
+              <CardTitle>Today&apos;s Tasks</CardTitle>
+            </div>
+            <div className="hidden sm:block">
+              <CreateTodoForm>
+                <Button size="sm" variant="outline">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Task
+                </Button>
+              </CreateTodoForm>
+            </div>
+          </div>
           <CardDescription>
             {counts.remaining > 0 
               ? `${counts.remaining} of ${counts.total} tasks remaining`
@@ -212,15 +224,36 @@ export function TodoList() {
         </div>
       ) : (
         <Card>
-          <CardContent className="p-8 text-center">
-            <CheckCircle2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">No tasks for today</p>
-            <p className="text-sm text-muted-foreground mt-1">
-              Enjoy your free time! 🌟
-            </p>
+          <CardContent className="p-8 text-center space-y-4">
+            <CheckCircle2 className="h-12 w-12 text-muted-foreground mx-auto" />
+            <div className="space-y-2">
+              <p className="text-muted-foreground">No tasks for today</p>
+              <p className="text-sm text-muted-foreground">
+                Enjoy your free time! 🌟
+              </p>
+            </div>
+            <CreateTodoForm>
+              <Button variant="outline" className="mt-4">
+                <Plus className="h-4 w-4 mr-2" />
+                Create Your First Task
+              </Button>
+            </CreateTodoForm>
           </CardContent>
         </Card>
       )}
+
+      {/* Floating Action Button */}
+      <div className="fixed bottom-6 right-6 z-50 animate-scale-in">
+        <CreateTodoForm>
+          <Button
+            size="lg"
+            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 fab-pulse"
+          >
+            <Plus className="h-6 w-6" />
+            <span className="sr-only">Create new task</span>
+          </Button>
+        </CreateTodoForm>
+      </div>
     </div>
   )
 }

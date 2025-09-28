@@ -34,6 +34,36 @@ export interface TodayTodosResponse {
   }
 }
 
+export interface CreateTodoRequest {
+  description: string
+  scheduledFor?: string
+  relations?: Array<{
+    mealInstruction: {
+      mealStepId: string
+      mealId: string
+      recipeId: string
+      instructionNumber: number
+    }
+  }>
+}
+
+export interface CreateTodoResponse {
+  id: string
+  userId: string
+  description: string
+  completed: boolean
+  scheduledFor?: string
+  completedAt?: string
+  relations?: Array<{
+    mealInstruction: {
+      mealStepId: string
+      mealId: string
+      recipeId: string
+      instructionNumber: number
+    }
+  }>
+}
+
 class ApiClient {
   private baseUrl: string
 
@@ -79,6 +109,13 @@ class ApiClient {
   async getTodayTodos(token: string | null): Promise<ApiResponse<TodayTodosResponse>> {
     return this.makeRequest<TodayTodosResponse>('/api/todo/today', token)
   }
+
+  async createTodo(token: string | null, todoData: CreateTodoRequest): Promise<ApiResponse<CreateTodoResponse>> {
+    return this.makeRequest<CreateTodoResponse>('/api/todo/', token, {
+      method: 'POST',
+      body: JSON.stringify(todoData),
+    })
+  }
 }
 
 export const apiClient = new ApiClient()
@@ -91,6 +128,10 @@ export function useApiClient() {
     getTodayTodos: async (): Promise<ApiResponse<TodayTodosResponse>> => {
       const token = await getToken()
       return apiClient.getTodayTodos(token)
+    },
+    createTodo: async (todoData: CreateTodoRequest): Promise<ApiResponse<CreateTodoResponse>> => {
+      const token = await getToken()
+      return apiClient.createTodo(token, todoData)
     },
   }
 }
