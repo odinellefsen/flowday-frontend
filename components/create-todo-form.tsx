@@ -37,7 +37,7 @@ const createTodoSchema = z.object({
     .string()
     .min(1, 'Description is required')
     .max(250, 'Description must be less than 250 characters'),
-  scheduledFor: z.string().optional().or(z.undefined()),
+  scheduledFor: z.string().optional(),
 })
 
 type CreateTodoFormData = z.infer<typeof createTodoSchema>
@@ -55,7 +55,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     resolver: zodResolver(createTodoSchema),
     defaultValues: {
       description: '',
-      scheduledFor: undefined, // Use undefined instead of empty string
+      scheduledFor: '', // Use empty string to keep input controlled
     },
   })
 
@@ -103,7 +103,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
       setOpen(false)
       form.reset({
         description: '',
-        scheduledFor: undefined,
+        scheduledFor: '',
       })
       toast.success('Task created successfully! 🎉', {
         description: 'Your new task has been added to today\'s schedule.',
@@ -241,7 +241,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={() => form.setValue('scheduledFor', undefined)}
+                              onClick={() => form.setValue('scheduledFor', '')}
                               className="text-xs text-muted-foreground hover:text-foreground"
                             >
                               <X className="h-3 w-3 mr-1" />
