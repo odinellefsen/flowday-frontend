@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Remove experimental config as it's not needed with newer Clerk versions
-  // and can cause module resolution issues
+  // Reduce Clerk logging in development
+  env: {
+    CLERK_LOGGING: 'false',
+    CLERK_DEBUG: 'false',
+  },
 }
 
 export default nextConfig;

@@ -7,17 +7,8 @@ const isProtectedRoute = createRouteMatcher([
 
 export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) {
-    try {
-      await auth.protect()
-    } catch (error) {
-      console.error('Auth protection error:', error)
-      // Let Clerk handle the redirect to sign-in
-      throw error
-    }
+    await auth.protect()
   }
-}, {
-  // Add debug mode for development
-  debug: process.env.NODE_ENV === 'development',
 })
 
 export const config = {
