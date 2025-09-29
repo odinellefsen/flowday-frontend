@@ -216,24 +216,24 @@ export default function FoodItemsPage() {
 
     foodItemsList.forEach((foodItem) => {
       if (!foodItem.categoryHierarchy || foodItem.categoryHierarchy.length === 0) {
-        // Uncategorized items - show at root level only
+        // Uncategorized items - show ONLY at root level
         if (currentPath.length === 0) {
           currentItems.push(foodItem)
         }
       } else {
         const hierarchy = foodItem.categoryHierarchy
         
-        // Check if this item belongs to the current path
-        const isInCurrentPath = currentPath.every((pathSegment, index) => 
+        // Check if this item's hierarchy matches the current path exactly
+        const isExactMatch = currentPath.every((pathSegment, index) => 
           hierarchy[index] === pathSegment
         )
 
-        if (isInCurrentPath) {
+        if (isExactMatch) {
           if (hierarchy.length === currentPath.length) {
-            // This shouldn't happen as items should have categories, but handle it
+            // This item belongs exactly at this level - show it
             currentItems.push(foodItem)
           } else if (hierarchy.length > currentPath.length) {
-            // This item is in a subcategory
+            // This item is deeper - show its next category level
             const nextCategory = hierarchy[currentPath.length]
             const hasMoreLevels = hierarchy.length > currentPath.length + 1
 
@@ -244,11 +244,6 @@ export default function FoodItemsPage() {
             const existing = subcategories.get(nextCategory)!
             existing.count++
             existing.hasSubcategories = existing.hasSubcategories || hasMoreLevels
-            
-            // If this is the final level, also add the item
-            if (hierarchy.length === currentPath.length + 1) {
-              currentItems.push(foodItem)
-            }
           }
         }
       }
