@@ -1,4 +1,12 @@
 import { useAuth } from '@clerk/nextjs'
+import type { 
+  CreateFoodItemRequest, 
+  CreateFoodItemResponse, 
+  ListFoodItemsResponse, 
+  CreateFoodItemUnitRequest, 
+  CreateFoodItemUnitsResponse,
+  ApiResponse as FoodApiResponse
+} from './food-types'
 
 // API Response types based on the documentation
 export interface ApiResponse<T = unknown> {
@@ -118,6 +126,32 @@ class ApiClient {
       body: JSON.stringify(todoData),
     })
   }
+
+  // Food Item API methods
+  async listFoodItems(token: string | null): Promise<FoodApiResponse<ListFoodItemsResponse['data']>> {
+    return this.makeRequest<ListFoodItemsResponse['data']>('/api/food-item', token)
+  }
+
+  async createFoodItem(token: string | null, foodItemData: CreateFoodItemRequest): Promise<FoodApiResponse<CreateFoodItemResponse['data']>> {
+    return this.makeRequest<CreateFoodItemResponse['data']>('/api/food-item', token, {
+      method: 'POST',
+      body: JSON.stringify(foodItemData),
+    })
+  }
+
+  async createFoodItemUnits(token: string | null, foodItemId: string, unitsData: CreateFoodItemUnitRequest): Promise<FoodApiResponse<CreateFoodItemUnitsResponse['data']>> {
+    return this.makeRequest<CreateFoodItemUnitsResponse['data']>(`/api/food-item/${foodItemId}/units`, token, {
+      method: 'POST',
+      body: JSON.stringify(unitsData),
+    })
+  }
+
+  async deleteFoodItem(token: string | null, foodItemName: string): Promise<FoodApiResponse<unknown>> {
+    return this.makeRequest<unknown>('/api/food-item', token, {
+      method: 'DELETE',
+      body: JSON.stringify({ foodItemName }),
+    })
+  }
 }
 
 export const apiClient = new ApiClient()
@@ -134,6 +168,23 @@ export function useApiClient() {
     createTodo: async (todoData: CreateTodoRequest): Promise<ApiResponse<CreateTodoResponse>> => {
       const token = await getToken()
       return apiClient.createTodo(token, todoData)
+    },
+    // Food Item methods
+    listFoodItems: async (): Promise<FoodApiResponse<ListFoodItemsResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.listFoodItems(token)
+    },
+    createFoodItem: async (foodItemData: CreateFoodItemRequest): Promise<FoodApiResponse<CreateFoodItemResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.createFoodItem(token, foodItemData)
+    },
+    createFoodItemUnits: async (foodItemId: string, unitsData: CreateFoodItemUnitRequest): Promise<FoodApiResponse<CreateFoodItemUnitsResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.createFoodItemUnits(token, foodItemId, unitsData)
+    },
+    deleteFoodItem: async (foodItemName: string): Promise<FoodApiResponse<unknown>> => {
+      const token = await getToken()
+      return apiClient.deleteFoodItem(token, foodItemName)
     },
   }
 }
