@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { 
   Drawer,
   DrawerClose,
@@ -62,6 +63,7 @@ interface DomainDrawerProps {
 
 export function DomainDrawer({ children }: DomainDrawerProps) {
   const [open, setOpen] = useState(false)
+  const router = useRouter()
 
   const handleDomainClick = (domain: Domain) => {
     if (!domain.implemented) {
@@ -70,9 +72,9 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
       return
     }
 
-    // For now, just show a message for the food domain
+    // Navigate to domain-specific page
     if (domain.id === 'food') {
-      alert('Food domain is implemented! Navigation will be added in the next update.')
+      router.push('/food')
     }
     
     setOpen(false)
