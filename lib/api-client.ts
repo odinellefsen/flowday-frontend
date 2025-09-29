@@ -8,6 +8,17 @@ import type {
   FoodItemUnit,
   ApiResponse as FoodApiResponse
 } from './food-types'
+import type {
+  CreateRecipeRequest,
+  CreateRecipeResponse,
+  ListRecipesResponse,
+  GetRecipeResponse,
+  CreateRecipeIngredientsRequest,
+  CreateRecipeIngredientsResponse,
+  CreateRecipeInstructionsRequest,
+  CreateRecipeInstructionsResponse,
+  UpdateRecipeInstructionsRequest
+} from './recipe-types'
 
 // API Response types based on the documentation
 export interface ApiResponse<T = unknown> {
@@ -157,6 +168,57 @@ class ApiClient {
   async getFoodItemUnits(token: string | null, foodItemId: string): Promise<FoodApiResponse<FoodItemUnit[]>> {
     return this.makeRequest<FoodItemUnit[]>(`/api/food-item/${foodItemId}/units`, token)
   }
+
+  // Recipe API methods
+  async listRecipes(token: string | null): Promise<FoodApiResponse<ListRecipesResponse['data']>> {
+    return this.makeRequest<ListRecipesResponse['data']>('/api/recipe', token)
+  }
+
+  async getRecipe(token: string | null, recipeId: string): Promise<FoodApiResponse<GetRecipeResponse['data']>> {
+    return this.makeRequest<GetRecipeResponse['data']>(`/api/recipe/${recipeId}`, token)
+  }
+
+  async createRecipe(token: string | null, recipeData: CreateRecipeRequest): Promise<FoodApiResponse<CreateRecipeResponse['data']>> {
+    return this.makeRequest<CreateRecipeResponse['data']>('/api/recipe', token, {
+      method: 'POST',
+      body: JSON.stringify(recipeData),
+    })
+  }
+
+  async deleteRecipe(token: string | null, nameOfTheRecipe: string): Promise<FoodApiResponse<unknown>> {
+    return this.makeRequest<unknown>('/api/recipe', token, {
+      method: 'DELETE',
+      body: JSON.stringify({ nameOfTheRecipe }),
+    })
+  }
+
+  async createRecipeIngredients(token: string | null, ingredientsData: CreateRecipeIngredientsRequest): Promise<FoodApiResponse<CreateRecipeIngredientsResponse['data']>> {
+    return this.makeRequest<CreateRecipeIngredientsResponse['data']>('/api/recipe/ingredients', token, {
+      method: 'POST',
+      body: JSON.stringify(ingredientsData),
+    })
+  }
+
+  async createRecipeInstructions(token: string | null, instructionsData: CreateRecipeInstructionsRequest): Promise<FoodApiResponse<CreateRecipeInstructionsResponse['data']>> {
+    return this.makeRequest<CreateRecipeInstructionsResponse['data']>('/api/recipe/instructions', token, {
+      method: 'POST',
+      body: JSON.stringify(instructionsData),
+    })
+  }
+
+  async updateRecipeInstructions(
+    token: string | null,
+    instructionsData: UpdateRecipeInstructionsRequest
+  ): Promise<FoodApiResponse<CreateRecipeInstructionsResponse['data']>> {
+    return this.makeRequest<CreateRecipeInstructionsResponse['data']>(
+      '/api/recipe/instructions',
+      token,
+      {
+        method: 'PATCH',
+        body: JSON.stringify(instructionsData),
+      }
+    )
+  }
 }
 
 export const apiClient = new ApiClient()
@@ -194,6 +256,35 @@ export function useApiClient() {
     getFoodItemUnits: async (foodItemId: string): Promise<FoodApiResponse<FoodItemUnit[]>> => {
       const token = await getToken()
       return apiClient.getFoodItemUnits(token, foodItemId)
+    },
+    // Recipe methods
+    listRecipes: async (): Promise<FoodApiResponse<ListRecipesResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.listRecipes(token)
+    },
+    getRecipe: async (recipeId: string): Promise<FoodApiResponse<GetRecipeResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.getRecipe(token, recipeId)
+    },
+    createRecipe: async (recipeData: CreateRecipeRequest): Promise<FoodApiResponse<CreateRecipeResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.createRecipe(token, recipeData)
+    },
+    deleteRecipe: async (nameOfTheRecipe: string): Promise<FoodApiResponse<unknown>> => {
+      const token = await getToken()
+      return apiClient.deleteRecipe(token, nameOfTheRecipe)
+    },
+    createRecipeIngredients: async (ingredientsData: CreateRecipeIngredientsRequest): Promise<FoodApiResponse<CreateRecipeIngredientsResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.createRecipeIngredients(token, ingredientsData)
+    },
+    createRecipeInstructions: async (instructionsData: CreateRecipeInstructionsRequest): Promise<FoodApiResponse<CreateRecipeInstructionsResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.createRecipeInstructions(token, instructionsData)
+    },
+    updateRecipeInstructions: async (instructionsData: UpdateRecipeInstructionsRequest): Promise<FoodApiResponse<CreateRecipeInstructionsResponse['data']>> => {
+      const token = await getToken()
+      return apiClient.updateRecipeInstructions(token, instructionsData)
     },
   }
 }
