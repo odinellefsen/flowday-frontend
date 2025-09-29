@@ -31,6 +31,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useApiClient } from '@/lib/api-client'
 import { CreateRecipeRequest, MealTimingEnum } from '@/lib/recipe-types'
+import { useRouter } from 'next/navigation'
 
 // Form validation schema based on API documentation
 const createRecipeSchema = z.object({
@@ -63,6 +64,7 @@ const mealTimingOptions = [
 export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeFormProps) {
   const queryClient = useQueryClient()
   const apiClient = useApiClient()
+  const router = useRouter()
 
   const form = useForm<CreateRecipeFormData>({
     resolver: zodResolver(createRecipeSchema),
@@ -107,6 +109,11 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
       toast.success('Recipe created successfully! 🎉', {
         description: `${data.data?.nameOfTheRecipe} has been added to your recipes.`,
       })
+      
+      // Navigate to the recipe detail page
+      if (data.data?.id) {
+        router.push(`/food/recipes/${data.data.id}`)
+      }
     },
     onError: (error) => {
       console.error('Failed to create recipe:', error)
