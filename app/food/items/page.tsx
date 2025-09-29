@@ -6,13 +6,62 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Apple, ArrowLeft, Plus, Search, MoreHorizontal, Trash2, Settings } from 'lucide-react'
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from '@/components/ui/breadcrumb'
+import { Apple, ArrowLeft, Plus, Search, MoreHorizontal, Trash2, Folder, FolderOpen, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useApiClient } from '@/lib/api-client'
-import { CreateFoodItemForm } from '@/components/create-food-item-form'
+import { CreateFoodItemForm } from '../../../components/create-food-item-form'
 import type { FoodItem } from '@/lib/food-types'
 import { toast } from 'sonner'
+
+function CategoryCard({ 
+  categoryName, 
+  itemCount, 
+  hasSubcategories, 
+  onClick 
+}: { 
+  categoryName: string
+  itemCount: number
+  hasSubcategories: boolean
+  onClick: () => void 
+}) {
+  return (
+    <Card 
+      className="transition-all duration-200 hover:shadow-md cursor-pointer hover:bg-accent/50"
+      onClick={onClick}
+    >
+      <CardContent className="p-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-md bg-primary/10 text-primary">
+              {hasSubcategories ? (
+                <Folder className="h-5 w-5" />
+              ) : (
+                <FolderOpen className="h-5 w-5" />
+              )}
+            </div>
+            <div>
+              <h3 className="font-semibold">{categoryName}</h3>
+              <p className="text-sm text-muted-foreground">
+                {itemCount} item{itemCount !== 1 ? 's' : ''}
+                {hasSubcategories && ' and subcategories'}
+              </p>
+            </div>
+          </div>
+          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+        </div>
+      </CardContent>
+    </Card>
+  )
+}
 
 function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   const [showActions, setShowActions] = useState(false)
@@ -41,7 +90,10 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   }
 
   return (
-    <Card className="transition-all duration-200 hover:shadow-md animate-slide-up">
+    <Card 
+      className="transition-all duration-200 hover:shadow-md animate-slide-up cursor-pointer"
+      onClick={() => router.push(`/food/items/${foodItem.id}/units`)}
+    >
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
@@ -88,7 +140,10 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
               variant="ghost"
               size="sm"
               className="p-2"
-              onClick={() => setShowActions(!showActions)}
+              onClick={(e) => {
+                e.stopPropagation() // Prevent card click when clicking menu
+                setShowActions(!showActions)
+              }}
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
@@ -98,20 +153,9 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="w-full justify-start text-xs"
-                  onClick={() => {
-                    setShowActions(false)
-                    router.push(`/food/items/${foodItem.id}/units`)
-                  }}
-                >
-                  <Settings className="h-3 w-3 mr-2" />
-                  Manage Units
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
                   className="w-full justify-start text-xs text-destructive hover:text-destructive"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.stopPropagation()
                     setShowActions(false)
                     handleDelete()
                   }}
@@ -155,6 +199,7 @@ function FoodItemsSkeleton() {
 
 export default function FoodItemsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const [currentPath, setCurrentPath] = useState<string[]>([]) // Current navigation path
   const apiClient = useApiClient()
 
   const { data: foodItems, isLoading, error } = useQuery({
@@ -164,42 +209,158 @@ export default function FoodItemsPage() {
 
   const foodItemsList = foodItems?.data || []
 
+  // Get items and subcategories at the current path level
+  const getCurrentLevelData = () => {
+    const currentItems: FoodItem[] = []
+    const subcategories = new Map<string, { count: number; hasSubcategories: boolean }>()
+
+    foodItemsList.forEach((foodItem) => {
+      if (!foodItem.categoryHierarchy || foodItem.categoryHierarchy.length === 0) {
+        // Uncategorized items - show at root level only
+        if (currentPath.length === 0) {
+          currentItems.push(foodItem)
+        }
+      } else {
+        const hierarchy = foodItem.categoryHierarchy
+        
+        // Check if this item belongs to the current path
+        const isInCurrentPath = currentPath.every((pathSegment, index) => 
+          hierarchy[index] === pathSegment
+        )
+
+        if (isInCurrentPath) {
+          if (hierarchy.length === currentPath.length) {
+            // This shouldn't happen as items should have categories, but handle it
+            currentItems.push(foodItem)
+          } else if (hierarchy.length > currentPath.length) {
+            // This item is in a subcategory
+            const nextCategory = hierarchy[currentPath.length]
+            const hasMoreLevels = hierarchy.length > currentPath.length + 1
+
+            if (!subcategories.has(nextCategory)) {
+              subcategories.set(nextCategory, { count: 0, hasSubcategories: hasMoreLevels })
+            }
+            
+            const existing = subcategories.get(nextCategory)!
+            existing.count++
+            existing.hasSubcategories = existing.hasSubcategories || hasMoreLevels
+            
+            // If this is the final level, also add the item
+            if (hierarchy.length === currentPath.length + 1) {
+              currentItems.push(foodItem)
+            }
+          }
+        }
+      }
+    })
+
+    return {
+      items: currentItems,
+      subcategories: Array.from(subcategories.entries()).map(([name, data]) => ({
+        name,
+        count: data.count,
+        hasSubcategories: data.hasSubcategories
+      })).sort((a, b) => a.name.localeCompare(b.name))
+    }
+  }
+
+  const { items: currentItems, subcategories } = getCurrentLevelData()
+
+  const navigateToCategory = (categoryName: string) => {
+    setCurrentPath([...currentPath, categoryName])
+  }
+
+  const navigateUp = () => {
+    setCurrentPath(currentPath.slice(0, -1))
+  }
+
+  const navigateToPath = (pathIndex: number) => {
+    setCurrentPath(currentPath.slice(0, pathIndex + 1))
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
-        <header className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Link href="/food">
-              <Button variant="ghost" size="sm" className="p-2">
-                <ArrowLeft className="h-4 w-4" />
-                <span className="sr-only">Back to food domain</span>
+        <header className="space-y-4 mb-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <Link href="/food">
+                <Button variant="ghost" size="sm" className="p-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="sr-only">Back to food domain</span>
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+                  <Apple className="h-6 w-6 text-primary" />
+                  Food Items
+                </h1>
+              </div>
+            </div>
+            <div className="flex gap-2">
+              <Button variant="outline" size="sm" disabled>
+                <Search className="h-4 w-4 mr-2" />
+                Search
               </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-                <Apple className="h-6 w-6 text-primary" />
-                Food Items
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Manage individual food items and their nutritional information
-              </p>
+              <CreateFoodItemForm 
+                open={showCreateForm} 
+                onOpenChange={setShowCreateForm}
+              >
+                <Button size="sm">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Add Item
+                </Button>
+              </CreateFoodItemForm>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled>
-              <Search className="h-4 w-4 mr-2" />
-              Search
-            </Button>
-            <CreateFoodItemForm 
-              open={showCreateForm} 
-              onOpenChange={setShowCreateForm}
-            >
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Add Item
+
+          {/* Breadcrumb Navigation */}
+          <div className="flex items-center gap-4">
+            <Breadcrumb>
+              <BreadcrumbList>
+                <BreadcrumbItem>
+                  <BreadcrumbLink 
+                    href="#" 
+                    onClick={(e) => {
+                      e.preventDefault()
+                      setCurrentPath([])
+                    }}
+                    className="cursor-pointer"
+                  >
+                    All Items
+                  </BreadcrumbLink>
+                </BreadcrumbItem>
+                {currentPath.map((pathSegment, index) => (
+                  <div key={pathSegment} className="flex items-center">
+                    <BreadcrumbSeparator />
+                    <BreadcrumbItem>
+                      {index === currentPath.length - 1 ? (
+                        <BreadcrumbPage>{pathSegment}</BreadcrumbPage>
+                      ) : (
+                        <BreadcrumbLink 
+                          href="#" 
+                          onClick={(e) => {
+                            e.preventDefault()
+                            navigateToPath(index)
+                          }}
+                          className="cursor-pointer"
+                        >
+                          {pathSegment}
+                        </BreadcrumbLink>
+                      )}
+                    </BreadcrumbItem>
+                  </div>
+                ))}
+              </BreadcrumbList>
+            </Breadcrumb>
+            
+            {currentPath.length > 0 && (
+              <Button variant="ghost" size="sm" onClick={navigateUp}>
+                <ArrowLeft className="h-3 w-3 mr-1" />
+                Back
               </Button>
-            </CreateFoodItemForm>
+            )}
           </div>
         </header>
 
@@ -239,10 +400,55 @@ export default function FoodItemsPage() {
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-4 animate-fade-in">
-                {foodItemsList.map((foodItem) => (
-                  <FoodItemCard key={foodItem.id} foodItem={foodItem} />
-                ))}
+              <div className="space-y-6 animate-fade-in">
+                {/* Show subcategories first */}
+                {subcategories.length > 0 && (
+                  <div className="space-y-3">
+                    <h2 className="text-lg font-semibold">Categories</h2>
+                    <div className="space-y-2">
+                      {subcategories.map((category) => (
+                        <CategoryCard
+                          key={category.name}
+                          categoryName={category.name}
+                          itemCount={category.count}
+                          hasSubcategories={category.hasSubcategories}
+                          onClick={() => navigateToCategory(category.name)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Show food items at current level */}
+                {currentItems.length > 0 && (
+                  <div className="space-y-3">
+                    <h2 className="text-lg font-semibold">
+                      {currentPath.length === 0 ? 'Uncategorized Items' : 'Items'}
+                    </h2>
+                    <div className="space-y-3">
+                      {currentItems.map((foodItem) => (
+                        <FoodItemCard key={foodItem.id} foodItem={foodItem} />
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Show message if current level is empty */}
+                {subcategories.length === 0 && currentItems.length === 0 && (
+                  <Card>
+                    <CardContent className="p-8 text-center">
+                      <Folder className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No Items in This Category</h3>
+                      <p className="text-muted-foreground mb-4">
+                        This category doesn&apos;t contain any food items yet.
+                      </p>
+                      <Button variant="outline" onClick={navigateUp}>
+                        <ArrowLeft className="h-4 w-4 mr-2" />
+                        Go Back
+                      </Button>
+                    </CardContent>
+                  </Card>
+                )}
               </div>
             )}
           </>

@@ -125,9 +125,16 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   const addNewCategory = () => {
     const newCategory = form.getValues('newCategory')
     if (newCategory && newCategory.trim()) {
-      // Add as a single-level hierarchy
-      setSelectedCategories([newCategory.trim()])
-      form.setValue('newCategory', '')
+      // Parse comma-separated hierarchy
+      const hierarchyParts = newCategory
+        .split(',')
+        .map(part => part.trim())
+        .filter(part => part.length > 0)
+      
+      if (hierarchyParts.length > 0) {
+        setSelectedCategories(hierarchyParts)
+        form.setValue('newCategory', '')
+      }
     }
   }
 
@@ -171,6 +178,9 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
 
             <div className="space-y-3">
               <FormLabel className="text-sm font-medium">Categories (Optional)</FormLabel>
+              <p className="text-xs text-muted-foreground">
+                Choose a pre-defined hierarchy or create your own using comma-separated levels
+              </p>
               
               {/* Selected Category Hierarchy */}
               {selectedCategories.length > 0 && (
@@ -223,32 +233,62 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                 </div>
               </div>
 
-              {/* Custom Category Input */}
+              {/* Custom Category Hierarchy Input */}
               <FormField
                 control={form.control}
                 name="newCategory"
                 render={({ field }) => (
                   <FormItem>
+                    <FormLabel className="text-xs font-medium">Custom Category Hierarchy</FormLabel>
                     <FormControl>
-                      <div className="flex gap-2">
-                        <Input
-                          placeholder="Add custom category"
-                          {...field}
-                          className="text-sm"
-                        />
-                        <Button
-                          type="button"
-                          variant="outline"
-                          size="sm"
-                          onClick={addNewCategory}
-                          disabled={!field.value?.trim()}
-                        >
-                          Add
-                        </Button>
+                      <div className="space-y-2">
+                        <div className="flex gap-2">
+                          <Input
+                            placeholder="e.g., Food, Fruits, Citrus (comma-separated)"
+                            {...field}
+                            className="text-sm"
+                          />
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            onClick={addNewCategory}
+                            disabled={!field.value?.trim()}
+                          >
+                            Add
+                          </Button>
+                        </div>
+                        <div className="text-xs text-muted-foreground space-y-1">
+                          <p><strong>Format:</strong> Use commas to separate hierarchy levels</p>
+                          
+                          {/* Live preview of hierarchy */}
+                          {field.value && field.value.trim() && (
+                            <div className="p-2 bg-muted/50 rounded border">
+                              <p className="font-medium mb-1">Preview:</p>
+                              <div className="flex items-center gap-1">
+                                {field.value.split(',').map((part, index) => (
+                                  <span key={index} className="flex items-center">
+                                    {index > 0 && <span className="mx-1 text-muted-foreground">→</span>}
+                                    <Badge variant="secondary" className="text-xs">
+                                      {part.trim()}
+                                    </Badge>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          )}
+                          
+                          <p><strong>Examples:</strong></p>
+                          <ul className="ml-4 space-y-0.5">
+                            <li>• <code className="bg-muted px-1 rounded">Food, Fruits, Tropical</code></li>
+                            <li>• <code className="bg-muted px-1 rounded">Food, Proteins, Plant-based</code></li>
+                            <li>• <code className="bg-muted px-1 rounded">Food, Spices & Seasonings</code></li>
+                          </ul>
+                        </div>
                       </div>
                     </FormControl>
                     <FormDescription className="text-xs text-muted-foreground">
-                      Create a custom category hierarchy (this will replace any selected hierarchy above)
+                      This will replace any selected hierarchy above
                     </FormDescription>
                   </FormItem>
                 )}
