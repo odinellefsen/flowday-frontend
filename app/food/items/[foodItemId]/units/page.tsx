@@ -145,13 +145,9 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
     queryFn: () => apiClient.getFoodItemUnits(foodItemId),
   })
 
-  console.log('🔍 Units API Response:', unitsData)
-
   const units = unitsData?.data || []
   const foodItemName = units[0]?.foodItemName || 'Food Item'
   
-  console.log('📊 Processed units:', units)
-
   return (
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
