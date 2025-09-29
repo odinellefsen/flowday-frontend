@@ -1,6 +1,6 @@
 'use client'
 
-import { use } from 'react'
+import { useState, use } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,6 +19,8 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useApiClient } from '@/lib/api-client'
+import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
+import { ManageInstructionsForm } from '@/components/manage-instructions-form'
 import type { RecipeWithDetails, MealTimingEnum } from '@/lib/recipe-types'
 
 interface PageProps {
@@ -101,6 +103,8 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
 }
 
 function IngredientsSection({ recipe }: { recipe: RecipeWithDetails }) {
+  const [showIngredientsForm, setShowIngredientsForm] = useState(false)
+
   return (
     <Card>
       <CardHeader>
@@ -109,10 +113,17 @@ function IngredientsSection({ recipe }: { recipe: RecipeWithDetails }) {
             <Utensils className="h-5 w-5" />
             Ingredients
           </CardTitle>
-          <Button size="sm" variant="outline">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Ingredients
-          </Button>
+          <ManageIngredientsForm
+            recipeId={recipe.id}
+            recipeName={recipe.nameOfTheRecipe}
+            open={showIngredientsForm}
+            onOpenChange={setShowIngredientsForm}
+          >
+            <Button size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Ingredients
+            </Button>
+          </ManageIngredientsForm>
         </div>
       </CardHeader>
       <CardContent>
@@ -123,19 +134,23 @@ function IngredientsSection({ recipe }: { recipe: RecipeWithDetails }) {
             <p className="text-muted-foreground mb-4">
               Add ingredients to complete your recipe.
             </p>
-            <Button variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Your First Ingredient
-            </Button>
+            <ManageIngredientsForm
+              recipeId={recipe.id}
+              recipeName={recipe.nameOfTheRecipe}
+              open={showIngredientsForm}
+              onOpenChange={setShowIngredientsForm}
+            >
+              <Button variant="outline">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Ingredient
+              </Button>
+            </ManageIngredientsForm>
           </div>
         ) : (
           <div className="space-y-2">
-            {recipe.ingredients.map((ingredient, index) => (
-              <div key={ingredient.id} className="flex items-center gap-3 p-3 bg-muted/30 rounded-md">
-                <span className="text-sm font-medium text-muted-foreground w-6">
-                  {index + 1}.
-                </span>
-                <span className="flex-1">{ingredient.ingredientText}</span>
+            {recipe.ingredients.map((ingredient) => (
+              <div key={ingredient.id} className="p-3 bg-muted/30 rounded-md">
+                <span>{ingredient.ingredientText}</span>
               </div>
             ))}
           </div>
@@ -146,6 +161,8 @@ function IngredientsSection({ recipe }: { recipe: RecipeWithDetails }) {
 }
 
 function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
+  const [showInstructionsForm, setShowInstructionsForm] = useState(false)
+
   return (
     <Card>
       <CardHeader>
@@ -154,10 +171,17 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
             <BookOpen className="h-5 w-5" />
             Instructions
           </CardTitle>
-          <Button size="sm" variant="outline">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Instructions
-          </Button>
+          <ManageInstructionsForm
+            recipeId={recipe.id}
+            recipeName={recipe.nameOfTheRecipe}
+            open={showInstructionsForm}
+            onOpenChange={setShowInstructionsForm}
+          >
+            <Button size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Add Instructions
+            </Button>
+          </ManageInstructionsForm>
         </div>
       </CardHeader>
       <CardContent>
@@ -168,10 +192,17 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
             <p className="text-muted-foreground mb-4">
               Add step-by-step instructions to complete your recipe.
             </p>
-            <Button variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Add Your First Instruction
-            </Button>
+            <ManageInstructionsForm
+              recipeId={recipe.id}
+              recipeName={recipe.nameOfTheRecipe}
+              open={showInstructionsForm}
+              onOpenChange={setShowInstructionsForm}
+            >
+              <Button variant="outline">
+                <Plus className="h-4 w-4 mr-2" />
+                Add Your First Instruction
+              </Button>
+            </ManageInstructionsForm>
           </div>
         ) : (
           <div className="space-y-4">
