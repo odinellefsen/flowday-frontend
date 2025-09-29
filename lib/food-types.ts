@@ -65,10 +65,17 @@ export interface NutritionInfo {
 
 export interface FoodItemUnit {
     id: string
+    foodItemId: string
+    foodItemName: string
     unitOfMeasurement: UnitOfMeasurementEnum
     unitDescription?: string
-    nutritionPerOfThisUnit: NutritionInfo
-    source: "user_measured" | "package_label" | "database" | "estimated"
+    calories: number
+    proteinInGrams?: number
+    carbohydratesInGrams?: number
+    fatInGrams?: number
+    fiberInGrams?: number
+    sugarInGrams?: number
+    source?: "user_measured" | "package_label" | "database" | "estimated"
 }
 
 export interface CreateFoodItemUnitRequest {

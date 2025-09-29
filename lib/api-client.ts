@@ -5,6 +5,7 @@ import type {
   ListFoodItemsResponse, 
   CreateFoodItemUnitRequest, 
   CreateFoodItemUnitsResponse,
+  FoodItemUnit,
   ApiResponse as FoodApiResponse
 } from './food-types'
 
@@ -152,6 +153,10 @@ class ApiClient {
       body: JSON.stringify({ foodItemName }),
     })
   }
+
+  async getFoodItemUnits(token: string | null, foodItemId: string): Promise<FoodApiResponse<FoodItemUnit[]>> {
+    return this.makeRequest<FoodItemUnit[]>(`/api/food-item/${foodItemId}/units`, token)
+  }
 }
 
 export const apiClient = new ApiClient()
@@ -185,6 +190,10 @@ export function useApiClient() {
     deleteFoodItem: async (foodItemName: string): Promise<FoodApiResponse<unknown>> => {
       const token = await getToken()
       return apiClient.deleteFoodItem(token, foodItemName)
+    },
+    getFoodItemUnits: async (foodItemId: string): Promise<FoodApiResponse<FoodItemUnit[]>> => {
+      const token = await getToken()
+      return apiClient.getFoodItemUnits(token, foodItemId)
     },
   }
 }
