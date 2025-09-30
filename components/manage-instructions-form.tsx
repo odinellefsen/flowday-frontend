@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -28,7 +29,18 @@ import {
 } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
 import { useApiClient } from '@/lib/api-client'
-import type { CreateRecipeInstructionsRequest, FoodItemUnitUsed } from '@/lib/recipe-types'
+import { FoodItemUnitPicker, AttachedUnitBadge } from './food-item-unit-picker'
+import type { CreateRecipeInstructionsRequest } from '@/lib/recipe-types'
+
+// Extended type for form handling
+interface AttachedFoodUnit {
+  foodItemUnitId: string
+  foodItemId: string
+  foodItemName: string
+  unitOfMeasurement: string
+  quantityOfFoodItemUnit: number
+  calories?: number
+}
 
 // Form validation schema based on API documentation
 const instructionsSchema = z.object({
@@ -43,7 +55,7 @@ const instructionsSchema = z.object({
           .array(
             z.object({
               foodItemUnitId: z.string().uuid(),
-              quantityOfFoodItemUnit: z.number().positive().max(1_000_000).default(1),
+              quantityOfFoodItemUnit: z.number().positive().max(1_000_000),
             })
           )
           .optional(),
@@ -70,6 +82,7 @@ export function ManageInstructionsForm({
   open, 
   onOpenChange 
 }: ManageInstructionsFormProps) {
+  const [attachedUnits, setAttachedUnits] = useState<Record<number, AttachedFoodUnit[]>>({})
   const queryClient = useQueryClient()
   const apiClient = useApiClient()
 
@@ -85,14 +98,31 @@ export function ManageInstructionsForm({
     name: 'instructions',
   })
 
+  const handleAttachUnit = (stepIndex: number, unit: AttachedFoodUnit) => {
+    setAttachedUnits(prev => ({
+      ...prev,
+      [stepIndex]: [...(prev[stepIndex] || []), unit]
+    }))
+  }
+
+  const handleRemoveUnit = (stepIndex: number, unitIndex: number) => {
+    setAttachedUnits(prev => ({
+      ...prev,
+      [stepIndex]: prev[stepIndex]?.filter((_, i) => i !== unitIndex) || []
+    }))
+  }
+
   const createInstructionsMutation = useMutation({
     mutationFn: async (data: InstructionsFormData) => {
       const instructionsData: CreateRecipeInstructionsRequest = {
         recipeId,
-        stepByStepInstructions: data.instructions.map((instruction) => ({
+        stepByStepInstructions: data.instructions.map((instruction, index) => ({
           stepInstruction: instruction.stepInstruction,
-          foodItemUnitsUsedInStep: instruction.foodItemUnitsUsedInStep && instruction.foodItemUnitsUsedInStep.length > 0 
-            ? instruction.foodItemUnitsUsedInStep 
+          foodItemUnitsUsedInStep: attachedUnits[index] && attachedUnits[index].length > 0 
+            ? attachedUnits[index].map(unit => ({
+                foodItemUnitId: unit.foodItemUnitId,
+                quantityOfFoodItemUnit: unit.quantityOfFoodItemUnit,
+              }))
             : undefined,
         })),
       }
@@ -104,6 +134,7 @@ export function ManageInstructionsForm({
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
       onOpenChange(false)
       form.reset()
+      setAttachedUnits({}) // Clear attached units
       toast.success('Instructions added successfully! 📝', {
         description: `New instructions have been added to ${recipeName}.`,
       })
@@ -128,6 +159,19 @@ export function ManageInstructionsForm({
   const removeInstruction = (index: number) => {
     if (fields.length > 1) {
       remove(index)
+      // Remove attached units for this instruction
+      setAttachedUnits(prev => {
+        const newUnits = { ...prev }
+        delete newUnits[index]
+        // Reindex remaining units
+        const reindexed: Record<number, AttachedFoodUnit[]> = {}
+        Object.keys(newUnits).forEach(key => {
+          const oldIndex = parseInt(key)
+          const newIndex = oldIndex > index ? oldIndex - 1 : oldIndex
+          reindexed[newIndex] = newUnits[oldIndex]
+        })
+        return reindexed
+      })
     }
   }
 
@@ -206,30 +250,42 @@ export function ManageInstructionsForm({
                       )}
                     />
 
-                    {/* Food Units Attachment - Placeholder for now */}
+                    {/* Food Units Attachment */}
                     <div className="pt-2 border-t border-muted">
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-medium text-muted-foreground">
                           Attached Food Units
                         </span>
-                        <Button
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs"
-                          onClick={() => toast.info('Food unit attachment coming soon!')}
+                        <FoodItemUnitPicker
+                          onAttachUnit={(unit) => handleAttachUnit(index, unit)}
                         >
-                          <LinkIcon className="h-3 w-3 mr-1" />
-                          Attach Food Units
-                        </Button>
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="text-xs"
+                          >
+                            <LinkIcon className="h-3 w-3 mr-1" />
+                            Attach Food Units
+                          </Button>
+                        </FoodItemUnitPicker>
                       </div>
                       
-                      {/* TODO: Display attached food units */}
+                      {/* Display attached food units */}
                       <div className="mt-2 flex flex-wrap gap-1">
-                        {/* Placeholder for food unit badges */}
-                        <span className="text-xs text-muted-foreground italic">
-                          No food units attached to this step
-                        </span>
+                        {attachedUnits[index] && attachedUnits[index].length > 0 ? (
+                          attachedUnits[index].map((unit, unitIndex) => (
+                            <AttachedUnitBadge
+                              key={`${unit.foodItemUnitId}-${unitIndex}`}
+                              unit={unit}
+                              onRemove={() => handleRemoveUnit(index, unitIndex)}
+                            />
+                          ))
+                        ) : (
+                          <span className="text-xs text-muted-foreground italic">
+                            No food units attached to this step
+                          </span>
+                        )}
                       </div>
                     </div>
                   </div>

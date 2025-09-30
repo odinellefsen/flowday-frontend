@@ -213,7 +213,7 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
                     {step.instructionNumber}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm leading-relaxed">{step.instruction}</p>
+                    <p className="text-sm leading-relaxed">{step.stepInstruction}</p>
                     
                     {/* Food Item Units Attached to this step */}
                     {/* TODO: Display attached food units */}
