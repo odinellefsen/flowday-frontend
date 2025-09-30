@@ -143,11 +143,6 @@ export default function FoodPage() {
                       <div className="flex-1">
                         <div className="flex items-center gap-2 mb-1">
                           <h3 className="font-semibold text-lg">{section.name}</h3>
-                          {section.implemented && (
-                            <Badge variant="default" className="text-xs">
-                              Available
-                            </Badge>
-                          )}
                           {section.comingSoon && (
                             <Badge variant="outline" className="text-xs">
                               Coming Soon

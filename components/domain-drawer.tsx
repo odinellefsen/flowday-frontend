@@ -130,11 +130,6 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <h3 className="font-semibold text-sm">{domain.name}</h3>
-                        {domain.implemented && (
-                          <Badge variant="default" className="text-xs px-2 py-0">
-                            Available
-                          </Badge>
-                        )}
                         {domain.comingSoon && (
                           <Badge variant="outline" className="text-xs px-2 py-0">
                             Coming Soon
