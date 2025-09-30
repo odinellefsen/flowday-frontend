@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { useApiClient } from '@/lib/api-client'
 import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
 import { ManageInstructionsForm } from '@/components/manage-instructions-form'
+import { AttachedUnitBadge } from '@/components/food-item-unit-picker'
 import type { RecipeWithDetails, MealTimingEnum } from '@/lib/recipe-types'
 
 interface PageProps {
@@ -213,10 +214,21 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
                     {step.instructionNumber}
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm leading-relaxed">{step.stepInstruction}</p>
+                    <p className="text-sm leading-relaxed">{step.instruction}</p>
                     
                     {/* Food Item Units Attached to this step */}
-                    {/* TODO: Display attached food units */}
+                    {step.foodItemUnitsUsedInStep && step.foodItemUnitsUsedInStep.length > 0 && (
+                      <div className="mt-3 pt-2 border-t border-muted">
+                        <p className="text-xs font-medium text-muted-foreground mb-2">Attached Food Units:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {step.foodItemUnitsUsedInStep.map((unit, unitIndex) => (
+                            <Badge key={`${unit.foodItemUnitId}-${unitIndex}`} variant="secondary" className="text-xs">
+                              {unit.quantityOfFoodItemUnit}x Unit ID: {unit.foodItemUnitId.substring(0, 8)}...
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     
                     <div className="flex items-center gap-2 mt-3">
                       <Button variant="ghost" size="sm" className="text-xs">
@@ -286,7 +298,11 @@ export default function RecipeDetailPage({ params }: PageProps) {
     queryFn: () => apiClient.getRecipe(recipeId),
   })
 
+  console.log('🔍 Recipe API Response:', recipeData)
+
   const recipe = recipeData?.data
+  
+  console.log('📊 Recipe steps:', recipe?.steps)
 
   if (isLoading) {
     return (

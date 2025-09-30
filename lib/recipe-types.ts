@@ -68,7 +68,7 @@ export interface FoodItemUnitUsed {
 export interface RecipeInstruction {
   id: string
   instructionNumber: number
-  stepInstruction: string
+  instruction: string // Note: API returns 'instruction', not 'stepInstruction'
   foodItemUnitsUsedInStep?: FoodItemUnitUsed[]
 }
 
