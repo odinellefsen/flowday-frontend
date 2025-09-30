@@ -21,7 +21,6 @@ import Link from 'next/link'
 import { useApiClient } from '@/lib/api-client'
 import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
 import { ManageInstructionsForm } from '@/components/manage-instructions-form'
-import { AttachedUnitBadge } from '@/components/food-item-unit-picker'
 import type { RecipeWithDetails, MealTimingEnum } from '@/lib/recipe-types'
 
 interface PageProps {
@@ -69,7 +68,7 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
               </span>
               <span className="flex items-center gap-1">
                 <BookOpen className="h-4 w-4" />
-                {recipe.stepCount} step{recipe.stepCount !== 1 ? 's' : ''}
+                {recipe.instructions?.length || recipe.stepCount} step{(recipe.instructions?.length || recipe.stepCount) !== 1 ? 's' : ''}
               </span>
               {recipe.metadata.estimatedTotalTime && (
                 <span className="flex items-center gap-1">
@@ -186,7 +185,7 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
         </div>
       </CardHeader>
       <CardContent>
-        {recipe.steps.length === 0 ? (
+        {recipe.instructions.length === 0 ? (
           <div className="text-center py-8">
             <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2">No Instructions Added</h3>
@@ -207,7 +206,7 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
           </div>
         ) : (
           <div className="space-y-4">
-            {recipe.steps.map((step) => (
+            {recipe.instructions.map((step) => (
               <div key={step.id} className="border rounded-lg p-4">
                 <div className="flex items-start gap-3">
                   <div className="flex-shrink-0 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-semibold">
@@ -217,13 +216,13 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
                     <p className="text-sm leading-relaxed">{step.instruction}</p>
                     
                     {/* Food Item Units Attached to this step */}
-                    {step.foodItemUnitsUsedInStep && step.foodItemUnitsUsedInStep.length > 0 && (
+                    {step.foodItemUnits && step.foodItemUnits.length > 0 && (
                       <div className="mt-3 pt-2 border-t border-muted">
                         <p className="text-xs font-medium text-muted-foreground mb-2">Attached Food Units:</p>
                         <div className="flex flex-wrap gap-1">
-                          {step.foodItemUnitsUsedInStep.map((unit, unitIndex) => (
-                            <Badge key={`${unit.foodItemUnitId}-${unitIndex}`} variant="secondary" className="text-xs">
-                              {unit.quantityOfFoodItemUnit}x Unit ID: {unit.foodItemUnitId.substring(0, 8)}...
+                          {step.foodItemUnits.map((unit, unitIndex) => (
+                            <Badge key={`${unit.foodItemName}-${unit.unitOfMeasurement}-${unitIndex}`} variant="secondary" className="text-xs">
+                              {unit.quantity}x {unit.unitOfMeasurement} {unit.foodItemName} ({unit.calories * unit.quantity} cal)
                             </Badge>
                           ))}
                         </div>
@@ -302,8 +301,6 @@ export default function RecipeDetailPage({ params }: PageProps) {
 
   const recipe = recipeData?.data
   
-  console.log('📊 Recipe steps:', recipe?.steps)
-
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">

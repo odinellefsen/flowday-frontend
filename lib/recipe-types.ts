@@ -29,7 +29,7 @@ export interface Recipe {
 }
 
 export interface RecipeWithDetails extends Recipe {
-  steps: RecipeInstruction[]
+  instructions: RecipeInstruction[] // Note: API returns 'instructions', not 'steps'
   ingredients: RecipeIngredient[]
   metadata: {
     stepCount: number
@@ -68,8 +68,13 @@ export interface FoodItemUnitUsed {
 export interface RecipeInstruction {
   id: string
   instructionNumber: number
-  instruction: string // Note: API returns 'instruction', not 'stepInstruction'
-  foodItemUnitsUsedInStep?: FoodItemUnitUsed[]
+  instruction: string
+  foodItemUnits: Array<{
+    quantity: number
+    calories: number
+    unitOfMeasurement: string
+    foodItemName: string
+  }>
 }
 
 export interface CreateRecipeInstructionsRequest {
