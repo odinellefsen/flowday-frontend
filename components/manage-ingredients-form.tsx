@@ -27,8 +27,8 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { useApiClient } from '@/lib/api-client'
-import type { CreateRecipeIngredientsRequest } from '@/lib/recipe-types'
+import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
+import type { CreateRecipeIngredientsRequest } from '@/src/lib/api/types/recipes'
 
 // Form validation schema based on API documentation
 const ingredientsSchema = z.object({
@@ -63,7 +63,7 @@ export function ManageIngredientsForm({
   onOpenChange 
 }: ManageIngredientsFormProps) {
   const queryClient = useQueryClient()
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedRecipesAPI()
 
   const form = useForm<IngredientsFormData>({
     resolver: zodResolver(ingredientsSchema),
@@ -84,7 +84,7 @@ export function ManageIngredientsForm({
         ingredients: data.ingredients,
       }
       
-      return apiClient.createRecipeIngredients(ingredientsData)
+      return apiClient.createIngredients(ingredientsData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] })

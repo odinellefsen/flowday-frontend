@@ -29,8 +29,8 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
-import { useApiClient } from '@/lib/api-client'
-import { CreateFoodItemRequest } from '@/lib/food-types'
+import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
+import type { CreateFoodItemRequest } from '@/src/lib/api/types/food-items'
 
 // Form validation schema based on API documentation
 const createFoodItemSchema = z.object({
@@ -76,7 +76,7 @@ const categoryHierarchies = [
 export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodItemFormProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const queryClient = useQueryClient()
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
 
   const form = useForm<CreateFoodItemFormData>({
     resolver: zodResolver(createFoodItemSchema),
@@ -94,7 +94,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
         categoryHierarchy: selectedCategories.length > 0 ? selectedCategories : undefined,
       }
       
-      return apiClient.createFoodItem(foodItemData)
+      return apiClient.create(foodItemData)
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['foodItems'] })

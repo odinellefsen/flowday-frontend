@@ -29,8 +29,8 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
-import { useApiClient } from '@/lib/api-client'
-import { CreateRecipeRequest, MealTimingEnum } from '@/lib/recipe-types'
+import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
+import { CreateRecipeRequest, MealTimingEnum } from '@/src/lib/api/types/recipes'
 import { useRouter } from 'next/navigation'
 
 // Form validation schema based on API documentation
@@ -63,7 +63,7 @@ const mealTimingOptions = [
 
 export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeFormProps) {
   const queryClient = useQueryClient()
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedRecipesAPI()
   const router = useRouter()
 
   const form = useForm<CreateRecipeFormData>({
@@ -100,7 +100,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
         throw new Error('Description must be less than 250 characters')
       }
       
-      return apiClient.createRecipe(recipeData)
+      return apiClient.create(recipeData)
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] })

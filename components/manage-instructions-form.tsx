@@ -28,9 +28,9 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Textarea } from '@/components/ui/textarea'
-import { useApiClient } from '@/lib/api-client'
+import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { FoodItemUnitPicker, AttachedUnitBadge } from './food-item-unit-picker'
-import type { CreateRecipeInstructionsRequest } from '@/lib/recipe-types'
+import type { CreateRecipeInstructionsRequest } from '@/src/lib/api/types/recipes'
 
 // Extended type for form handling
 interface AttachedFoodUnit {
@@ -84,7 +84,7 @@ export function ManageInstructionsForm({
 }: ManageInstructionsFormProps) {
   const [attachedUnits, setAttachedUnits] = useState<Record<number, AttachedFoodUnit[]>>({})
   const queryClient = useQueryClient()
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedRecipesAPI()
 
   const form = useForm<InstructionsFormData>({
     resolver: zodResolver(instructionsSchema),
@@ -127,7 +127,7 @@ export function ManageInstructionsForm({
         })),
       }
       
-      return apiClient.createRecipeInstructions(instructionsData)
+      return apiClient.createInstructions(instructionsData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recipe', recipeId] })

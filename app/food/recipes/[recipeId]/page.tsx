@@ -18,10 +18,10 @@ import {
   Utensils
 } from 'lucide-react'
 import Link from 'next/link'
-import { useApiClient } from '@/lib/api-client'
+import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
 import { ManageInstructionsForm } from '@/components/manage-instructions-form'
-import type { RecipeWithDetails, MealTimingEnum } from '@/lib/recipe-types'
+import type { RecipeWithDetails, MealTimingEnum } from '@/src/lib/api/types/recipes'
 
 interface PageProps {
   params: Promise<{
@@ -287,14 +287,14 @@ function RecipeDetailSkeleton() {
 }
 
 export default function RecipeDetailPage({ params }: PageProps) {
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedRecipesAPI()
   
   // Unwrap the params Promise
   const { recipeId } = use(params)
 
   const { data: recipeData, isLoading, error } = useQuery({
     queryKey: ['recipe', recipeId],
-    queryFn: () => apiClient.getRecipe(recipeId),
+    queryFn: () => apiClient.get(recipeId),
   })
 
   console.log('🔍 Recipe API Response:', recipeData)

@@ -9,20 +9,20 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { ChefHat, ArrowLeft, Plus, Search, MoreHorizontal, Trash2, Edit, Clock, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useApiClient } from '@/lib/api-client'
+import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { CreateRecipeForm } from '@/components/create-recipe-form'
-import { type Recipe, MealTimingEnum } from '@/lib/recipe-types'
+import { type Recipe, MealTimingEnum } from '@/src/lib/api/types/recipes'
 import { toast } from 'sonner'
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
   const [showActions, setShowActions] = useState(false)
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedRecipesAPI()
   const queryClient = useQueryClient()
   const router = useRouter()
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      return apiClient.deleteRecipe(recipe.nameOfTheRecipe)
+      return apiClient.delete(recipe.nameOfTheRecipe)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
@@ -182,11 +182,11 @@ function RecipesSkeleton() {
 
 export default function RecipesPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedRecipesAPI()
 
   const { data: recipes, isLoading, error } = useQuery({
     queryKey: ['recipes'],
-    queryFn: apiClient.listRecipes,
+    queryFn: apiClient.list,
   })
 
   const recipesList = recipes?.data || []

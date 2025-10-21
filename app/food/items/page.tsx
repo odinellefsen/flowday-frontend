@@ -17,9 +17,9 @@ import {
 import { Apple, ArrowLeft, Plus, Search, MoreHorizontal, Trash2, Folder, FolderOpen, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useApiClient } from '@/lib/api-client'
+import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateFoodItemForm } from '../../../components/create-food-item-form'
-import type { FoodItem } from '@/lib/food-types'
+import type { FoodItem } from '@/src/lib/api/types/food-items'
 import { toast } from 'sonner'
 
 function CategoryCard({ 
@@ -65,13 +65,13 @@ function CategoryCard({
 
 function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   const [showActions, setShowActions] = useState(false)
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
   const queryClient = useQueryClient()
   const router = useRouter()
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      return apiClient.deleteFoodItem(foodItem.name)
+      return apiClient.delete(foodItem.name)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['foodItems'] })
@@ -200,11 +200,11 @@ function FoodItemsSkeleton() {
 export default function FoodItemsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [currentPath, setCurrentPath] = useState<string[]>([]) // Current navigation path
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
 
   const { data: foodItems, isLoading, error } = useQuery({
     queryKey: ['foodItems'],
-    queryFn: apiClient.listFoodItems,
+    queryFn: apiClient.list,
   })
 
   const foodItemsList = foodItems?.data || []

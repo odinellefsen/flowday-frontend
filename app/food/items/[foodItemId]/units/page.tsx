@@ -8,9 +8,9 @@ import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ArrowLeft, Plus, Scale, MoreHorizontal, Trash2, Edit } from 'lucide-react'
 import Link from 'next/link'
-import { useApiClient } from '@/lib/api-client'
+import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateUnitForm } from '@/components/create-unit-form'
-import type { FoodItemUnit } from '@/lib/food-types'
+import type { FoodItemUnit } from '@/src/lib/api/types/food-items'
 import { toast } from 'sonner'
 
 interface PageProps {
@@ -135,14 +135,14 @@ function UnitsSkeleton() {
 
 export default function FoodItemUnitsPage({ params }: PageProps) {
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
   
   // Unwrap the params Promise
   const { foodItemId } = use(params)
 
   const { data: unitsData, isLoading, error } = useQuery({
     queryKey: ['foodItemUnits', foodItemId],
-    queryFn: () => apiClient.getFoodItemUnits(foodItemId),
+    queryFn: () => apiClient.getUnits(foodItemId),
   })
 
   const units = unitsData?.data || []

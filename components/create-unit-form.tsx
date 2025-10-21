@@ -35,8 +35,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { useApiClient } from '@/lib/api-client'
-import { UnitOfMeasurementEnum, type CreateFoodItemUnitRequest } from '@/lib/food-types'
+import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
+import { UnitOfMeasurementEnum, type CreateFoodItemUnitRequest } from '@/src/lib/api/types/food-items'
 
 // Form validation schema
 const createUnitSchema = z.object({
@@ -105,7 +105,7 @@ const unitCategories = {
 
 export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpenChange }: CreateUnitFormProps) {
   const queryClient = useQueryClient()
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
 
   const form = useForm<CreateUnitFormData>({
     resolver: zodResolver(createUnitSchema),
@@ -143,7 +143,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
         }]
       }
       
-      return apiClient.createFoodItemUnits(foodItemId, unitData)
+      return apiClient.createUnits(foodItemId, unitData)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['foodItemUnits', foodItemId] })

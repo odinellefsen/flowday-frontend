@@ -1,17 +1,12 @@
-// Recipe-related types based on API documentation
+/**
+ * Recipes domain types
+ */
 
 export enum MealTimingEnum {
   BREAKFAST = "BREAKFAST",
-  LUNCH = "LUNCH", 
+  LUNCH = "LUNCH",
   DINNER = "DINNER",
   SNACK = "SNACK"
-}
-
-// Recipe interfaces
-export interface CreateRecipeRequest {
-  nameOfTheRecipe: string
-  generalDescriptionOfTheRecipe?: string
-  whenIsItConsumed?: MealTimingEnum[]
 }
 
 export interface Recipe {
@@ -28,8 +23,25 @@ export interface Recipe {
   completeness: "complete" | "incomplete"
 }
 
+export interface RecipeIngredient {
+  id: string
+  ingredientText: string
+}
+
+export interface RecipeInstruction {
+  id: string
+  instructionNumber: number
+  instruction: string
+  foodItemUnits: Array<{
+    quantity: number
+    calories: number
+    unitOfMeasurement: string
+    foodItemName: string
+  }>
+}
+
 export interface RecipeWithDetails extends Recipe {
-  instructions: RecipeInstruction[] // Note: API returns 'instructions', not 'steps'
+  instructions: RecipeInstruction[]
   ingredients: RecipeIngredient[]
   metadata: {
     stepCount: number
@@ -38,10 +50,11 @@ export interface RecipeWithDetails extends Recipe {
   }
 }
 
-// Ingredient interfaces
-export interface RecipeIngredient {
-  id: string
-  ingredientText: string
+// Request types
+export interface CreateRecipeRequest {
+  nameOfTheRecipe: string
+  generalDescriptionOfTheRecipe?: string
+  whenIsItConsumed?: MealTimingEnum[]
 }
 
 export interface CreateRecipeIngredientsRequest {
@@ -55,25 +68,6 @@ export interface UpdateRecipeIngredientsRequest {
   recipeId: string
   ingredients: Array<{
     ingredientText: string
-  }>
-}
-
-// Instruction interfaces
-export interface FoodItemUnitUsed {
-  foodItemUnitId: string
-  foodItemId: string
-  quantityOfFoodItemUnit: number
-}
-
-export interface RecipeInstruction {
-  id: string
-  instructionNumber: number
-  instruction: string
-  foodItemUnits: Array<{
-    quantity: number
-    calories: number
-    unitOfMeasurement: string
-    foodItemName: string
   }>
 }
 
@@ -101,7 +95,7 @@ export interface UpdateRecipeInstructionsRequest {
   }>
 }
 
-// API Response types
+// Response types
 export interface ListRecipesResponse {
   data: Recipe[]
 }
@@ -127,3 +121,4 @@ export interface CreateRecipeInstructionsResponse {
     stepByStepInstructions: RecipeInstruction[]
   }
 }
+

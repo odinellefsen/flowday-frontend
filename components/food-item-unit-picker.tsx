@@ -33,8 +33,8 @@ import {
   Apple,
   Scale,
 } from 'lucide-react'
-import { useApiClient } from '@/lib/api-client'
-import type { FoodItem, FoodItemUnit } from '@/lib/food-types'
+import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
+import type { FoodItem, FoodItemUnit } from '@/src/lib/api/types/food-items'
 
 interface AttachedFoodUnit {
   foodItemUnitId: string
@@ -60,11 +60,11 @@ function FoodItemBrowser({
   currentPath: string[]
   setCurrentPath: (path: string[]) => void
 }) {
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
 
   const { data: foodItems, isLoading } = useQuery({
     queryKey: ['foodItems'],
-    queryFn: apiClient.listFoodItems,
+    queryFn: apiClient.list,
   })
 
   const foodItemsList = foodItems?.data || []
@@ -283,11 +283,11 @@ function UnitSelector({
   onBack: () => void
 }) {
   const [quantity, setQuantity] = useState(1)
-  const apiClient = useApiClient()
+  const apiClient = useAuthenticatedFoodItemsAPI()
 
   const { data: unitsData, isLoading } = useQuery({
     queryKey: ['foodItemUnits', foodItem.id],
-    queryFn: () => apiClient.getFoodItemUnits(foodItem.id),
+    queryFn: () => apiClient.getUnits(foodItem.id),
   })
 
   const units = unitsData?.data || []

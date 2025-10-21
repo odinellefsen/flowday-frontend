@@ -29,7 +29,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { useCreateTodo } from '@/src/hooks/useQueries'
-import type { CreateTodoRequest } from '@/src/lib/api/client-api'
+import type { CreateTodoRequest } from '@/src/lib/api/types/todos'
 
 // Form validation schema based on API documentation
 const createTodoSchema = z.object({
