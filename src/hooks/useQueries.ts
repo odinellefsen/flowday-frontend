@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys, queryInvalidation } from "@/src/lib/query-client";
-import { createAuthenticatedAPI } from "@/src/lib/api/client-api";
+import { useAuthenticatedAPI } from "@/src/lib/api/client-api";
 import type {
   TodayTodosResponse,
   CreateTodoRequest,
@@ -14,7 +14,7 @@ import type {
  * Hook to fetch today's todos for the authenticated user
  */
 export function useTodayTodos() {
-  const api = createAuthenticatedAPI();
+  const api = useAuthenticatedAPI();
 
   return useQuery<TodayTodosResponse>({
     queryKey: queryKeys.todos.today(),
@@ -35,7 +35,7 @@ export function useTodayTodos() {
  */
 export function useCreateTodo() {
   const queryClient = useQueryClient();
-  const api = createAuthenticatedAPI();
+  const api = useAuthenticatedAPI();
 
   return useMutation({
     mutationFn: async (todoData: CreateTodoRequest): Promise<CreateTodoResponse> => {
@@ -60,7 +60,7 @@ export function useCreateTodo() {
  */
 export function useUpdateTodo() {
   const queryClient = useQueryClient();
-  const api = createAuthenticatedAPI();
+  const api = useAuthenticatedAPI();
 
   return useMutation({
     mutationFn: async ({
@@ -92,7 +92,7 @@ export function useUpdateTodo() {
  */
 export function useDeleteTodo() {
   const queryClient = useQueryClient();
-  const api = createAuthenticatedAPI();
+  const api = useAuthenticatedAPI();
 
   return useMutation({
     mutationFn: async (todoId: string): Promise<void> => {

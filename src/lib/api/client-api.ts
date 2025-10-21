@@ -173,7 +173,7 @@ export const clientAPI = {
  * Hook factory for authenticated API calls
  * This creates the authenticated versions of the API functions
  */
-export function createAuthenticatedAPI() {
+export function useAuthenticatedAPI() {
   const { getToken } = useAuth()
 
   return {
