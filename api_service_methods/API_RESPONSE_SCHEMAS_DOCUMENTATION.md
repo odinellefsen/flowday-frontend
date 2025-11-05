@@ -227,8 +227,10 @@ All API endpoints return responses in a standardized format:
   success: true,
   message: "Batch habits created successfully",
   data: {
-    domain: string,
-    subEntityCount: number
+    domain: string, // e.g., "meal"
+    userConfiguredCount: number, // Number of subEntities user explicitly configured
+    autoAddedCount: number, // Number of subEntities automatically added by the system
+    totalSubEntityCount: number // Total subEntities (userConfigured + autoAdded)
   }
 }
 ```
@@ -528,7 +530,7 @@ All API endpoints return responses in a standardized format:
 
 ### POST /api/meal/ - Create Meal
 
-**Success Response (200):**
+**Success Response (201):**
 
 ```typescript
 {
@@ -537,105 +539,9 @@ All API endpoints return responses in a standardized format:
   data: {
     meal: {
       id: string, // UUID
-      userId: string,
-      mealName: string,
-      scheduledToBeEatenAt?: string, // ISO datetime
-      hasMealBeenConsumed: boolean,
-      recipes: Array<{
-        recipeId: string, // UUID
-        recipeName: string,
-        recipeDescription: string,
-        recipeVersion: number
-      }>
+      mealName: string
     },
-    instructions: {
-      mealId: string, // UUID
-      stepByStepInstructions: Array<{
-        id: string, // UUID
-        recipeId?: string, // UUID
-        originalRecipeInstructionId?: string, // UUID
-        isStepCompleted: boolean,
-        instructionNumber: number,
-        stepInstruction: string,
-        estimatedDurationMinutes?: number,
-        assignedToDate?: string, // YYYY-MM-DD
-        foodItemUnitsUsedInStep?: Array<{
-          foodItemUnitId: string, // UUID
-          foodItemId: string, // UUID
-          quantityOfFoodItemUnit: number
-        }>
-      }>
-    },
-    ingredients: {
-      mealId: string, // UUID
-      ingredients: Array<{
-        id: string, // UUID
-        recipeId: string, // UUID
-        ingredientText: string
-      }>
-    }
-  }
-}
-```
-
-### DELETE /api/meal/ - Delete Meal
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal archived successfully",
-  data: {
-    id: string, // UUID
-    userId: string,
-    mealName: string,
-    scheduledToBeEatenAt?: string, // ISO datetime
-    hasMealBeenConsumed: boolean,
-    recipes: Array<{
-      recipeId: string, // UUID
-      recipeName: string,
-      recipeDescription: string,
-      recipeVersion: number
-    }>,
-    reasonForArchiving: string
-  }
-}
-```
-
-### GET /api/meal/week - List Weekly Meals
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Weekly meal plan retrieved successfully",
-  data: {
-    weekPlan: Array<{
-      date: string, // YYYY-MM-DD or "unscheduled"
-      dayName: string,
-      meals: Array<{
-        mealId: string, // UUID
-        mealName: string,
-        scheduledToBeEatenAt?: string, // ISO datetime
-        hasMealBeenConsumed: boolean,
-        recipes: Array<{
-          recipeName: string,
-          recipeVersion: number
-        }>,
-        canStartPrep?: string | null // ISO datetime
-      }>,
-      totalMeals: number,
-      completedMeals: number,
-      totalCookingSteps: number,
-      completedCookingSteps: number
-    }>,
-    summary: {
-      totalMeals: number,
-      completedMeals: number,
-      daysWithMeals: number
-    }
+    message: "Meal created. Use POST /api/meal/:mealId/recipes to attach recipes."
   }
 }
 ```
@@ -651,14 +557,7 @@ All API endpoints return responses in a standardized format:
   data: Array<{
     id: string, // UUID
     mealName: string,
-    scheduledToBeEatenAt?: string, // ISO datetime
-    hasMealBeenConsumed: boolean,
-    recipes: Array<{
-      recipeId: string, // UUID
-      recipeName: string,
-      recipeDescription: string,
-      recipeVersion: number
-    }>
+    recipeCount: number // Number of recipes attached to the meal
   }>
 }
 ```
@@ -674,277 +573,68 @@ All API endpoints return responses in a standardized format:
   data: {
     id: string, // UUID
     mealName: string,
-    scheduledToBeEatenAt?: string, // ISO datetime
-    hasMealBeenConsumed: boolean,
     recipes: Array<{
+      recipeId: string, // UUID
+      orderInMeal: number
+    }>,
+    instructions: Array<{
+      recipeId: string, // UUID
+      instruction: string,
+      instructionNumber: number
+    }>,
+    ingredients: Array<{
+      recipeId: string, // UUID
+      ingredientText: string
+    }>,
+  }
+}
+```
+
+### POST /api/meal/:mealId/recipes - Attach Recipe(s) to Meal
+
+**Success Response (201):**
+
+```typescript
+{
+  success: true,
+  message: "{count} recipe(s) attached to meal successfully",
+  data: {
+    mealRecipe: {
+      mealId: string, // UUID
+      recipes: Array<{
+        recipeId: string, // UUID
+        orderInMeal: number // Position in the meal's recipe list
+      }>
+    }
+  }
+}
+```
+
+**Notes:**
+
+- The message dynamically adjusts based on the number of recipes attached
+  (singular vs. plural)
+- All recipes are attached in a single transaction with sequential ordering
+- Each recipe captures the current version at the time of attachment
+
+### GET /api/meal/:mealId/recipes - List Meal Recipes
+
+**Success Response (200):**
+
+```typescript
+{
+  success: true,
+  message: "Meal recipes retrieved successfully",
+  data: {
+    mealId: string, // UUID
+    recipes: Array<{
+      mealRecipeId: string, // UUID - junction table ID
       recipeId: string, // UUID
       recipeName: string,
       recipeDescription: string,
-      recipeVersion: number
-    }>,
-    steps: Array<{
-      id: string, // UUID
-      recipeId?: string, // UUID
-      originalRecipeInstructionId?: string, // UUID
-      instruction: string,
-      instructionNumber: number,
-      estimatedDurationMinutes?: number,
-      foodItemUnitsUsedInStep?: Array<{
-        foodItemUnitId: string, // UUID
-        foodItemId: string, // UUID
-        quantityOfFoodItemUnit: number
-      }> | null
-    }>,
-    progress: {
-      completed: number,
-      total: number,
-      percentage: number
-    },
-    estimatedTimeRemaining: number
-  }
-}
-```
-
-### GET /api/meal/:mealId/progress/:date - Get Meal Progress for Date
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Progress for meal on {date}",
-  data: {
-    // Progress data structure from meal-progress service
-    mealId: string, // UUID
-    progress: {
-      percentComplete: number,
-      nextInstruction?: any,
-      estimatedTimeRemaining?: number
-    }
-  }
-}
-```
-
-### GET /api/meal/progress/:date - Get All Meals Progress for Date
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Progress for all meals on {date}",
-  data: {
-    date: string, // YYYY-MM-DD
-    meals: Array<{
-      mealId: string, // UUID
-      progress: {
-        percentComplete: number,
-        nextInstruction?: any,
-        estimatedTimeRemaining?: number
-      }
-    }>,
-    summary: {
-      totalMeals: number,
-      completedMeals: number,
-      inProgressMeals: number,
-      notStartedMeals: number
-    }
-  }
-}
-```
-
-### GET /api/meal/progress/today - Get Today's Meal Progress
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Progress for today's meals",
-  data: {
-    date: string, // YYYY-MM-DD
-    meals: Array<{
-      mealId: string, // UUID
-      progress: {
-        percentComplete: number,
-        nextInstruction?: any,
-        estimatedTimeRemaining?: number
-      }
-    }>,
-    summary: {
-      totalMeals: number,
-      completedMeals: number,
-      inProgressMeals: number,
-      nextTasks: Array<{
-        mealId: string, // UUID
-        nextInstruction: any,
-        estimatedTimeRemaining?: number
-      }>
-    }
-  }
-}
-```
-
-### POST /api/meal/ingredients - Create Meal Ingredients
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal ingredients created successfully",
-  data: {
-    mealId: string, // UUID
-    ingredients: Array<{
-      id: string, // UUID
-      ingredientText: string
+      currentVersion: number, // Current version of the recipe
+      orderInMeal: number,
     }>
-  }
-}
-```
-
-### DELETE /api/meal/ingredients - Delete Meal Ingredients
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal ingredients archived successfully",
-  data: {
-    mealId: string, // UUID
-    ingredients: Array<{
-      id: string, // UUID
-      recipeId?: string, // UUID
-      ingredientText: string
-    }>,
-    reasonForArchiving: string
-  }
-}
-```
-
-### PATCH /api/meal/ingredients - Update Meal Ingredients
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal ingredients updated successfully",
-  data: {
-    mealId: string, // UUID
-    ingredients: Array<{
-      id: string, // UUID
-      recipeId: string, // UUID
-      ingredientText: string
-    }>,
-    oldValues: {
-      mealId: string, // UUID
-      ingredients: Array<{
-        id: string, // UUID
-        recipeId?: string, // UUID
-        ingredientText: string
-      }>
-    }
-  }
-}
-```
-
-### POST /api/meal/instructions - Create Meal Instructions
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal instructions created successfully",
-  data: {
-    mealId: string, // UUID
-    stepByStepInstructions: Array<{
-      id: string, // UUID
-      stepInstruction: string,
-      foodItemUnitsUsedInStep?: Array<{
-        foodItemUnitId: string, // UUID
-        foodItemId: string, // UUID
-        quantityOfFoodItemUnit: number
-      }>,
-      isStepCompleted: boolean,
-      instructionNumber: number
-    }>
-  }
-}
-```
-
-### DELETE /api/meal/instructions - Delete Meal Instructions
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal instructions archived successfully",
-  data: {
-    mealId: string, // UUID
-    stepByStepInstructions: Array<{
-      id: string, // UUID
-      recipeId?: string, // UUID
-      originalRecipeInstructionId?: string, // UUID
-      isStepCompleted: boolean,
-      instructionNumber: number,
-      stepInstruction: string,
-      estimatedDurationMinutes?: number,
-      foodItemUnitsUsedInStep?: Array<{
-        foodItemUnitId: string, // UUID
-        foodItemId: string, // UUID
-        quantityOfFoodItemUnit: number
-      }>
-    }>,
-    reasonForArchiving: string
-  }
-}
-```
-
-### PATCH /api/meal/instructions - Update Meal Instructions
-
-**Success Response (200):**
-
-```typescript
-{
-  success: true,
-  message: "Meal instructions updated successfully",
-  data: {
-    mealId: string, // UUID
-    stepByStepInstructions: Array<{
-      id: string, // UUID
-      recipeId: string, // UUID
-      originalRecipeInstructionId: string, // UUID
-      isStepCompleted: boolean,
-      instructionNumber: number,
-      stepInstruction: string,
-      estimatedDurationMinutes?: number,
-      foodItemUnitsUsedInStep?: Array<{
-        foodItemUnitId: string, // UUID
-        foodItemId: string, // UUID
-        quantityOfFoodItemUnit: number
-      }>
-    }>,
-    oldValues: {
-      mealId: string, // UUID
-      stepByStepInstructions: Array<{
-        id: string, // UUID
-        recipeId?: string, // UUID
-        originalRecipeInstructionId?: string, // UUID
-        isStepCompleted: boolean,
-        instructionNumber: number,
-        stepInstruction: string,
-        estimatedDurationMinutes?: number,
-        foodItemUnitsUsedInStep?: Array<{
-          foodItemUnitId: string, // UUID
-          foodItemId: string, // UUID
-          quantityOfFoodItemUnit: number
-        }>
-      }>
-    }
   }
 }
 ```
