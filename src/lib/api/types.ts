@@ -14,3 +14,4 @@ export interface ApiResponse<T = unknown> {
 export * from './types/todos'
 export * from './types/food-items'
 export * from './types/recipes'
+export * from './types/meals'

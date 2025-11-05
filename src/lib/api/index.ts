@@ -10,14 +10,17 @@ export * from './types'
 export * from './todos'
 export * from './food-items'
 export * from './recipes'
+export * from './meals'
 
 // Re-export for convenience with namespacing
 export { todosAPI } from './todos'
 export { foodItemsAPI } from './food-items'
 export { recipesAPI } from './recipes'
+export { mealsAPI } from './meals'
 
 // Re-export authenticated hooks
 export { useAuthenticatedTodosAPI } from './todos'
 export { useAuthenticatedFoodItemsAPI } from './food-items'
 export { useAuthenticatedRecipesAPI } from './recipes'
+export { useAuthenticatedMealsAPI } from './meals'
 
