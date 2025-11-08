@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, use } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { use } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -14,13 +14,15 @@ import {
   ChefHat,
   List, 
   BookOpen,
-  Utensils
+  Utensils,
+  RefreshCw
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
 import type { MealWithDetails } from '@/src/lib/api/types/meals'
 import { toast } from 'sonner'
+import { CreateMealHabitForm } from '@/components/create-meal-habit-form'
 
 interface PageProps {
   params: Promise<{
@@ -361,7 +363,7 @@ export default function MealDetailPage({ params }: PageProps) {
           
           {/* Meal Content Tabs */}
           <Tabs defaultValue="ingredients" className="animate-fade-in">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="ingredients" className="flex items-center gap-2">
                 <Utensils className="h-4 w-4" />
                 Ingredients
@@ -369,6 +371,10 @@ export default function MealDetailPage({ params }: PageProps) {
               <TabsTrigger value="instructions" className="flex items-center gap-2">
                 <BookOpen className="h-4 w-4" />
                 Instructions
+              </TabsTrigger>
+              <TabsTrigger value="habit" className="flex items-center gap-2">
+                <RefreshCw className="h-4 w-4" />
+                Habit
               </TabsTrigger>
             </TabsList>
             
@@ -378,6 +384,10 @@ export default function MealDetailPage({ params }: PageProps) {
             
             <TabsContent value="instructions" className="mt-6">
               <InstructionsSection meal={meal} />
+            </TabsContent>
+            
+            <TabsContent value="habit" className="mt-6">
+              <CreateMealHabitForm meal={meal} />
             </TabsContent>
           </Tabs>
         </div>

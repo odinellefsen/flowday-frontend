@@ -14,6 +14,7 @@ export interface MealRecipe {
 }
 
 export interface MealInstruction {
+  id?: string // Instruction UUID (mealStepId) - needed for habits
   recipeId: string
   instruction: string
   instructionNumber: number
