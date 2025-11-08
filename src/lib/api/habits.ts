@@ -35,7 +35,8 @@ export const habitsAPI = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+      console.error('Habit creation error:', errorData)
+      throw new Error(errorData.message || errorData.error || `HTTP error! status: ${response.status}`)
     }
 
     return response.json()

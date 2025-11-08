@@ -12,7 +12,7 @@ export type Weekday =
   | "sunday"
 
 export interface HabitSubEntity {
-  subEntityId: string
+  subEntityId?: string // Optional - if omitted, triggers auto-configuration
   scheduledWeekday: Weekday
   scheduledTime?: string // HH:MM format (optional)
 }
@@ -25,7 +25,7 @@ export interface CreateHabitBatchRequest {
   targetWeekday: Weekday // Main event day
   targetTime?: string // Main event time (HH:MM, optional)
   startDate: string // When to start (YYYY-MM-DD)
-  subEntities?: HabitSubEntity[] // Recipe instructions to schedule
+  subEntities: HabitSubEntity[] // Recipe instructions to schedule (empty array = auto-add all with defaults)
 }
 
 // Response types

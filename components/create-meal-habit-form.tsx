@@ -144,6 +144,14 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
   })
 
   const onSubmit = (values: FormValues) => {
+    // Calculate default prep time (30 min before main event)
+    const targetTime = values.targetTime || '18:00'
+    const [hours, minutes] = targetTime.split(':').map(Number)
+    const prepMinutes = minutes - 30
+    const prepHours = prepMinutes < 0 ? hours - 1 : hours
+    const adjustedMinutes = prepMinutes < 0 ? prepMinutes + 60 : prepMinutes
+    const defaultPrepTime = `${String(prepHours).padStart(2, '0')}:${String(adjustedMinutes).padStart(2, '0')}`
+
     const habitData: CreateHabitBatchRequest = {
       domain: 'meal',
       entityId: meal.id,
@@ -151,14 +159,18 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
       targetWeekday: values.targetWeekday,
       targetTime: values.targetTime,
       startDate: values.startDate,
+      // Backend requires at least 1 element, so provide a default entry that will trigger auto-configuration
+      subEntities: [{
+        scheduledWeekday: values.targetWeekday,
+        scheduledTime: defaultPrepTime,
+      }],
     }
 
     // Add custom instruction schedules if customization is enabled
     if (values.customizeInstructions && instructionSchedules.length > 0) {
-      habitData.subEntities = instructionSchedules
+      const customSchedules = instructionSchedules
         .filter((schedule) => {
           // Only include instructions that have valid UUIDs
-          // If no ID, backend will auto-add them with default scheduling
           const instruction = meal.instructions.find(
             (inst) => inst.id === schedule.instructionId || 
                      `${inst.recipeId}-${inst.instructionNumber}` === schedule.instructionId
@@ -170,8 +182,14 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
           scheduledWeekday: schedule.scheduledWeekday,
           scheduledTime: schedule.scheduledTime,
         }))
+      
+      // If we have valid custom schedules, use them; otherwise keep the default
+      if (customSchedules.length > 0) {
+        habitData.subEntities = customSchedules
+      }
     }
 
+    console.log('Submitting habit data:', habitData)
     createHabitMutation.mutate(habitData)
   }
 
