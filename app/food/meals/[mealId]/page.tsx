@@ -20,7 +20,6 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
 import type { MealWithDetails } from '@/src/lib/api/types/meals'
-import { AttachRecipesForm } from '@/components/attach-recipes-form'
 import { toast } from 'sonner'
 
 interface PageProps {
@@ -67,7 +66,6 @@ function MealHeader({ meal }: { meal: MealWithDetails }) {
 
 function RecipesSection({ meal }: { meal: MealWithDetails }) {
   const router = useRouter()
-  const [showAttachForm, setShowAttachForm] = useState(false)
 
   return (
     <Card>
@@ -77,17 +75,10 @@ function RecipesSection({ meal }: { meal: MealWithDetails }) {
             <ChefHat className="h-5 w-5" />
             Recipes in this Meal
           </CardTitle>
-          <AttachRecipesForm
-            mealId={meal.id}
-            mealName={meal.mealName}
-            open={showAttachForm}
-            onOpenChange={setShowAttachForm}
-          >
-            <Button size="sm" variant="outline">
-              <Plus className="h-4 w-4 mr-2" />
-              Attach Recipe
-            </Button>
-          </AttachRecipesForm>
+          <Button size="sm" variant="outline" onClick={() => toast.info('Attach recipes feature coming soon!')}>
+            <Plus className="h-4 w-4 mr-2" />
+            Attach Recipe
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
@@ -98,17 +89,10 @@ function RecipesSection({ meal }: { meal: MealWithDetails }) {
             <p className="text-muted-foreground mb-4">
               Attach recipes to this meal to build your meal plan.
             </p>
-            <AttachRecipesForm
-              mealId={meal.id}
-              mealName={meal.mealName}
-              open={showAttachForm}
-              onOpenChange={setShowAttachForm}
-            >
-              <Button variant="outline">
-                <Plus className="h-4 w-4 mr-2" />
-                Attach Your First Recipe
-              </Button>
-            </AttachRecipesForm>
+            <Button variant="outline" onClick={() => toast.info('Attach recipes feature coming soon!')}>
+              <Plus className="h-4 w-4 mr-2" />
+              Attach Your First Recipe
+            </Button>
           </div>
         ) : (
           <div className="space-y-2">
