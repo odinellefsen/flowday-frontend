@@ -1,6 +1,6 @@
 'use client'
 
-import { use } from 'react'
+import { useState, use } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -21,6 +21,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
 import type { MealWithDetails } from '@/src/lib/api/types/meals'
+import { AttachRecipesForm } from '@/components/attach-recipes-form'
 import { toast } from 'sonner'
 import { CreateMealHabitForm } from '@/components/create-meal-habit-form'
 
@@ -68,6 +69,7 @@ function MealHeader({ meal }: { meal: MealWithDetails }) {
 
 function RecipesSection({ meal }: { meal: MealWithDetails }) {
   const router = useRouter()
+  const [showAttachForm, setShowAttachForm] = useState(false)
 
   return (
     <Card>
@@ -77,10 +79,17 @@ function RecipesSection({ meal }: { meal: MealWithDetails }) {
             <ChefHat className="h-5 w-5" />
             Recipes in this Meal
           </CardTitle>
-          <Button size="sm" variant="outline" onClick={() => toast.info('Attach recipes feature coming soon!')}>
-            <Plus className="h-4 w-4 mr-2" />
-            Attach Recipe
-          </Button>
+          <AttachRecipesForm
+            mealId={meal.id}
+            mealName={meal.mealName}
+            open={showAttachForm}
+            onOpenChange={setShowAttachForm}
+          >
+            <Button size="sm" variant="outline">
+              <Plus className="h-4 w-4 mr-2" />
+              Attach Recipe
+            </Button>
+          </AttachRecipesForm>
         </div>
       </CardHeader>
       <CardContent>
@@ -91,10 +100,17 @@ function RecipesSection({ meal }: { meal: MealWithDetails }) {
             <p className="text-muted-foreground mb-4">
               Attach recipes to this meal to build your meal plan.
             </p>
-            <Button variant="outline" onClick={() => toast.info('Attach recipes feature coming soon!')}>
-              <Plus className="h-4 w-4 mr-2" />
-              Attach Your First Recipe
-            </Button>
+            <AttachRecipesForm
+              mealId={meal.id}
+              mealName={meal.mealName}
+              open={showAttachForm}
+              onOpenChange={setShowAttachForm}
+            >
+              <Button variant="outline">
+                <Plus className="h-4 w-4 mr-2" />
+                Attach Your First Recipe
+              </Button>
+            </AttachRecipesForm>
           </div>
         ) : (
           <div className="space-y-2">
