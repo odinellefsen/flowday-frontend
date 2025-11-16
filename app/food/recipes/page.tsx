@@ -22,7 +22,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
-      return apiClient.delete(recipe.nameOfTheRecipe)
+      return apiClient.delete(recipe.id)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] })

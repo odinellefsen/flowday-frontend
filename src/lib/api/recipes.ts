@@ -89,14 +89,14 @@ export const recipesAPI = {
   /**
    * Delete a recipe by name
    */
-  delete: async (token: string | null, nameOfTheRecipe: string): Promise<ApiResponse<unknown>> => {
+  delete: async (token: string | null, recipeId: string): Promise<ApiResponse<unknown>> => {
     const response = await fetch(`${BASE_URL}/api/recipe`, {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` }),
       },
-      body: JSON.stringify({ nameOfTheRecipe }),
+      body: JSON.stringify({ recipeId }),
     })
 
     if (!response.ok) {
