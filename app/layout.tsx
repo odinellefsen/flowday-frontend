@@ -3,6 +3,8 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 import { QueryProvider } from '@/components/providers/query-provider'
 import { Toaster } from '@/components/ui/sonner'
+import { PWARegister } from '@/components/pwa-register'
+import { InstallPrompt } from '@/components/install-prompt'
 import "./globals.css";
 
 const geistSans = Geist({
@@ -18,6 +20,34 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Flowday - Daily Task Scheduler",
   description: "Manage your daily tasks, meals, and habits with Flowday - your personal productivity companion.",
+  manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.svg",
+    apple: "/icon-192.png",
+  },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Flowday",
+  },
+  formatDetection: {
+    telephone: false,
+  },
+  openGraph: {
+    type: "website",
+    siteName: "Flowday",
+    title: "Flowday - Daily Task Scheduler",
+    description: "Manage your daily tasks, meals, and habits with Flowday - your personal productivity companion.",
+  },
+  twitter: {
+    card: "summary",
+    title: "Flowday - Daily Task Scheduler",
+    description: "Manage your daily tasks, meals, and habits with Flowday - your personal productivity companion.",
+  },
+};
+
+export const viewport = {
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -28,12 +58,21 @@ export default function RootLayout({
   return (
     <ClerkProvider>
       <html lang="en">
+        <head>
+          <link rel="apple-touch-icon" href="/icon-192.png" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+          <meta name="mobile-web-app-capable" content="yes" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0, viewport-fit=cover" />
+        </head>
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <QueryProvider>
             {children}
             <Toaster />
+            <PWARegister />
+            <InstallPrompt />
           </QueryProvider>
         </body>
       </html>

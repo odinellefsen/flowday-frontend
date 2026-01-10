@@ -6,7 +6,9 @@
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:pwa": "next build --turbopack && npm run start",
+    "test:pwa": "npm run build && npm run start"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.33.0",
