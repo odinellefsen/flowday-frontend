@@ -13,6 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
+import { ThemeToggle } from '@/components/theme-toggle'
 
 export default function Home() {
   const { isSignedIn, isLoaded, signOut } = useAuth()
@@ -65,6 +66,7 @@ export default function Home() {
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold">Flowday</h1>
           <div className="flex items-center gap-2 sm:gap-4">
+            <ThemeToggle />
             {isSignedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

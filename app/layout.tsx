@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
+import { ThemeProvider } from "@/components/providers/theme-provider"
 import { QueryProvider } from '@/components/providers/query-provider'
 import { Toaster } from '@/components/ui/sonner'
 import { PWARegister } from '@/components/pwa-register'
@@ -57,7 +58,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html lang="en" suppressHydrationWarning>
         <head>
           <link rel="apple-touch-icon" href="/icon-192.png" />
           <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -68,12 +69,14 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <QueryProvider>
-            {children}
-            <Toaster />
-            <PWARegister />
-            <InstallPrompt />
-          </QueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <QueryProvider>
+              {children}
+              <Toaster />
+              <PWARegister />
+              <InstallPrompt />
+            </QueryProvider>
+          </ThemeProvider>
         </body>
       </html>
     </ClerkProvider>
