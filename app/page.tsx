@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect, useRef, useState } from 'react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { SignInButton, SignUpButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
@@ -22,8 +23,60 @@ export default function Home() {
   const { isSignedIn, isLoaded, signOut } = useAuth()
   const { theme, setTheme } = useTheme()
   const { user } = useUser()
+  const pullStartYRef = useRef<number | null>(null)
+  const shouldRefreshRef = useRef(false)
+  const [isRefreshing, setIsRefreshing] = useState(false)
   const displayName =
     user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0] || 'Account'
+
+  useEffect(() => {
+    if (isSignedIn) {
+      return
+    }
+
+    const threshold = 80
+    const handleTouchStart = (event: TouchEvent) => {
+      const scrollTop =
+        document.scrollingElement?.scrollTop ?? window.scrollY
+      if (scrollTop > 0) {
+        return
+      }
+      pullStartYRef.current = event.touches[0]?.clientY ?? null
+      shouldRefreshRef.current = false
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (pullStartYRef.current === null) {
+        return
+      }
+      const currentY = event.touches[0]?.clientY ?? 0
+      const deltaY = currentY - pullStartYRef.current
+      if (deltaY > threshold) {
+        shouldRefreshRef.current = true
+      } else {
+        shouldRefreshRef.current = false
+      }
+    }
+
+    const handleTouchEnd = () => {
+      if (shouldRefreshRef.current) {
+        setIsRefreshing(true)
+        window.location.reload()
+      }
+      pullStartYRef.current = null
+      shouldRefreshRef.current = false
+    }
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: true })
+    document.addEventListener('touchmove', handleTouchMove, { passive: true })
+    document.addEventListener('touchend', handleTouchEnd, { passive: true })
+
+    return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
+      document.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [isSignedIn])
 
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
@@ -65,6 +118,13 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-background">
+      {!isSignedIn && isRefreshing && (
+        <div className="pointer-events-none fixed left-0 right-0 top-0 z-50 flex justify-center">
+          <div className="mt-2 rounded-full border bg-card px-4 py-1 text-xs text-muted-foreground shadow-sm">
+            Refreshing...
+          </div>
+        </div>
+      )}
       <div className="container mx-auto px-4 py-6 max-w-2xl">
         {/* Header */}
         <header className="flex justify-between items-center mb-8">
