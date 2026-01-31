@@ -13,7 +13,9 @@ import type {
   UpdateTodoRequest,
 } from './types/todos'
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3030'
+import { getApiBaseUrl } from '@/src/lib/api/base-url'
+
+const BASE_URL = getApiBaseUrl()
 
 /**
  * Raw API functions that accept a token parameter
