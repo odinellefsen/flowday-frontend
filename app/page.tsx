@@ -1,13 +1,24 @@
 'use client'
 
 import { useAuth, useUser } from '@clerk/nextjs'
-import { SignInButton, SignUpButton, UserButton } from '@/components/auth'
+import { SignInButton, SignUpButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Home() {
-  const { isSignedIn, isLoaded } = useAuth()
+  const { isSignedIn, isLoaded, signOut } = useAuth()
   const { user } = useUser()
+  const displayName =
+    user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0] || 'Account'
 
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
@@ -55,12 +66,25 @@ export default function Home() {
           <h1 className="text-2xl sm:text-3xl font-bold">Flowday</h1>
           <div className="flex items-center gap-2 sm:gap-4">
             {isSignedIn ? (
-              <div className="flex items-center gap-2 sm:gap-3">
-                <span className="text-xs sm:text-sm text-muted-foreground hidden sm:block">
-                  {user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0]}
-                </span>
-                <UserButton />
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="px-2">
+                    <span className="text-xs sm:text-sm text-muted-foreground">
+                      {displayName}
+                    </span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuLabel>{displayName}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem
+                    className="cursor-pointer"
+                    onClick={() => signOut()}
+                  >
+                    Sign out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <div className="flex gap-2">
                 <SignInButton />
