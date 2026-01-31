@@ -98,48 +98,8 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
   )
 }
 
-function TodoListSkeleton() {
-  return (
-    <div className="space-y-3">
-      {[...Array(5)].map((_, i) => (
-        <Card key={i}>
-          <CardContent className="p-4">
-            <div className="flex items-start justify-between gap-3">
-              <div className="flex-1 space-y-2">
-                <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-3 w-2/3" />
-              </div>
-              <div className="space-y-2">
-                <Skeleton className="h-6 w-16" />
-                <Skeleton className="h-3 w-12" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
-    </div>
-  )
-}
-
 export function TodoList() {
-  const { data, isLoading, error } = useTodayTodos()
-
-  if (isLoading) {
-    return (
-      <div className="space-y-6">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              Today&apos;s Tasks
-            </CardTitle>
-            <CardDescription>Loading your tasks for today...</CardDescription>
-          </CardHeader>
-        </Card>
-        <TodoListSkeleton />
-      </div>
-    )
-  }
+  const { data, error } = useTodayTodos()
 
   if (error) {
     return (
@@ -158,58 +118,9 @@ export function TodoList() {
   }
 
   const todos = data?.todos || []
-  const counts = data?.counts || { total: 0, completed: 0, remaining: 0, overdue: 0 }
 
   return (
     <div className="space-y-6 animate-fade-in">
-      {/* Summary Card */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
-              <CardTitle>Today&apos;s Tasks</CardTitle>
-            </div>
-            <div className="hidden sm:block">
-              <CreateTodoForm>
-                <Button size="sm" variant="outline">
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add Task
-                </Button>
-              </CreateTodoForm>
-            </div>
-          </div>
-          <CardDescription>
-            {counts.remaining > 0 
-              ? `${counts.remaining} of ${counts.total} tasks remaining`
-              : counts.total > 0 
-                ? `All ${counts.total} tasks completed! 🎉`
-                : 'No tasks scheduled for today'
-            }
-          </CardDescription>
-        </CardHeader>
-        {counts.total > 0 && (
-          <CardContent>
-            <div className="flex flex-wrap gap-2">
-              <Badge variant="outline" className="text-xs">
-                Total: {counts.total}
-              </Badge>
-              <Badge variant="default" className="text-xs">
-                Completed: {counts.completed}
-              </Badge>
-              <Badge variant="secondary" className="text-xs">
-                Remaining: {counts.remaining}
-              </Badge>
-              {counts.overdue > 0 && (
-                <Badge variant="destructive" className="text-xs">
-                  Overdue: {counts.overdue}
-                </Badge>
-              )}
-            </div>
-          </CardContent>
-        )}
-      </Card>
-
       {/* Todo Items */}
       {todos.length > 0 ? (
         <div className="space-y-3">
