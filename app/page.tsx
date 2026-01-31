@@ -3,20 +3,24 @@
 import { useAuth, useUser } from '@clerk/nextjs'
 import { SignInButton, SignUpButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
+import { Monitor, Moon, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ThemeToggle } from '@/components/theme-toggle'
+import { useTheme } from 'next-themes'
 
 export default function Home() {
   const { isSignedIn, isLoaded, signOut } = useAuth()
+  const { theme, setTheme } = useTheme()
   const { user } = useUser()
   const displayName =
     user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0] || 'Account'
@@ -66,7 +70,6 @@ export default function Home() {
         <header className="flex justify-between items-center mb-8">
           <h1 className="text-2xl sm:text-3xl font-bold">Flowday</h1>
           <div className="flex items-center gap-2 sm:gap-4">
-            <ThemeToggle />
             {isSignedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -78,6 +81,27 @@ export default function Home() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuLabel>{displayName}</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+                    Theme
+                  </DropdownMenuLabel>
+                  <DropdownMenuRadioGroup
+                    value={theme ?? 'system'}
+                    onValueChange={setTheme}
+                  >
+                    <DropdownMenuRadioItem value="light" className="cursor-pointer">
+                      <Sun className="h-4 w-4" />
+                      Light
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="dark" className="cursor-pointer">
+                      <Moon className="h-4 w-4" />
+                      Dark
+                    </DropdownMenuRadioItem>
+                    <DropdownMenuRadioItem value="system" className="cursor-pointer">
+                      <Monitor className="h-4 w-4" />
+                      System
+                    </DropdownMenuRadioItem>
+                  </DropdownMenuRadioGroup>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
                     className="cursor-pointer"
