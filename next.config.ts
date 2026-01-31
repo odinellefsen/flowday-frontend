@@ -10,6 +10,17 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: __dirname,
   },
+  allowedDevOrigins: [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "localhost",
+    "127.0.0.1",
+    "192.168.178.88",
+    "http://192.168.178.88:3000",
+    "http://192.168.178.88",
+    "https://192.168.178.88",
+    "https://192.168.178.88:3000",
+  ],
   // PWA configuration
   headers: async () => {
     return [
