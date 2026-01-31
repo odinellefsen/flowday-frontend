@@ -89,20 +89,6 @@ export default function Home() {
                 </p>
               </div>
 
-              <div className="bg-card rounded-lg border p-6 sm:p-8 space-y-4">
-                <h3 className="text-xl sm:text-2xl font-semibold">
-                  Start your next clear day
-                </h3>
-                <p className="text-muted-foreground">
-                  Create a free account to build a day plan that fits your energy,
-                  priorities, and pace.
-                </p>
-                <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pt-2">
-                  <SignInButton />
-                  <SignUpButton />
-                </div>
-              </div>
-
               <div className="grid gap-4 sm:grid-cols-3 text-left">
                 <div className="rounded-lg border bg-card p-4">
                   <h4 className="font-semibold">Flow first</h4>
