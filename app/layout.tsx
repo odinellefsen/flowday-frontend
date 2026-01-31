@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import { ClerkProvider } from '@clerk/nextjs'
 import { ThemeProvider } from "@/components/providers/theme-provider"
 import { QueryProvider } from '@/components/providers/query-provider'
+import { PullToRefresh } from "@/components/pull-to-refresh"
 import { Toaster } from '@/components/ui/sonner'
 import { PWARegister } from '@/components/pwa-register'
 import { InstallPrompt } from '@/components/install-prompt'
@@ -71,6 +72,7 @@ export default function RootLayout({
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
             <QueryProvider>
+              <PullToRefresh />
               {children}
               <Toaster />
               <PWARegister />
