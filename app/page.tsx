@@ -75,31 +75,53 @@ export default function Home() {
           {isSignedIn ? (
             <TodoList />
           ) : (
-            <div className="text-center space-y-6">
+            <div className="text-center space-y-8">
               <div className="space-y-4">
-                <h2 className="text-3xl sm:text-4xl font-bold">
-                  Welcome to Flowday
+                <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                  A gentle rhythm for your day
+                </p>
+                <h2 className="text-3xl sm:text-5xl font-bold">
+                  Flowday turns busy into balanced
                 </h2>
-                <p className="text-lg text-muted-foreground">
-                  Your personal daily task scheduler
+                <p className="text-base sm:text-lg text-muted-foreground">
+                  Plan tasks, meals, and routines in one calm space. Keep focus without
+                  the noise.
                 </p>
               </div>
-              
+
               <div className="bg-card rounded-lg border p-6 sm:p-8 space-y-4">
-                <h3 className="text-xl sm:text-2xl font-semibold">Get Started</h3>
+                <h3 className="text-xl sm:text-2xl font-semibold">
+                  Start your next clear day
+                </h3>
                 <p className="text-muted-foreground">
-                  Sign in to access your personalized task dashboard and start organizing your day
+                  Create a free account to build a day plan that fits your energy,
+                  priorities, and pace.
                 </p>
                 <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 pt-2">
                   <SignInButton />
                   <SignUpButton />
                 </div>
               </div>
-              
-              <div className="text-sm text-muted-foreground space-y-2">
-                <p>Manage your daily tasks</p>
-                <p>Track meal preparation</p>
-                <p>Stay organized with smart scheduling</p>
+
+              <div className="grid gap-4 sm:grid-cols-3 text-left">
+                <div className="rounded-lg border bg-card p-4">
+                  <h4 className="font-semibold">Flow first</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Capture tasks fast, then shape a realistic flow for the day.
+                  </p>
+                </div>
+                <div className="rounded-lg border bg-card p-4">
+                  <h4 className="font-semibold">Meals included</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Tie prep and recipes to your schedule so food feels effortless.
+                  </p>
+                </div>
+                <div className="rounded-lg border bg-card p-4">
+                  <h4 className="font-semibold">Habit gentle</h4>
+                  <p className="text-sm text-muted-foreground">
+                    Small routines, steady progress, and space to breathe.
+                  </p>
+                </div>
               </div>
             </div>
           )}
