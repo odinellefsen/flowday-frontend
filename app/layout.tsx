@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Flowday - Daily Task Scheduler",
+  title: "Flowday",
   description: "Manage your daily tasks, meals, and habits with Flowday - your personal productivity companion.",
   manifest: "/manifest.json",
   icons: {
