@@ -379,7 +379,7 @@ export default function MealDetailPage({ params }: PageProps) {
           
           {/* Meal Content Tabs */}
           <Tabs defaultValue="ingredients" className="animate-fade-in">
-            <TabsList className="grid w-full grid-cols-3">
+            <TabsList className="grid w-full grid-cols-3 h-auto overflow-hidden">
               <TabsTrigger value="ingredients" className="flex items-center gap-2">
                 <Utensils className="h-4 w-4" />
                 Ingredients
