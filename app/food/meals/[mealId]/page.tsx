@@ -133,17 +133,14 @@ function RecipesSection({
                   onClick={() => router.push(`/food/recipes/${recipe.recipeId}`)}
                 >
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="flex-shrink-0 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-semibold">
-                        {recipe.orderInMeal}
-                      </div>
-                      <div>
-                        <span className="font-medium">{recipeDisplayName}</span>
-                        <p className="text-xs text-muted-foreground">
-                          Order {recipe.orderInMeal} • Click to view recipe details
-                        </p>
-                      </div>
+                  <div className="flex items-center gap-3">
+                    <div>
+                      <span className="font-medium">Recipe {recipe.orderInMeal}</span>
+                      <p className="text-xs text-muted-foreground">
+                        {recipeDisplayName} • Click to view recipe details
+                      </p>
                     </div>
+                  </div>
                     <ChefHat className="h-4 w-4 text-muted-foreground" />
                   </div>
                 </div>
