@@ -119,12 +119,13 @@ function RecipesSection({
           </div>
         ) : (
           <div className="space-y-2">
-            {meal.recipes.map((recipe) => {
+            {meal.recipes.map((recipe, index) => {
               const recipeDisplayName =
                 recipe.recipeName ??
                 recipe.nameOfTheRecipe ??
                 recipeNameById?.get(recipe.recipeId) ??
                 `Recipe ${recipe.orderInMeal}`
+              const recipeNumber = index + 1
 
               return (
                 <div 
@@ -135,7 +136,7 @@ function RecipesSection({
                   <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div>
-                      <span className="font-medium">Recipe {recipe.orderInMeal}</span>
+                      <span className="font-medium">Recipe {recipeNumber}</span>
                       <p className="text-xs text-muted-foreground">
                         {recipeDisplayName} • Click to view recipe details
                       </p>
