@@ -136,9 +136,9 @@ function RecipesSection({
                   <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div>
-                      <span className="font-medium">Recipe {recipeNumber}</span>
+                      <span className="font-medium">{recipeDisplayName}</span>
                       <p className="text-xs text-muted-foreground">
-                        {recipeDisplayName} • Click to view recipe details
+                        Recipe {recipeNumber} • Click to view recipe details
                       </p>
                     </div>
                   </div>
