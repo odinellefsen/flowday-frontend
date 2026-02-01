@@ -376,7 +376,7 @@ export default function RecipeDetailPage({ params }: PageProps) {
           
           {/* Recipe Content Tabs */}
           <Tabs defaultValue="ingredients" className="animate-fade-in">
-            <TabsList className="grid w-full grid-cols-2">
+            <TabsList className="grid w-full grid-cols-2 h-auto overflow-hidden">
               <TabsTrigger value="ingredients" className="flex items-center gap-2">
                 <Utensils className="h-4 w-4" />
                 Ingredients
