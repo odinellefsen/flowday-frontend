@@ -11,6 +11,8 @@ export interface Meal {
 export interface MealRecipe {
   recipeId: string
   orderInMeal: number
+  recipeName?: string
+  nameOfTheRecipe?: string
 }
 
 export interface MealInstruction {

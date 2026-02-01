@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, use } from 'react'
+import { useMemo, useState, use } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -19,10 +19,9 @@ import {
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
+import { useAuthenticatedMealsAPI, useAuthenticatedRecipesAPI } from '@/src/lib/api'
 import type { MealWithDetails } from '@/src/lib/api/types/meals'
 import { AttachRecipesForm } from '@/components/attach-recipes-form'
-import { toast } from 'sonner'
 import { CreateMealHabitForm } from '@/components/create-meal-habit-form'
 
 interface PageProps {
@@ -67,7 +66,13 @@ function MealHeader({ meal }: { meal: MealWithDetails }) {
   )
 }
 
-function RecipesSection({ meal }: { meal: MealWithDetails }) {
+function RecipesSection({
+  meal,
+  recipeNameById,
+}: {
+  meal: MealWithDetails
+  recipeNameById?: Map<string, string>
+}) {
   const router = useRouter()
   const [showAttachForm, setShowAttachForm] = useState(false)
 
@@ -114,26 +119,36 @@ function RecipesSection({ meal }: { meal: MealWithDetails }) {
           </div>
         ) : (
           <div className="space-y-2">
-            {meal.recipes.map((recipe) => (
-              <div 
-                key={recipe.recipeId}
-                className="p-4 bg-muted/30 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
-                onClick={() => router.push(`/food/recipes/${recipe.recipeId}`)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="flex-shrink-0 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-semibold">
-                      {recipe.orderInMeal}
+            {meal.recipes.map((recipe) => {
+              const recipeDisplayName =
+                recipe.recipeName ??
+                recipe.nameOfTheRecipe ??
+                recipeNameById?.get(recipe.recipeId) ??
+                `Recipe ${recipe.orderInMeal}`
+
+              return (
+                <div 
+                  key={recipe.recipeId}
+                  className="p-4 bg-muted/30 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+                  onClick={() => router.push(`/food/recipes/${recipe.recipeId}`)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="flex-shrink-0 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-semibold">
+                        {recipe.orderInMeal}
+                      </div>
+                      <div>
+                        <span className="font-medium">{recipeDisplayName}</span>
+                        <p className="text-xs text-muted-foreground">
+                          Order {recipe.orderInMeal} • Click to view recipe details
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <span className="font-medium">Recipe {recipe.orderInMeal}</span>
-                      <p className="text-xs text-muted-foreground">Click to view recipe details</p>
-                    </div>
+                    <ChefHat className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  <ChefHat className="h-4 w-4 text-muted-foreground" />
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         )}
       </CardContent>
@@ -290,6 +305,7 @@ function MealDetailSkeleton() {
 
 export default function MealDetailPage({ params }: PageProps) {
   const apiClient = useAuthenticatedMealsAPI()
+  const recipesApiClient = useAuthenticatedRecipesAPI()
   
   // Unwrap the params Promise
   const { mealId } = use(params)
@@ -298,8 +314,22 @@ export default function MealDetailPage({ params }: PageProps) {
     queryKey: ['meal', mealId],
     queryFn: () => apiClient.get(mealId),
   })
+  const { data: recipesData } = useQuery({
+    queryKey: ['recipes'],
+    queryFn: () => recipesApiClient.list(),
+  })
 
   const meal = mealData?.data
+  const recipeNameById = useMemo(() => {
+    if (!recipesData?.data) {
+      return undefined
+    }
+    const map = new Map<string, string>()
+    recipesData.data.forEach((recipe) => {
+      map.set(recipe.id, recipe.nameOfTheRecipe)
+    })
+    return map
+  }, [recipesData])
   
   if (isLoading) {
     return (
@@ -375,7 +405,7 @@ export default function MealDetailPage({ params }: PageProps) {
           <MealHeader meal={meal} />
           
           {/* Recipes Section */}
-          <RecipesSection meal={meal} />
+          <RecipesSection meal={meal} recipeNameById={recipeNameById} />
           
           {/* Meal Content Tabs */}
           <Tabs defaultValue="ingredients" className="animate-fade-in">
