@@ -77,7 +77,7 @@ function RecipesSection({ meal }: { meal: MealWithDetails }) {
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
             <ChefHat className="h-5 w-5" />
-            Recipes in this Meal
+            Recipes in this meal
           </CardTitle>
           <AttachRecipesForm
             mealId={meal.id}
