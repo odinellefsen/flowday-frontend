@@ -148,13 +148,6 @@ export default function FoodPage() {
             </Card>
           ))}
         </div>
-
-        {/* Footer Info */}
-        <div className="mt-12 text-center">
-          <p className="text-sm text-muted-foreground">
-            More food management features coming soon! 🍽️
-          </p>
-        </div>
       </div>
     </div>
   )

@@ -277,8 +277,8 @@ export default function FoodItemsPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
-        <header className="space-y-4 mb-8">
-          <div className="flex items-center justify-between">
+        <header className="space-y-5 mb-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <Link href="/food">
                 <Button variant="ghost" size="sm" className="p-2">
@@ -293,8 +293,8 @@ export default function FoodItemsPage() {
                 </h1>
               </div>
             </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm" disabled>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <Button variant="outline" size="sm" className="w-full sm:w-auto" disabled>
                 <Search className="h-4 w-4 mr-2" />
                 Search
               </Button>
@@ -302,7 +302,7 @@ export default function FoodItemsPage() {
                 open={showCreateForm} 
                 onOpenChange={setShowCreateForm}
               >
-                <Button size="sm">
+                <Button size="sm" className="w-full sm:w-auto">
                   <Plus className="h-4 w-4 mr-2" />
                   Add Item
                 </Button>
@@ -311,7 +311,7 @@ export default function FoodItemsPage() {
           </div>
 
           {/* Breadcrumb Navigation */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem>
@@ -351,7 +351,7 @@ export default function FoodItemsPage() {
             </Breadcrumb>
             
             {currentPath.length > 0 && (
-              <Button variant="ghost" size="sm" onClick={navigateUp}>
+              <Button variant="ghost" size="sm" onClick={navigateUp} className="w-fit">
                 <ArrowLeft className="h-3 w-3 mr-1" />
                 Back
               </Button>
