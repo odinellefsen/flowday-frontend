@@ -294,10 +294,6 @@ export default function FoodItemsPage() {
               </div>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-              <Button variant="outline" size="sm" className="w-full sm:w-auto" disabled>
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
               <CreateFoodItemForm 
                 open={showCreateForm} 
                 onOpenChange={setShowCreateForm}
