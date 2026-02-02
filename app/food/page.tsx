@@ -1,6 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { 
@@ -9,7 +9,6 @@ import {
   UtensilsCrossed, 
   ArrowLeft,
   ArrowRight,
-  Sparkles
 } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
@@ -89,20 +88,6 @@ export default function FoodPage() {
             </div>
           </div>
         </header>
-
-        {/* Welcome Card */}
-        <Card className="mb-8 animate-fade-in">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5" />
-              Welcome to Food Management
-            </CardTitle>
-            <CardDescription>
-              Choose a section below to start managing your food-related activities. 
-              Track nutrition, create recipes, and plan your meals all in one place.
-            </CardDescription>
-          </CardHeader>
-        </Card>
 
         {/* Food Sections */}
         <div className="space-y-4 animate-fade-in">
