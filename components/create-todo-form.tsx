@@ -204,15 +204,6 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
 
             <DialogFooter className="flex-col sm:flex-row gap-2">
               <Button
-                type="button"
-                variant="outline"
-                onClick={() => setOpen(false)}
-                disabled={createTodoMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                Cancel
-              </Button>
-              <Button
                 type="submit"
                 disabled={createTodoMutation.isPending}
                 className="w-full sm:w-auto"
