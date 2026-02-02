@@ -14,7 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Apple, ArrowLeft, Plus, Search, MoreHorizontal, Trash2, Folder, FolderOpen, ChevronRight } from 'lucide-react'
+import { Apple, ArrowLeft, Plus, MoreHorizontal, Trash2, Folder, FolderOpen, ChevronRight } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'

@@ -209,9 +209,6 @@ export default function RecipesPage() {
                 <ChefHat className="h-6 w-6 text-primary" />
                 Recipes
               </h1>
-              <p className="text-sm text-muted-foreground">
-                Create and manage recipes with ingredients and instructions
-              </p>
             </div>
           </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">

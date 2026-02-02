@@ -1,18 +1,17 @@
 'use client'
 
 import { useState } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { UtensilsCrossed, ArrowLeft, Plus, Calendar, ChefHat } from 'lucide-react'
+import { UtensilsCrossed, ArrowLeft, Plus, ChefHat } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
 import { CreateMealForm } from '@/components/create-meal-form'
 import { type Meal } from '@/src/lib/api/types/meals'
-import { toast } from 'sonner'
 
 function MealCard({ meal }: { meal: Meal }) {
   const router = useRouter()
@@ -107,9 +106,6 @@ export default function MealsPage() {
                   <UtensilsCrossed className="h-6 w-6 text-primary" />
                   Meals
                 </h1>
-                <p className="text-sm text-muted-foreground">
-                  Plan meals by combining recipes and track preparation
-                </p>
               </div>
             </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
