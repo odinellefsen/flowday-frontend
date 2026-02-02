@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -132,6 +132,18 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     // Always schedule for today - let the user decide if they want tomorrow
     form.setValue('scheduledFor', formatDateTimeLocal(scheduledDate))
   }
+
+  useEffect(() => {
+    if (!open) return
+    const currentValue = form.getValues('scheduledFor')
+    if (!currentValue) {
+      form.setValue('scheduledFor', formatDateTimeLocal(new Date()), {
+        shouldDirty: false,
+        shouldTouch: false,
+        shouldValidate: false,
+      })
+    }
+  }, [open, form])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
