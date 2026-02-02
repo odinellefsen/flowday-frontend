@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -57,6 +57,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
       scheduledFor: '', // Use empty string to keep input controlled
     },
   })
+  const scheduledInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleCreateTodo = async (data: CreateTodoFormData) => {
     // Convert datetime-local format to ISO string if scheduledFor is provided
@@ -142,29 +143,29 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
       <DialogTrigger asChild>
         {children}
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto animate-scale-in">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Plus className="h-5 w-5" />
-            Create New Task
+      <DialogContent className="w-[calc(100%-2rem)] sm:max-w-[480px] max-h-[90vh] overflow-y-auto animate-scale-in rounded-2xl p-5 sm:p-6">
+        <DialogHeader className="space-y-1">
+          <DialogTitle className="flex items-center gap-2 text-lg">
+            <Plus className="h-4 w-4" />
+            New task
           </DialogTitle>
-          <DialogDescription>
-            Add a new task to your daily schedule. You can set a specific time or leave it unscheduled.
+          <DialogDescription className="text-sm">
+            Add a task for today or set a time.
           </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Task Description</FormLabel>
+                  <FormLabel className="text-sm font-medium">Task</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="What do you need to do?"
-                      className="min-h-[80px] resize-none"
+                      className="min-h-[72px] resize-none"
                       {...field}
                     />
                   </FormControl>
@@ -181,32 +182,56 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
               name="scheduledFor"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Schedule (Optional)</FormLabel>
+                  <FormLabel className="text-sm font-medium">Schedule</FormLabel>
                   <FormControl>
-                    <div className="space-y-3">
+                    <div className="space-y-2">
                       <Input
                         type="datetime-local"
                         {...field}
-                        className="w-full"
+                        ref={(node) => {
+                          scheduledInputRef.current = node
+                          field.ref(node)
+                        }}
+                        className="sr-only"
                       />
+                      <Button
+                        type="button"
+                        variant="outline"
+                        className="w-full justify-between text-left"
+                        onClick={() => {
+                          if (!scheduledInputRef.current) return
+                          if (typeof scheduledInputRef.current.showPicker === 'function') {
+                            scheduledInputRef.current.showPicker()
+                          } else {
+                            scheduledInputRef.current.click()
+                            scheduledInputRef.current.focus()
+                          }
+                        }}
+                      >
+                        <span>
+                          {field.value
+                            ? new Date(field.value).toLocaleString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: '2-digit',
+                              })
+                            : 'Choose date & time (optional)'}
+                        </span>
+                        <span className="text-xs text-muted-foreground">Edit</span>
+                      </Button>
                     </div>
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
-                    {field.value ? 
-                      `Scheduled for ${new Date(field.value).toLocaleString()}` : 
-                      'Leave empty to create an unscheduled task'
-                    }
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <DialogFooter className="flex-col sm:flex-row gap-2">
+            <DialogFooter className="flex-col gap-2 pt-2">
               <Button
                 type="submit"
                 disabled={createTodoMutation.isPending}
-                className="w-full sm:w-auto"
+                className="w-full"
               >
                 {createTodoMutation.isPending ? (
                   <>
