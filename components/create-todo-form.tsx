@@ -149,9 +149,6 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
             <Plus className="h-4 w-4" />
             New task
           </DialogTitle>
-          <DialogDescription className="text-sm">
-            Add a task for today or set a time.
-          </DialogDescription>
         </DialogHeader>
 
         <Form {...form}>
@@ -185,19 +182,8 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
                   <FormLabel className="text-sm font-medium">Schedule</FormLabel>
                   <FormControl>
                     <div className="space-y-2">
-                      <Input
-                        type="datetime-local"
-                        {...field}
-                        ref={(node) => {
-                          scheduledInputRef.current = node
-                          field.ref(node)
-                        }}
-                        className="sr-only"
-                      />
-                      <Button
-                        type="button"
-                        variant="outline"
-                        className="w-full justify-between text-left"
+                      <div
+                        className="relative"
                         onClick={() => {
                           if (!scheduledInputRef.current) return
                           if (typeof scheduledInputRef.current.showPicker === 'function') {
@@ -208,18 +194,28 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
                           }
                         }}
                       >
-                        <span>
-                          {field.value
-                            ? new Date(field.value).toLocaleString(undefined, {
-                                month: 'short',
-                                day: 'numeric',
-                                hour: 'numeric',
-                                minute: '2-digit',
-                              })
-                            : 'Choose date & time (optional)'}
-                        </span>
-                        <span className="text-xs text-muted-foreground">Edit</span>
-                      </Button>
+                        <div className="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 text-sm shadow-sm transition-colors hover:bg-accent">
+                          <span>
+                            {field.value
+                              ? new Date(field.value).toLocaleString(undefined, {
+                                  month: 'short',
+                                  day: 'numeric',
+                                  hour: 'numeric',
+                                  minute: '2-digit',
+                                })
+                              : 'Choose date & time (optional)'}
+                          </span>
+                        </div>
+                        <Input
+                          type="datetime-local"
+                          {...field}
+                          ref={(node) => {
+                            scheduledInputRef.current = node
+                            field.ref(node)
+                          }}
+                          className="absolute inset-0 h-full w-full cursor-pointer opacity-0"
+                        />
+                      </div>
                     </div>
                   </FormControl>
                   <FormMessage />
