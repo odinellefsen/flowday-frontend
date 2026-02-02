@@ -93,34 +93,36 @@ export default function MealsPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
-        <header className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
-            <Link href="/food">
-              <Button variant="ghost" size="sm" className="p-2">
-                <ArrowLeft className="h-4 w-4" />
-                <span className="sr-only">Back to food domain</span>
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-                <UtensilsCrossed className="h-6 w-6 text-primary" />
-                Meals
-              </h1>
-              <p className="text-sm text-muted-foreground">
-                Plan meals by combining recipes and track preparation
-              </p>
+        <header className="space-y-5 mb-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
+              <Link href="/food">
+                <Button variant="ghost" size="sm" className="p-2">
+                  <ArrowLeft className="h-4 w-4" />
+                  <span className="sr-only">Back to food domain</span>
+                </Button>
+              </Link>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+                  <UtensilsCrossed className="h-6 w-6 text-primary" />
+                  Meals
+                </h1>
+                <p className="text-sm text-muted-foreground">
+                  Plan meals by combining recipes and track preparation
+                </p>
+              </div>
             </div>
-          </div>
-          <div className="flex gap-2">
-            <CreateMealForm 
-              open={showCreateForm} 
-              onOpenChange={setShowCreateForm}
-            >
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                Plan Meal
-              </Button>
-            </CreateMealForm>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <CreateMealForm 
+                open={showCreateForm} 
+                onOpenChange={setShowCreateForm}
+              >
+                <Button size="sm" className="w-full sm:w-auto">
+                  <Plus className="h-4 w-4 mr-2" />
+                  Plan Meal
+                </Button>
+              </CreateMealForm>
+            </div>
           </div>
         </header>
 

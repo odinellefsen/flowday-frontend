@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ChefHat, ArrowLeft, Plus, Search, MoreHorizontal, Trash2, Edit, Clock, Users } from 'lucide-react'
+import { ChefHat, ArrowLeft, Plus, MoreHorizontal, Trash2, Edit, Clock, Users } from 'lucide-react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
@@ -195,8 +195,9 @@ export default function RecipesPage() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
-        <header className="flex items-center justify-between mb-8">
-          <div className="flex items-center gap-3">
+        <header className="space-y-5 mb-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex items-center gap-3">
             <Link href="/food">
               <Button variant="ghost" size="sm" className="p-2">
                 <ArrowLeft className="h-4 w-4" />
@@ -213,20 +214,17 @@ export default function RecipesPage() {
               </p>
             </div>
           </div>
-          <div className="flex gap-2">
-            <Button variant="outline" size="sm" disabled>
-              <Search className="h-4 w-4 mr-2" />
-              Search
-            </Button>
-            <CreateRecipeForm 
-              open={showCreateForm} 
-              onOpenChange={setShowCreateForm}
-            >
-              <Button size="sm">
-                <Plus className="h-4 w-4 mr-2" />
-                New Recipe
-              </Button>
-            </CreateRecipeForm>
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <CreateRecipeForm 
+                open={showCreateForm} 
+                onOpenChange={setShowCreateForm}
+              >
+                <Button size="sm" className="w-full sm:w-auto">
+                  <Plus className="h-4 w-4 mr-2" />
+                  New Recipe
+                </Button>
+              </CreateRecipeForm>
+            </div>
           </div>
         </header>
 
