@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Clock, Plus, X } from 'lucide-react'
+import { Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -125,14 +125,6 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
     return `${year}-${month}-${day}T${hours}:${minutes}`
   }
 
-  const setQuickTime = (hours: number, minutes: number = 0) => {
-    const scheduledDate = new Date()
-    scheduledDate.setHours(hours, minutes, 0, 0)
-    
-    // Always schedule for today - let the user decide if they want tomorrow
-    form.setValue('scheduledFor', formatDateTimeLocal(scheduledDate))
-  }
-
   useEffect(() => {
     if (!open) return
     const currentValue = form.getValues('scheduledFor')
@@ -197,65 +189,6 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
                         {...field}
                         className="w-full"
                       />
-                      
-                      {/* Quick time buttons */}
-                      <div className="space-y-2">
-                        <p className="text-xs text-muted-foreground">Quick schedule:</p>
-                        <div className="flex flex-wrap gap-2">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQuickTime(9, 0)}
-                            className="text-xs"
-                          >
-                            <Clock className="h-3 w-3 mr-1" />
-                            9:00 AM
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQuickTime(12, 0)}
-                            className="text-xs"
-                          >
-                            <Clock className="h-3 w-3 mr-1" />
-                            12:00 PM
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQuickTime(15, 0)}
-                            className="text-xs"
-                          >
-                            <Clock className="h-3 w-3 mr-1" />
-                            3:00 PM
-                          </Button>
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setQuickTime(18, 0)}
-                            className="text-xs"
-                          >
-                            <Clock className="h-3 w-3 mr-1" />
-                            6:00 PM
-                          </Button>
-                          {field.value && (
-                            <Button
-                              type="button"
-                              variant="ghost"
-                              size="sm"
-                              onClick={() => form.setValue('scheduledFor', '')}
-                              className="text-xs text-muted-foreground hover:text-foreground"
-                            >
-                              <X className="h-3 w-3 mr-1" />
-                              Clear
-                            </Button>
-                          )}
-                        </div>
-                      </div>
                     </div>
                   </FormControl>
                   <FormDescription className="text-xs text-muted-foreground">
