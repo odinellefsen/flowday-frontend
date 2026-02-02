@@ -11,7 +11,6 @@ import { Button } from '@/components/ui/button'
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -147,7 +146,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
         <DialogHeader className="space-y-1">
           <DialogTitle className="flex items-center gap-2 text-lg">
             <Plus className="h-4 w-4" />
-            New task
+            Add a todo
           </DialogTitle>
         </DialogHeader>
 

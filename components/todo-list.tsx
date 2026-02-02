@@ -3,25 +3,24 @@
 import { useTodayTodos } from '@/src/hooks/useQueries'
 import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3 } from 'lucide-react'
 import { CreateTodoForm } from './create-todo-form'
 import { DomainDrawer } from './domain-drawer'
 
 function TodoItemCard({ todo }: { todo: TodoItem }) {
-  const getUrgencyColor = (urgency: TodoItem['urgency']) => {
+  const getUrgencyStyles = (urgency: TodoItem['urgency']) => {
     switch (urgency) {
       case 'overdue':
-        return 'destructive'
+        return 'border-destructive/30 bg-destructive/10 text-destructive'
       case 'now':
-        return 'default'
+        return 'border-primary/30 bg-primary/10 text-primary'
       case 'upcoming':
-        return 'secondary'
+        return 'border-amber-500/30 bg-amber-500/10 text-amber-700'
       case 'later':
-        return 'outline'
+        return 'border-muted bg-muted text-muted-foreground'
       default:
-        return 'outline'
+        return 'border-muted bg-muted text-muted-foreground'
     }
   }
 
@@ -78,12 +77,14 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
           </div>
           
           <div className="flex flex-col items-end gap-2">
-            <Badge variant={getUrgencyColor(todo.urgency)} className="text-xs">
-              <span className="flex items-center gap-1">
-                {getUrgencyIcon(todo.urgency)}
-                {todo.urgency}
-              </span>
-            </Badge>
+            <div
+              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${getUrgencyStyles(
+                todo.urgency
+              )}`}
+            >
+              {getUrgencyIcon(todo.urgency)}
+              <span>{todo.urgency}</span>
+            </div>
             
             {todo.context.estimatedDuration && (
               <span className="text-xs text-muted-foreground">
