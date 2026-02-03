@@ -165,9 +165,6 @@ export function TodoList() {
                 ) : (
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
                     <div className="flex items-center gap-2 sm:flex-1">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
-                        <Plus className="h-4 w-4" />
-                      </div>
                       <Input
                         ref={quickInputRef}
                         value={quickDescription}
