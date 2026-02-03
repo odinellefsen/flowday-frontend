@@ -176,9 +176,14 @@ export function TodoList() {
                   </button>
                 ) : (
                   <div className="flex items-center gap-2">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
+                    <button
+                      type="submit"
+                      disabled={createTodoMutation.isPending || !quickDescription.trim()}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-primary/40 bg-primary/10 text-primary shadow-sm transition active:scale-95 disabled:opacity-50"
+                      aria-label="Add quick task"
+                    >
                       <Check className="h-4 w-4" />
-                    </div>
+                    </button>
                     <Input
                       ref={quickInputRef}
                       value={quickDescription}
