@@ -6,7 +6,7 @@ import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3 } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3, X } from 'lucide-react'
 import { CreateTodoForm } from './create-todo-form'
 import { DomainDrawer } from './domain-drawer'
 
@@ -176,14 +176,29 @@ export function TodoList() {
                         className="h-9"
                       />
                     </div>
-                    <Button
-                      type="submit"
-                      size="sm"
-                      className="h-9"
-                      disabled={createTodoMutation.isPending || !quickDescription.trim()}
-                    >
-                      Add
-                    </Button>
+                    <div className="flex gap-2">
+                      <Button
+                        type="submit"
+                        size="sm"
+                        className="h-9"
+                        disabled={createTodoMutation.isPending || !quickDescription.trim()}
+                      >
+                        Add
+                      </Button>
+                      <Button
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        className="h-9 w-9 p-0"
+                        onClick={() => {
+                          setQuickDescription('')
+                          setShowQuickInput(false)
+                        }}
+                        aria-label="Cancel quick add"
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
                 )}
               </CardContent>
