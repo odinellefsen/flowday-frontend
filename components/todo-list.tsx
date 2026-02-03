@@ -127,6 +127,21 @@ export function TodoList() {
           {todos.map((todo) => (
             <TodoItemCard key={todo.id} todo={todo} />
           ))}
+          <CreateTodoForm defaultScheduledForNow={false}>
+            <Card className="cursor-pointer border-dashed hover:border-primary/50 hover:bg-accent/30 transition-colors">
+              <CardContent className="p-4">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
+                    <Plus className="h-4 w-4" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-medium">Quick add task</p>
+                    <p className="text-xs text-muted-foreground">No schedule</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </CreateTodoForm>
         </div>
       ) : (
         <Card>
