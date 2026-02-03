@@ -43,9 +43,13 @@ type CreateTodoFormData = z.infer<typeof createTodoSchema>
 
 interface CreateTodoFormProps {
   children: React.ReactNode
+  defaultScheduledForNow?: boolean
 }
 
-export function CreateTodoForm({ children }: CreateTodoFormProps) {
+export function CreateTodoForm({
+  children,
+  defaultScheduledForNow = true,
+}: CreateTodoFormProps) {
   const [open, setOpen] = useState(false)
   const createTodoMutation = useCreateTodo()
 
@@ -127,6 +131,7 @@ export function CreateTodoForm({ children }: CreateTodoFormProps) {
 
   useEffect(() => {
     if (!open) return
+    if (!defaultScheduledForNow) return
     const currentValue = form.getValues('scheduledFor')
     if (!currentValue) {
       form.setValue('scheduledFor', formatDateTimeLocal(new Date()), {
