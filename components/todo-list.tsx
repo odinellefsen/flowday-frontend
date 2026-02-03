@@ -144,7 +144,7 @@ export function TodoList() {
           ))}
           <form onSubmit={handleQuickAdd}>
             <Card className="border-dashed">
-              <CardContent className="p-3">
+              <CardContent className="p-3 min-h-[72px]">
                 {!showQuickInput ? (
                   <button
                     type="button"
@@ -163,41 +163,31 @@ export function TodoList() {
                     </div>
                   </button>
                 ) : (
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                    <div className="flex items-center gap-2 sm:flex-1">
-                      <Input
-                        ref={quickInputRef}
-                        value={quickDescription}
-                        onChange={(event) => setQuickDescription(event.target.value)}
-                        placeholder="Quick add task"
-                        className="h-9"
-                      />
+                  <div className="flex items-center gap-2">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
+                      <Check className="h-4 w-4" />
                     </div>
-                    <div className="flex gap-1.5">
-                      <Button
-                        type="submit"
-                        size="icon"
-                        variant="secondary"
-                        className="h-9 w-9 rounded-full"
-                        disabled={createTodoMutation.isPending || !quickDescription.trim()}
-                      >
-                        <Check className="h-4 w-4" />
-                        <span className="sr-only">Add</span>
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9 rounded-full"
-                        onClick={() => {
-                          setQuickDescription('')
-                          setShowQuickInput(false)
-                        }}
-                      >
-                        <X className="h-4 w-4" />
-                        <span className="sr-only">Cancel</span>
-                      </Button>
-                    </div>
+                    <Input
+                      ref={quickInputRef}
+                      value={quickDescription}
+                      onChange={(event) => setQuickDescription(event.target.value)}
+                      placeholder="Quick add task"
+                      className="h-9 flex-1"
+                      disabled={createTodoMutation.isPending}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon"
+                      className="h-9 w-9 rounded-full"
+                      onClick={() => {
+                        setQuickDescription('')
+                        setShowQuickInput(false)
+                      }}
+                    >
+                      <X className="h-4 w-4" />
+                      <span className="sr-only">Cancel</span>
+                    </Button>
                   </div>
                 )}
               </CardContent>
