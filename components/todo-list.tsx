@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
 import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -104,6 +104,8 @@ export function TodoList() {
   const { data, error } = useTodayTodos()
   const createTodoMutation = useCreateTodo()
   const [quickDescription, setQuickDescription] = useState('')
+  const [showQuickInput, setShowQuickInput] = useState(false)
+  const quickInputRef = useRef<HTMLInputElement | null>(null)
 
   const handleQuickAdd = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -111,6 +113,7 @@ export function TodoList() {
     if (!trimmed) return
     await createTodoMutation.mutateAsync({ description: trimmed })
     setQuickDescription('')
+    setShowQuickInput(false)
   }
 
   if (error) {
@@ -142,27 +145,47 @@ export function TodoList() {
           <form onSubmit={handleQuickAdd}>
             <Card className="border-dashed">
               <CardContent className="p-3">
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                  <div className="flex items-center gap-2 sm:flex-1">
+                {!showQuickInput ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowQuickInput(true)
+                      requestAnimationFrame(() => quickInputRef.current?.focus())
+                    }}
+                    className="flex w-full items-center gap-3 text-left"
+                  >
                     <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
                       <Plus className="h-4 w-4" />
                     </div>
-                    <Input
-                      value={quickDescription}
-                      onChange={(event) => setQuickDescription(event.target.value)}
-                      placeholder="Quick add task"
+                    <div>
+                      <p className="text-sm font-medium">Quick add task</p>
+                      <p className="text-xs text-muted-foreground">Tap to type</p>
+                    </div>
+                  </button>
+                ) : (
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                    <div className="flex items-center gap-2 sm:flex-1">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
+                        <Plus className="h-4 w-4" />
+                      </div>
+                      <Input
+                        ref={quickInputRef}
+                        value={quickDescription}
+                        onChange={(event) => setQuickDescription(event.target.value)}
+                        placeholder="Quick add task"
+                        className="h-9"
+                      />
+                    </div>
+                    <Button
+                      type="submit"
+                      size="sm"
                       className="h-9"
-                    />
+                      disabled={createTodoMutation.isPending || !quickDescription.trim()}
+                    >
+                      Add
+                    </Button>
                   </div>
-                  <Button
-                    type="submit"
-                    size="sm"
-                    className="h-9"
-                    disabled={createTodoMutation.isPending || !quickDescription.trim()}
-                  >
-                    Add
-                  </Button>
-                </div>
+                )}
               </CardContent>
             </Card>
           </form>
