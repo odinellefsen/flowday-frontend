@@ -1,12 +1,12 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
 import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3, X, Check } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3, Check } from 'lucide-react'
 import { CreateTodoForm } from './create-todo-form'
 import { DomainDrawer } from './domain-drawer'
 
@@ -106,6 +106,7 @@ export function TodoList() {
   const [quickDescription, setQuickDescription] = useState('')
   const [showQuickInput, setShowQuickInput] = useState(false)
   const quickInputRef = useRef<HTMLInputElement | null>(null)
+  const quickAddCardRef = useRef<HTMLDivElement | null>(null)
 
   const handleQuickAdd = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -115,6 +116,17 @@ export function TodoList() {
     setQuickDescription('')
     setShowQuickInput(false)
   }
+
+  useEffect(() => {
+    if (!showQuickInput) return
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!quickAddCardRef.current) return
+      if (quickAddCardRef.current.contains(event.target as Node)) return
+      setShowQuickInput(false)
+    }
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => document.removeEventListener('pointerdown', handlePointerDown)
+  }, [showQuickInput])
 
   if (error) {
     return (
@@ -143,7 +155,7 @@ export function TodoList() {
             <TodoItemCard key={todo.id} todo={todo} />
           ))}
           <form onSubmit={handleQuickAdd}>
-            <Card className="border-dashed">
+            <Card className="border-dashed" ref={quickAddCardRef}>
               <CardContent className="p-3 min-h-[72px]">
                 {!showQuickInput ? (
                   <button
@@ -175,19 +187,6 @@ export function TodoList() {
                       className="h-9 flex-1"
                       disabled={createTodoMutation.isPending}
                     />
-                    <Button
-                      type="button"
-                      variant="ghost"
-                      size="icon"
-                      className="h-9 w-9 rounded-full"
-                      onClick={() => {
-                        setQuickDescription('')
-                        setShowQuickInput(false)
-                      }}
-                    >
-                      <X className="h-4 w-4" />
-                      <span className="sr-only">Cancel</span>
-                    </Button>
                   </div>
                 )}
               </CardContent>
