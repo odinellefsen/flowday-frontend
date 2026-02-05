@@ -24,6 +24,11 @@ export default function Home() {
   const { user } = useUser()
   const displayName =
     user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0] || 'Account'
+  const todayLabel = new Date().toLocaleDateString(undefined, {
+    weekday: 'long',
+    month: 'short',
+    day: 'numeric',
+  })
 
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
@@ -64,20 +69,23 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
       <div className="container mx-auto px-4 py-6 max-w-2xl">
         {/* Header */}
-        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground">Flowday</p>
-            <h1 className="text-3xl sm:text-4xl font-semibold">Daily focus</h1>
-            <p className="text-sm text-muted-foreground">Minimal, but never empty.</p>
-          </div>
-          <div className="flex items-center gap-2 sm:gap-4">
+        <header className="mb-6 rounded-2xl border border-border/60 bg-card/70 backdrop-blur-sm p-4 sm:p-5 shadow-sm">
+          <div className="flex items-start justify-between gap-3">
+            <div className="space-y-1">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+                Today
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-semibold leading-tight">Your flow</h1>
+              <p className="text-sm text-muted-foreground">{todayLabel}</p>
+            </div>
+            <div className="flex items-center gap-2 sm:gap-4">
             {isSignedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="px-2">
+                  <Button variant="ghost" className="px-2 rounded-full border border-transparent hover:border-border/60">
                     <span className="text-xs sm:text-sm text-muted-foreground">
                       {displayName}
                     </span>
@@ -121,6 +129,7 @@ export default function Home() {
                 <SignUpButton />
               </div>
             )}
+            </div>
           </div>
         </header>
 
