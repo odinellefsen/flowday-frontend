@@ -6,39 +6,11 @@ import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Clock, CheckCircle2, AlertCircle, Calendar, Plus, Grid3X3, Check } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check } from 'lucide-react'
 import { CreateTodoForm } from './create-todo-form'
 import { DomainDrawer } from './domain-drawer'
 
 function TodoItemCard({ todo }: { todo: TodoItem }) {
-  const getUrgencyStyles = (urgency: TodoItem['urgency']) => {
-    switch (urgency) {
-      case 'overdue':
-        return 'border-destructive/30 bg-destructive/10 text-destructive'
-      case 'now':
-        return 'border-primary/30 bg-primary/10 text-primary'
-      case 'upcoming':
-        return 'border-amber-500/30 bg-amber-500/10 text-amber-700'
-      case 'later':
-        return 'border-muted bg-muted text-muted-foreground'
-      default:
-        return 'border-muted bg-muted text-muted-foreground'
-    }
-  }
-
-  const getUrgencyIcon = (urgency: TodoItem['urgency']) => {
-    switch (urgency) {
-      case 'overdue':
-        return <AlertCircle className="h-4 w-4" />
-      case 'now':
-        return <Clock className="h-4 w-4" />
-      case 'upcoming':
-        return <Calendar className="h-4 w-4" />
-      default:
-        return <Clock className="h-4 w-4" />
-    }
-  }
-
   const formatScheduledTime = (scheduledFor?: string) => {
     if (!scheduledFor) return null
     const date = new Date(scheduledFor)
@@ -78,22 +50,13 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
             )}
           </div>
           
-          <div className="flex flex-col items-end gap-2">
-            <div
-              className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide ${getUrgencyStyles(
-                todo.urgency
-              )}`}
-            >
-              {getUrgencyIcon(todo.urgency)}
-              <span>{todo.urgency}</span>
-            </div>
-            
-            {todo.context.estimatedDuration && (
+          {todo.context.estimatedDuration && (
+            <div className="flex flex-col items-end gap-2">
               <span className="text-xs text-muted-foreground">
                 ~{todo.context.estimatedDuration}min
               </span>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

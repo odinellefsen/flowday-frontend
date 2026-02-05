@@ -68,7 +68,7 @@ export default function Home() {
       <div className="container mx-auto px-4 py-6 max-w-2xl">
         {/* Header */}
         <header className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold">Flowday</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">Your Todos</h1>
           <div className="flex items-center gap-2 sm:gap-4">
             {isSignedIn ? (
               <DropdownMenu>
