@@ -56,7 +56,7 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
               {todo.completed && <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />}
-              <p className={`text-sm font-medium leading-relaxed ${
+              <p className={`text-sm font-medium leading-relaxed break-all whitespace-pre-wrap ${
                 todo.completed ? 'line-through text-muted-foreground' : ''
               }`}>
                 {todo.description}
