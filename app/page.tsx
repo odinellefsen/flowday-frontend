@@ -67,8 +67,12 @@ export default function Home() {
     <div className="min-h-screen bg-background">
       <div className="container mx-auto px-4 py-6 max-w-2xl">
         {/* Header */}
-        <header className="flex justify-between items-center mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold">Your Todos</h1>
+        <header className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="text-xs uppercase tracking-[0.35em] text-muted-foreground">Flowday</p>
+            <h1 className="text-3xl sm:text-4xl font-semibold">Daily focus</h1>
+            <p className="text-sm text-muted-foreground">Minimal, but never empty.</p>
+          </div>
           <div className="flex items-center gap-2 sm:gap-4">
             {isSignedIn ? (
               <DropdownMenu>
