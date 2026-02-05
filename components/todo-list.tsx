@@ -182,7 +182,7 @@ export function TodoList() {
                       className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-primary/40 bg-primary/10 text-primary shadow-sm transition active:scale-95 disabled:opacity-50"
                       aria-label="Add quick task"
                     >
-                      <Check className="h-4 w-4" />
+                      <Check className="h-4 w-4 scale-110" />
                     </button>
                     <Input
                       ref={quickInputRef}
