@@ -130,6 +130,14 @@ export function TodoList() {
     return () => document.removeEventListener('pointerdown', handlePointerDown)
   }, [showQuickInput])
 
+  useEffect(() => {
+    if (!showQuickInput) return
+    const focusId = window.setTimeout(() => {
+      quickInputRef.current?.focus()
+    }, 0)
+    return () => window.clearTimeout(focusId)
+  }, [showQuickInput])
+
   if (error) {
     return (
       <Card>
@@ -190,6 +198,7 @@ export function TodoList() {
                     </button>
                     <Input
                       ref={quickInputRef}
+                      autoFocus
                       value={quickDescription}
                       onChange={(event) => setQuickDescription(event.target.value)}
                       placeholder="Quick add task"
