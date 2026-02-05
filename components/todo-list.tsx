@@ -23,32 +23,32 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
 
   return (
     <Card
-      className={`relative overflow-hidden border-border/60 bg-card/80 shadow-sm transition-all duration-200 hover:border-border hover:bg-card ${
+      className={`relative overflow-hidden border border-white/10 bg-[#151a21] shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-white/20 ${
         todo.completed ? 'opacity-70' : ''
-      } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-primary/40`}
+      } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[#7ed2a7]`}
     >
       <CardContent className="p-4 pl-5 sm:p-5 sm:pl-6">
         <div className="flex items-start justify-between gap-3">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 mb-2">
-              {todo.completed && <CheckCircle2 className="h-4 w-4 text-green-600 flex-shrink-0" />}
+              {todo.completed && <CheckCircle2 className="h-4 w-4 text-[#7ed2a7] flex-shrink-0" />}
               <p className={`text-sm font-medium leading-relaxed break-all whitespace-pre-wrap ${
-                todo.completed ? 'line-through text-muted-foreground' : ''
+                todo.completed ? 'line-through text-white/40' : 'text-white'
               }`}>
                 {todo.description}
               </p>
             </div>
             
             {todo.context.type === 'meal' && todo.context.mealName && (
-              <p className="text-xs text-muted-foreground mb-2">
+              <p className="text-xs text-white/60 mb-2">
                 Meal: {todo.context.mealName}
                 {todo.context.instructionNumber && ` (Step ${todo.context.instructionNumber})`}
               </p>
             )}
             
             {todo.scheduledFor && (
-              <div className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-muted-foreground">
-                <Clock className="h-3 w-3" />
+              <div className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-white/60">
+                <Clock className="h-3 w-3 text-[#f3c969]" />
                 <span>{formatScheduledTime(todo.scheduledFor)}</span>
               </div>
             )}
@@ -56,7 +56,7 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
           
           {todo.context.estimatedDuration && (
             <div className="flex flex-col items-end gap-2">
-              <span className="text-xs text-muted-foreground">
+              <span className="text-xs text-white/60">
                 ~{todo.context.estimatedDuration}min
               </span>
             </div>
@@ -133,7 +133,7 @@ export function TodoList() {
           ))}
           <form onSubmit={handleQuickAdd}>
             <Card
-              className="border-dashed border-border/70 bg-muted/20 hover:border-primary/30 hover:bg-muted/30 transition-colors"
+              className="border-dashed border-white/15 bg-[#151a21] hover:border-[#7ed2a7]/60 transition-colors"
               ref={quickAddCardRef}
             >
               <CardContent className="p-3 min-h-[72px]">
@@ -146,11 +146,11 @@ export function TodoList() {
                     }}
                     className="flex w-full items-center gap-3 text-left"
                   >
-                    <span className={`${quickIconBaseClass} border-muted-foreground/50 text-muted-foreground`}>
+                    <span className={`${quickIconBaseClass} border-white/20 text-white/70`}>
                       <Plus className="h-4 w-4" />
                     </span>
                     <div>
-                      <p className="text-sm font-medium">Add a task</p>
+                      <p className="text-sm font-medium text-white">Add a task</p>
                     </div>
                   </button>
                 ) : (
@@ -161,7 +161,7 @@ export function TodoList() {
                       className="p-0 transition active:scale-95 disabled:opacity-50"
                       aria-label="Add a task"
                     >
-                      <span className={`${quickIconBaseClass} border-primary/40 bg-primary/10 text-primary`}>
+                      <span className={`${quickIconBaseClass} border-[#7ed2a7]/50 bg-[#7ed2a7]/10 text-[#7ed2a7]`}>
                         <Check className="h-4 w-4 scale-110" />
                       </span>
                     </button>
@@ -171,7 +171,7 @@ export function TodoList() {
                       value={quickDescription}
                       onChange={(event) => setQuickDescription(event.target.value)}
                       placeholder="Add a task"
-                      className="h-9 flex-1"
+                      className="h-9 flex-1 border-white/10 bg-[#0f1216] text-white placeholder:text-white/40 focus-visible:ring-[#7ed2a7]/30"
                       disabled={createTodoMutation.isPending}
                     />
                   </div>
@@ -181,18 +181,18 @@ export function TodoList() {
           </form>
         </div>
       ) : (
-        <div className="rounded-2xl border border-border/60 bg-card/70 p-6 sm:p-8 text-center space-y-4 shadow-sm">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border/60 bg-background px-3 py-1 text-xs uppercase tracking-[0.25em] text-muted-foreground">
+        <div className="rounded-2xl border border-white/10 bg-[#151a21] p-6 sm:p-8 text-center space-y-4 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
+          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0f1216] px-3 py-1 text-xs uppercase tracking-[0.25em] text-[#7ed2a7]">
             Fresh day
           </div>
           <div className="space-y-2">
-            <h2 className="text-xl font-semibold">No tasks yet</h2>
-            <p className="text-sm text-muted-foreground">
+            <h2 className="text-xl font-semibold text-white">No tasks yet</h2>
+            <p className="text-sm text-white/60">
               Add one small thing and build from there.
             </p>
           </div>
           <CreateTodoForm>
-            <Button className="mt-2 rounded-full px-5">
+            <Button className="mt-2 rounded-full px-5 bg-[#7ed2a7] text-[#0f1216] hover:bg-[#6bc795]">
               <Plus className="h-4 w-4 mr-2" />
               Create your first task
             </Button>

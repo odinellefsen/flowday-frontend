@@ -69,24 +69,24 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-background to-muted/30">
+    <div className="min-h-screen bg-[#0f1216]">
       <div className="container mx-auto px-4 py-6 max-w-2xl">
         {/* Header */}
-        <header className="mb-6 rounded-2xl border border-border/60 bg-card/70 backdrop-blur-sm p-4 sm:p-5 shadow-sm">
+        <header className="mb-6 rounded-2xl border border-white/10 bg-[#151a21] p-4 sm:p-5 shadow-[0_10px_30px_rgba(0,0,0,0.25)]">
           <div className="flex items-start justify-between gap-3">
             <div className="space-y-1">
-              <p className="text-[11px] uppercase tracking-[0.3em] text-muted-foreground">
+              <p className="text-[11px] uppercase tracking-[0.3em] text-[#7ed2a7]">
                 Today
               </p>
-              <h1 className="text-2xl sm:text-3xl font-semibold leading-tight">Your flow</h1>
-              <p className="text-sm text-muted-foreground">{todayLabel}</p>
+              <h1 className="text-2xl sm:text-3xl font-semibold leading-tight text-white">Your flow</h1>
+              <p className="text-sm text-white/60">{todayLabel}</p>
             </div>
             <div className="flex items-center gap-2 sm:gap-4">
             {isSignedIn ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="px-2 rounded-full border border-transparent hover:border-border/60">
-                    <span className="text-xs sm:text-sm text-muted-foreground">
+                  <Button variant="ghost" className="px-2 rounded-full border border-transparent hover:border-white/15">
+                    <span className="text-xs sm:text-sm text-white/60">
                       {displayName}
                     </span>
                   </Button>
