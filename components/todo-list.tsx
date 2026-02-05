@@ -180,7 +180,7 @@ export function TodoList() {
                       <Plus className="h-4 w-4" />
                     </span>
                     <div>
-                      <p className="text-sm font-medium">Quick add task</p>
+                      <p className="text-sm font-medium">Add a task</p>
                       <p className="text-xs text-muted-foreground">Tap to type</p>
                     </div>
                   </button>
@@ -190,7 +190,7 @@ export function TodoList() {
                       type="submit"
                       disabled={createTodoMutation.isPending || !quickDescription.trim()}
                       className="p-0 transition active:scale-95 disabled:opacity-50"
-                      aria-label="Add quick task"
+                      aria-label="Add a task"
                     >
                       <span className={`${quickIconBaseClass} border-primary/40 bg-primary/10 text-primary`}>
                         <Check className="h-4 w-4 scale-110" />
@@ -201,7 +201,7 @@ export function TodoList() {
                       autoFocus
                       value={quickDescription}
                       onChange={(event) => setQuickDescription(event.target.value)}
-                      placeholder="Quick add task"
+                      placeholder="Add a task"
                       className="h-9 flex-1"
                       disabled={createTodoMutation.isPending}
                     />
