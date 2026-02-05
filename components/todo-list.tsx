@@ -107,6 +107,8 @@ export function TodoList() {
   const [showQuickInput, setShowQuickInput] = useState(false)
   const quickInputRef = useRef<HTMLInputElement | null>(null)
   const quickAddCardRef = useRef<HTMLDivElement | null>(null)
+  const quickIconBaseClass =
+    "flex size-9 items-center justify-center rounded-full border border-dashed shadow-sm box-border"
 
   const handleQuickAdd = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -166,9 +168,9 @@ export function TodoList() {
                     }}
                     className="flex w-full items-center gap-3 text-left"
                   >
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-muted-foreground/50 text-muted-foreground">
+                    <span className={`${quickIconBaseClass} border-muted-foreground/50 text-muted-foreground`}>
                       <Plus className="h-4 w-4" />
-                    </div>
+                    </span>
                     <div>
                       <p className="text-sm font-medium">Quick add task</p>
                       <p className="text-xs text-muted-foreground">Tap to type</p>
@@ -179,10 +181,12 @@ export function TodoList() {
                     <button
                       type="submit"
                       disabled={createTodoMutation.isPending || !quickDescription.trim()}
-                      className="flex h-9 w-9 items-center justify-center rounded-full border border-dashed border-primary/40 bg-primary/10 text-primary shadow-sm transition active:scale-95 disabled:opacity-50"
+                      className="p-0 transition active:scale-95 disabled:opacity-50"
                       aria-label="Add quick task"
                     >
-                      <Check className="h-4 w-4 scale-110" />
+                      <span className={`${quickIconBaseClass} border-primary/40 bg-primary/10 text-primary`}>
+                        <Check className="h-4 w-4 scale-110" />
+                      </span>
                     </button>
                     <Input
                       ref={quickInputRef}
