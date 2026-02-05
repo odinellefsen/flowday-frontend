@@ -245,16 +245,6 @@ export function TodoList() {
           </Button>
         </DomainDrawer>
         
-        {/* Create Todo Button */}
-        <CreateTodoForm>
-          <Button
-            size="lg"
-            className="h-14 w-14 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105"
-          >
-            <Plus className="h-6 w-6" />
-            <span className="sr-only">Create new task</span>
-          </Button>
-        </CreateTodoForm>
       </div>
     </div>
   )
