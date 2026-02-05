@@ -181,7 +181,6 @@ export function TodoList() {
                     </span>
                     <div>
                       <p className="text-sm font-medium">Add a task</p>
-                      <p className="text-xs text-muted-foreground">Tap to type</p>
                     </div>
                   </button>
                 ) : (
