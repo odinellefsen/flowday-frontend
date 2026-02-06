@@ -36,7 +36,9 @@ export const todosAPI = {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}))
-      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+      const message = errorData?.message || `HTTP error! status: ${response.status}`
+      const details = errorData?.errors ? ` | ${JSON.stringify(errorData.errors)}` : ''
+      throw new Error(`${message}${details}`)
     }
 
     return response.json()
