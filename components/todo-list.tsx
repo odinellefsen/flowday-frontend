@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useCompleteTodo, useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
+import { useCancelTodo, useCompleteTodo, useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
 import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -12,16 +12,21 @@ import { DomainDrawer } from './domain-drawer'
 function TodoItemCard({
   todo,
   onComplete,
+  onCancel,
   isCompleting,
+  isCancelling,
 }: {
   todo: TodoItem
   onComplete: (todoId: string) => Promise<void>
+  onCancel: (todoId: string) => Promise<void>
   isCompleting: boolean
+  isCancelling: boolean
 }) {
   const [translateX, setTranslateX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const startXRef = useRef(0)
   const SWIPE_COMPLETE_THRESHOLD = 90
+  const SWIPE_CANCEL_THRESHOLD = -90
   const MAX_SWIPE = 140
 
   const formatScheduledTime = (scheduledFor?: string) => {
@@ -35,7 +40,7 @@ function TodoItemCard({
   }
 
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (todo.completed || isCompleting) return
+    if (todo.completed || isCompleting || isCancelling) return
     startXRef.current = event.clientX
     setIsDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
@@ -43,18 +48,26 @@ function TodoItemCard({
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return
-    const deltaX = Math.max(0, event.clientX - startXRef.current)
-    setTranslateX(Math.min(deltaX, MAX_SWIPE))
+    const deltaX = event.clientX - startXRef.current
+    if (deltaX >= 0) {
+      setTranslateX(Math.min(deltaX, MAX_SWIPE))
+      return
+    }
+    setTranslateX(Math.max(deltaX, -MAX_SWIPE))
   }
 
   const handlePointerEnd = async (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return
     setIsDragging(false)
     const shouldComplete = translateX >= SWIPE_COMPLETE_THRESHOLD
+    const shouldCancel = translateX <= SWIPE_CANCEL_THRESHOLD
     setTranslateX(0)
     event.currentTarget.releasePointerCapture(event.pointerId)
     if (shouldComplete) {
       await onComplete(todo.id)
+    }
+    if (shouldCancel) {
+      await onCancel(todo.id)
     }
   }
 
@@ -66,9 +79,14 @@ function TodoItemCard({
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 flex items-center gap-2 rounded-lg border border-transparent bg-[#10261f] px-5 text-xs uppercase tracking-[0.2em] text-[#7ed2a7]">
-        <CheckCircle2 className="h-4 w-4" />
-        Complete
+      <div className="absolute inset-0 flex items-center justify-between rounded-lg border border-transparent px-4 text-xs uppercase tracking-[0.2em]">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[#2a1313] px-3 py-1 text-[#f08a8a]">
+          Cancel
+        </span>
+        <span className="inline-flex items-center gap-2 rounded-full bg-[#10261f] px-3 py-1 text-[#7ed2a7]">
+          <CheckCircle2 className="h-4 w-4" />
+          Complete
+        </span>
       </div>
       <Card
         className={`relative overflow-hidden border border-white/10 bg-[#151a21] shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-white/20 ${
@@ -129,6 +147,7 @@ export function TodoList() {
   const { data, error } = useTodayTodos()
   const createTodoMutation = useCreateTodo()
   const completeTodoMutation = useCompleteTodo()
+  const cancelTodoMutation = useCancelTodo()
   const [quickDescription, setQuickDescription] = useState('')
   const [showQuickInput, setShowQuickInput] = useState(false)
   const quickInputRef = useRef<HTMLInputElement | null>(null)
@@ -182,10 +201,16 @@ export function TodoList() {
 
   const todos = data?.todos || []
   const completingTodoId = completeTodoMutation.isPending ? completeTodoMutation.variables : null
+  const cancellingTodoId = cancelTodoMutation.isPending ? cancelTodoMutation.variables : null
 
   const handleCompleteTodo = async (todoId: string) => {
     if (completeTodoMutation.isPending) return
     await completeTodoMutation.mutateAsync(todoId)
+  }
+
+  const handleCancelTodo = async (todoId: string) => {
+    if (cancelTodoMutation.isPending) return
+    await cancelTodoMutation.mutateAsync(todoId)
   }
 
   return (
@@ -197,7 +222,9 @@ export function TodoList() {
             key={todo.id}
             todo={todo}
             onComplete={handleCompleteTodo}
+            onCancel={handleCancelTodo}
             isCompleting={completingTodoId === todo.id}
+            isCancelling={cancellingTodoId === todo.id}
           />
         ))}
         <form onSubmit={handleQuickAdd}>

@@ -63,5 +63,10 @@ export interface CompleteTodoResponse {
   userId: string
 }
 
+export interface CancelTodoResponse {
+  id: string
+  userId: string
+}
+
 export type UpdateTodoRequest = Partial<Pick<TodoItem, 'completed' | 'description' | 'scheduledFor'>>
 

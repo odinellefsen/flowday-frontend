@@ -137,6 +137,31 @@ export function useCompleteTodo() {
 }
 
 /**
+ * Hook to cancel a todo
+ */
+export function useCancelTodo() {
+  const queryClient = useQueryClient();
+  const api = useAuthenticatedTodosAPI();
+
+  return useMutation({
+    mutationFn: async (todoId: string) => {
+      const response = await api.cancel(todoId);
+      if (!response.success || !response.data) {
+        throw new Error(response.message || 'Failed to cancel todo');
+      }
+      return response.data;
+    },
+    onSuccess: (_cancelledTodo, todoId) => {
+      queryInvalidation.invalidateTodayTodos(queryClient);
+      queryInvalidation.invalidateTodoById(queryClient, todoId);
+    },
+    onError: (error) => {
+      console.error('Failed to cancel todo:', error);
+    },
+  });
+}
+
+/**
  * Hook to toggle todo completion status
  */
 export function useToggleTodo() {

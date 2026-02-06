@@ -12,6 +12,7 @@ import type {
   CreateTodoResponse,
   UpdateTodoRequest,
   CompleteTodoResponse,
+  CancelTodoResponse,
 } from './types/todos'
 
 import { getApiBaseUrl } from '@/src/lib/api/base-url'
@@ -133,6 +134,29 @@ export const todosAPI = {
 
     return response.json()
   },
+
+  /**
+   * Cancel a todo
+   */
+  cancel: async (token: string | null, todoId: string): Promise<ApiResponse<CancelTodoResponse>> => {
+    const response = await fetch(`${BASE_URL}/api/todo/cancel`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: JSON.stringify({ id: todoId }),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      const message = errorData?.message || `HTTP error! status: ${response.status}`
+      const details = errorData?.errors ? ` | ${JSON.stringify(errorData.errors)}` : ''
+      throw new Error(`${message}${details}`)
+    }
+
+    return response.json()
+  },
 }
 
 /**
@@ -165,6 +189,10 @@ export function useAuthenticatedTodosAPI() {
     complete: async (todoId: string): Promise<ApiResponse<CompleteTodoResponse>> => {
       const token = await getToken()
       return todosAPI.complete(token, todoId)
+    },
+    cancel: async (todoId: string): Promise<ApiResponse<CancelTodoResponse>> => {
+      const token = await getToken()
+      return todosAPI.cancel(token, todoId)
     },
   }
 }
