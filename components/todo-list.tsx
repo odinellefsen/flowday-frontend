@@ -25,6 +25,7 @@ function TodoItemCard({
   const [translateX, setTranslateX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
   const startXRef = useRef(0)
+  const dragXRef = useRef(0)
   const SWIPE_COMPLETE_THRESHOLD = 90
   const SWIPE_CANCEL_THRESHOLD = -90
   const MAX_SWIPE = 140
@@ -42,6 +43,7 @@ function TodoItemCard({
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (todo.completed || isCompleting || isCancelling) return
     startXRef.current = event.clientX
+    dragXRef.current = 0
     setIsDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
   }
@@ -50,23 +52,27 @@ function TodoItemCard({
     if (!isDragging) return
     const deltaX = event.clientX - startXRef.current
     if (deltaX >= 0) {
-      setTranslateX(Math.min(deltaX, MAX_SWIPE))
+      const clamped = Math.min(deltaX, MAX_SWIPE)
+      dragXRef.current = clamped
+      setTranslateX(clamped)
       return
     }
-    setTranslateX(Math.max(deltaX, -MAX_SWIPE))
+    const clamped = Math.max(deltaX, -MAX_SWIPE)
+    dragXRef.current = clamped
+    setTranslateX(clamped)
   }
 
   const handlePointerEnd = async (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return
     setIsDragging(false)
-    const shouldComplete = translateX >= SWIPE_COMPLETE_THRESHOLD
-    const shouldCancel = translateX <= SWIPE_CANCEL_THRESHOLD
+    const deltaX = dragXRef.current
+    const shouldComplete = deltaX <= SWIPE_CANCEL_THRESHOLD
+    const shouldCancel = deltaX >= SWIPE_COMPLETE_THRESHOLD
     setTranslateX(0)
     event.currentTarget.releasePointerCapture(event.pointerId)
     if (shouldComplete) {
       await onComplete(todo.id)
-    }
-    if (shouldCancel) {
+    } else if (shouldCancel) {
       await onCancel(todo.id)
     }
   }
