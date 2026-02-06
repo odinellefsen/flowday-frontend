@@ -11,6 +11,7 @@ import type {
   CreateTodoRequest,
   CreateTodoResponse,
   UpdateTodoRequest,
+  CompleteTodoResponse,
 } from './types/todos'
 
 import { getApiBaseUrl } from '@/src/lib/api/base-url'
@@ -113,13 +114,14 @@ export const todosAPI = {
   /**
    * Complete a todo
    */
-  complete: async (token: string | null, todoId: string): Promise<ApiResponse<TodoItem>> => {
-    const response = await fetch(`${BASE_URL}/api/todo/${todoId}/complete`, {
+  complete: async (token: string | null, todoId: string): Promise<ApiResponse<CompleteTodoResponse>> => {
+    const response = await fetch(`${BASE_URL}/api/todo/complete`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` }),
       },
+      body: JSON.stringify({ id: todoId }),
     })
 
     if (!response.ok) {
@@ -158,7 +160,7 @@ export function useAuthenticatedTodosAPI() {
       const token = await getToken()
       return todosAPI.delete(token, todoId)
     },
-    complete: async (todoId: string): Promise<ApiResponse<TodoItem>> => {
+    complete: async (todoId: string): Promise<ApiResponse<CompleteTodoResponse>> => {
       const token = await getToken()
       return todosAPI.complete(token, todoId)
     },

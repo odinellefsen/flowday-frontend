@@ -58,5 +58,10 @@ export interface CreateTodoResponse {
   }>
 }
 
+export interface CompleteTodoResponse {
+  id: string
+  userId: string
+}
+
 export type UpdateTodoRequest = Partial<Pick<TodoItem, 'completed' | 'description' | 'scheduledFor'>>
 

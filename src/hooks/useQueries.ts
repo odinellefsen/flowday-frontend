@@ -119,16 +119,16 @@ export function useCompleteTodo() {
   const api = useAuthenticatedTodosAPI();
 
   return useMutation({
-    mutationFn: async (todoId: string): Promise<TodoItem> => {
+    mutationFn: async (todoId: string) => {
       const response = await api.complete(todoId);
       if (!response.success || !response.data) {
         throw new Error(response.message || 'Failed to complete todo');
       }
       return response.data;
     },
-    onSuccess: (completedTodo) => {
+    onSuccess: (_completedTodo, todoId) => {
       queryInvalidation.invalidateTodayTodos(queryClient);
-      queryInvalidation.invalidateTodoById(queryClient, completedTodo.id);
+      queryInvalidation.invalidateTodoById(queryClient, todoId);
     },
     onError: (error) => {
       console.error('Failed to complete todo:', error);
