@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
+import { useCompleteTodo, useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
 import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -10,7 +10,21 @@ import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check } from 'lucide-r
 import { CreateTodoForm } from './create-todo-form'
 import { DomainDrawer } from './domain-drawer'
 
-function TodoItemCard({ todo }: { todo: TodoItem }) {
+function TodoItemCard({
+  todo,
+  onComplete,
+  isCompleting,
+}: {
+  todo: TodoItem
+  onComplete: (todoId: string) => Promise<void>
+  isCompleting: boolean
+}) {
+  const [translateX, setTranslateX] = useState(0)
+  const [isDragging, setIsDragging] = useState(false)
+  const startXRef = useRef(0)
+  const SWIPE_COMPLETE_THRESHOLD = 90
+  const MAX_SWIPE = 140
+
   const formatScheduledTime = (scheduledFor?: string) => {
     if (!scheduledFor) return null
     const date = new Date(scheduledFor)
@@ -21,55 +35,101 @@ function TodoItemCard({ todo }: { todo: TodoItem }) {
     })
   }
 
+  const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (todo.completed || isCompleting) return
+    startXRef.current = event.clientX
+    setIsDragging(true)
+    event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return
+    const deltaX = Math.max(0, event.clientX - startXRef.current)
+    setTranslateX(Math.min(deltaX, MAX_SWIPE))
+  }
+
+  const handlePointerEnd = async (event: React.PointerEvent<HTMLDivElement>) => {
+    if (!isDragging) return
+    setIsDragging(false)
+    const shouldComplete = translateX >= SWIPE_COMPLETE_THRESHOLD
+    setTranslateX(0)
+    event.currentTarget.releasePointerCapture(event.pointerId)
+    if (shouldComplete) {
+      await onComplete(todo.id)
+    }
+  }
+
+  useEffect(() => {
+    if (!todo.completed) return
+    setTranslateX(0)
+    setIsDragging(false)
+  }, [todo.completed])
+
   return (
-    <Card
-      className={`relative overflow-hidden border border-white/10 bg-[#151a21] shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-white/20 ${
-        todo.completed ? 'opacity-70' : ''
-      } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[#7ed2a7]`}
-    >
-      <CardContent className="p-4 pl-5 sm:p-5 sm:pl-6">
-        <div className="flex items-start justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
-              {todo.completed && <CheckCircle2 className="h-4 w-4 text-[#7ed2a7] flex-shrink-0" />}
-              <p className={`text-sm font-medium leading-relaxed break-all whitespace-pre-wrap ${
-                todo.completed ? 'line-through text-white/40' : 'text-white'
-              }`}>
-                {todo.description}
-              </p>
+    <div className="relative">
+      <div className="absolute inset-0 flex items-center gap-2 rounded-lg border border-transparent bg-[#10261f] px-5 text-xs uppercase tracking-[0.2em] text-[#7ed2a7]">
+        <CheckCircle2 className="h-4 w-4" />
+        Complete
+      </div>
+      <Card
+        className={`relative overflow-hidden border border-white/10 bg-[#151a21] shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-white/20 ${
+          todo.completed ? 'opacity-70' : ''
+        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[#7ed2a7]`}
+        onPointerDown={handlePointerDown}
+        onPointerMove={handlePointerMove}
+        onPointerUp={handlePointerEnd}
+        onPointerCancel={handlePointerEnd}
+        style={{
+          transform: `translateX(${translateX}px)`,
+          transition: isDragging ? 'none' : 'transform 160ms ease',
+          touchAction: 'pan-y',
+        }}
+      >
+        <CardContent className="p-4 pl-5 sm:p-5 sm:pl-6">
+          <div className="flex items-start justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-2">
+                {todo.completed && <CheckCircle2 className="h-4 w-4 text-[#7ed2a7] flex-shrink-0" />}
+                <p className={`text-sm font-medium leading-relaxed break-all whitespace-pre-wrap ${
+                  todo.completed ? 'line-through text-white/40' : 'text-white'
+                }`}>
+                  {todo.description}
+                </p>
+              </div>
+              
+              {todo.context.type === 'meal' && todo.context.mealName && (
+                <p className="text-xs text-white/60 mb-2">
+                  Meal: {todo.context.mealName}
+                  {todo.context.instructionNumber && ` (Step ${todo.context.instructionNumber})`}
+                </p>
+              )}
+              
+              {todo.scheduledFor && (
+                <div className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-white/60">
+                  <Clock className="h-3 w-3 text-[#f3c969]" />
+                  <span>{formatScheduledTime(todo.scheduledFor)}</span>
+                </div>
+              )}
             </div>
             
-            {todo.context.type === 'meal' && todo.context.mealName && (
-              <p className="text-xs text-white/60 mb-2">
-                Meal: {todo.context.mealName}
-                {todo.context.instructionNumber && ` (Step ${todo.context.instructionNumber})`}
-              </p>
-            )}
-            
-            {todo.scheduledFor && (
-              <div className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-white/60">
-                <Clock className="h-3 w-3 text-[#f3c969]" />
-                <span>{formatScheduledTime(todo.scheduledFor)}</span>
+            {todo.context.estimatedDuration && (
+              <div className="flex flex-col items-end gap-2">
+                <span className="text-xs text-white/60">
+                  ~{todo.context.estimatedDuration}min
+                </span>
               </div>
             )}
           </div>
-          
-          {todo.context.estimatedDuration && (
-            <div className="flex flex-col items-end gap-2">
-              <span className="text-xs text-white/60">
-                ~{todo.context.estimatedDuration}min
-              </span>
-            </div>
-          )}
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </div>
   )
 }
 
 export function TodoList() {
   const { data, error } = useTodayTodos()
   const createTodoMutation = useCreateTodo()
+  const completeTodoMutation = useCompleteTodo()
   const [quickDescription, setQuickDescription] = useState('')
   const [showQuickInput, setShowQuickInput] = useState(false)
   const quickInputRef = useRef<HTMLInputElement | null>(null)
@@ -122,6 +182,12 @@ export function TodoList() {
   }
 
   const todos = data?.todos || []
+  const completingTodoId = completeTodoMutation.isPending ? completeTodoMutation.variables : null
+
+  const handleCompleteTodo = async (todoId: string) => {
+    if (completeTodoMutation.isPending) return
+    await completeTodoMutation.mutateAsync(todoId)
+  }
 
   return (
     <div className="space-y-5 animate-fade-in">
@@ -129,7 +195,12 @@ export function TodoList() {
       {todos.length > 0 ? (
         <div className="space-y-4">
           {todos.map((todo) => (
-            <TodoItemCard key={todo.id} todo={todo} />
+            <TodoItemCard
+              key={todo.id}
+              todo={todo}
+              onComplete={handleCompleteTodo}
+              isCompleting={completingTodoId === todo.id}
+            />
           ))}
           <form onSubmit={handleQuickAdd}>
             <Card

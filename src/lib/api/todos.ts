@@ -109,6 +109,26 @@ export const todosAPI = {
 
     return response.json()
   },
+
+  /**
+   * Complete a todo
+   */
+  complete: async (token: string | null, todoId: string): Promise<ApiResponse<TodoItem>> => {
+    const response = await fetch(`${BASE_URL}/api/todo/${todoId}/complete`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+    }
+
+    return response.json()
+  },
 }
 
 /**
@@ -137,6 +157,10 @@ export function useAuthenticatedTodosAPI() {
     delete: async (todoId: string): Promise<ApiResponse<void>> => {
       const token = await getToken()
       return todosAPI.delete(token, todoId)
+    },
+    complete: async (todoId: string): Promise<ApiResponse<TodoItem>> => {
+      const token = await getToken()
+      return todosAPI.complete(token, todoId)
     },
   }
 }

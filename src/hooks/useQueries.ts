@@ -112,6 +112,31 @@ export function useDeleteTodo() {
 }
 
 /**
+ * Hook to complete a todo
+ */
+export function useCompleteTodo() {
+  const queryClient = useQueryClient();
+  const api = useAuthenticatedTodosAPI();
+
+  return useMutation({
+    mutationFn: async (todoId: string): Promise<TodoItem> => {
+      const response = await api.complete(todoId);
+      if (!response.success || !response.data) {
+        throw new Error(response.message || 'Failed to complete todo');
+      }
+      return response.data;
+    },
+    onSuccess: (completedTodo) => {
+      queryInvalidation.invalidateTodayTodos(queryClient);
+      queryInvalidation.invalidateTodoById(queryClient, completedTodo.id);
+    },
+    onError: (error) => {
+      console.error('Failed to complete todo:', error);
+    },
+  });
+}
+
+/**
  * Hook to toggle todo completion status
  */
 export function useToggleTodo() {
