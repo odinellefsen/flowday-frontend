@@ -7,7 +7,6 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check } from 'lucide-react'
-import { CreateTodoForm } from './create-todo-form'
 import { DomainDrawer } from './domain-drawer'
 
 function TodoItemCard({
@@ -192,84 +191,64 @@ export function TodoList() {
   return (
     <div className="space-y-5 animate-fade-in">
       {/* Todo Items */}
-      {todos.length > 0 ? (
-        <div className="space-y-4">
-          {todos.map((todo) => (
-            <TodoItemCard
-              key={todo.id}
-              todo={todo}
-              onComplete={handleCompleteTodo}
-              isCompleting={completingTodoId === todo.id}
-            />
-          ))}
-          <form onSubmit={handleQuickAdd}>
-            <Card
-              className="border-dashed border-white/15 bg-[#151a21] hover:border-[#7ed2a7]/60 transition-colors"
-              ref={quickAddCardRef}
-            >
-              <CardContent className="p-3 min-h-[72px]">
-                {!showQuickInput ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setShowQuickInput(true)
-                      requestAnimationFrame(() => quickInputRef.current?.focus())
-                    }}
-                    className="flex w-full items-center gap-3 text-left"
-                  >
-                    <span className={`${quickIconBaseClass} border-white/20 text-white/70`}>
-                      <Plus className="h-4 w-4" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-medium text-white">Add a task</p>
-                    </div>
-                  </button>
-                ) : (
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="submit"
-                      disabled={createTodoMutation.isPending || !quickDescription.trim()}
-                      className="p-0 transition active:scale-95 disabled:opacity-50"
-                      aria-label="Add a task"
-                    >
-                      <span className={`${quickIconBaseClass} border-[#7ed2a7]/50 bg-[#7ed2a7]/10 text-[#7ed2a7]`}>
-                        <Check className="h-4 w-4 scale-110" />
-                      </span>
-                    </button>
-                    <Input
-                      ref={quickInputRef}
-                      autoFocus
-                      value={quickDescription}
-                      onChange={(event) => setQuickDescription(event.target.value)}
-                      placeholder="Add a task"
-                      className="h-9 flex-1 border-white/10 bg-[#0f1216] text-white placeholder:text-white/40 focus-visible:ring-[#7ed2a7]/30"
-                      disabled={createTodoMutation.isPending}
-                    />
+      <div className="space-y-4">
+        {todos.map((todo) => (
+          <TodoItemCard
+            key={todo.id}
+            todo={todo}
+            onComplete={handleCompleteTodo}
+            isCompleting={completingTodoId === todo.id}
+          />
+        ))}
+        <form onSubmit={handleQuickAdd}>
+          <Card
+            className="border-dashed border-white/15 bg-[#151a21] hover:border-[#7ed2a7]/60 transition-colors"
+            ref={quickAddCardRef}
+          >
+            <CardContent className="p-3 min-h-[72px]">
+              {!showQuickInput ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowQuickInput(true)
+                    requestAnimationFrame(() => quickInputRef.current?.focus())
+                  }}
+                  className="flex w-full items-center gap-3 text-left"
+                >
+                  <span className={`${quickIconBaseClass} border-white/20 text-white/70`}>
+                    <Plus className="h-4 w-4" />
+                  </span>
+                  <div>
+                    <p className="text-sm font-medium text-white">Add a task</p>
                   </div>
-                )}
-              </CardContent>
-            </Card>
-          </form>
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-white/10 bg-[#151a21] p-6 sm:p-8 text-center space-y-4 shadow-[0_10px_25px_rgba(0,0,0,0.25)]">
-          <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0f1216] px-3 py-1 text-xs uppercase tracking-[0.25em] text-[#7ed2a7]">
-            Fresh day
-          </div>
-          <div className="space-y-2">
-            <h2 className="text-xl font-semibold text-white">No tasks yet</h2>
-            <p className="text-sm text-white/60">
-              Add one small thing and build from there.
-            </p>
-          </div>
-          <CreateTodoForm>
-            <Button className="mt-2 rounded-full px-5 bg-[#7ed2a7] text-[#0f1216] hover:bg-[#6bc795]">
-              <Plus className="h-4 w-4 mr-2" />
-              Create your first task
-            </Button>
-          </CreateTodoForm>
-        </div>
-      )}
+                </button>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <button
+                    type="submit"
+                    disabled={createTodoMutation.isPending || !quickDescription.trim()}
+                    className="p-0 transition active:scale-95 disabled:opacity-50"
+                    aria-label="Add a task"
+                  >
+                    <span className={`${quickIconBaseClass} border-[#7ed2a7]/50 bg-[#7ed2a7]/10 text-[#7ed2a7]`}>
+                      <Check className="h-4 w-4 scale-110" />
+                    </span>
+                  </button>
+                  <Input
+                    ref={quickInputRef}
+                    autoFocus
+                    value={quickDescription}
+                    onChange={(event) => setQuickDescription(event.target.value)}
+                    placeholder="Add a task"
+                    className="h-9 flex-1 border-white/10 bg-[#0f1216] text-white placeholder:text-white/40 focus-visible:ring-[#7ed2a7]/30"
+                    disabled={createTodoMutation.isPending}
+                  />
+                </div>
+              )}
+            </CardContent>
+          </Card>
+        </form>
+      </div>
 
       {/* Floating Action Buttons */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 animate-scale-in">
