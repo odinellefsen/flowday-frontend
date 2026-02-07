@@ -74,13 +74,15 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-            <QueryProvider>
-              <PullToRefresh />
-              {children}
-              <Toaster />
-              <PWARegister />
-              <InstallPrompt />
-            </QueryProvider>
+            <div className="min-h-[100dvh] bg-background safe-area">
+              <QueryProvider>
+                <PullToRefresh />
+                {children}
+                <Toaster />
+                <PWARegister />
+                <InstallPrompt />
+              </QueryProvider>
+            </div>
           </ThemeProvider>
         </body>
       </html>
