@@ -86,18 +86,18 @@ function TodoItemCard({
   return (
     <div className="relative">
       <div className="absolute inset-0 flex items-center justify-between rounded-lg border border-transparent px-4 text-xs uppercase tracking-[0.2em]">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[#2a1313] px-3 py-1 text-[#f08a8a]">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--flow-danger-bg)] px-3 py-1 text-[var(--flow-danger-text)]">
           Cancel
         </span>
-        <span className="inline-flex items-center gap-2 rounded-full bg-[#10261f] px-3 py-1 text-[#7ed2a7]">
+        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--flow-success-bg)] px-3 py-1 text-[var(--flow-success-text)]">
           <CheckCircle2 className="h-4 w-4" />
           Complete
         </span>
       </div>
       <Card
-        className={`relative overflow-hidden border border-white/10 bg-[#151a21] shadow-[0_10px_25px_rgba(0,0,0,0.25)] transition-all duration-200 hover:border-white/20 ${
+        className={`relative overflow-hidden border border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] transition-all duration-200 hover:border-[color:var(--flow-border-hover)] ${
           todo.completed ? 'opacity-70' : ''
-        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[#7ed2a7]`}
+        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[var(--flow-accent)]`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
@@ -112,24 +112,26 @@ function TodoItemCard({
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
-                {todo.completed && <CheckCircle2 className="h-4 w-4 text-[#7ed2a7] flex-shrink-0" />}
+                {todo.completed && (
+                  <CheckCircle2 className="h-4 w-4 text-[var(--flow-accent)] flex-shrink-0" />
+                )}
                 <p className={`text-sm font-medium leading-relaxed break-all whitespace-pre-wrap ${
-                  todo.completed ? 'line-through text-white/40' : 'text-white'
+                  todo.completed ? 'line-through text-[var(--flow-text-muted)]' : 'text-[var(--flow-text)]'
                 }`}>
                   {todo.description}
                 </p>
               </div>
               
               {todo.context.type === 'meal' && todo.context.mealName && (
-                <p className="text-xs text-white/60 mb-2">
+                <p className="text-xs text-[var(--flow-text-muted)] mb-2">
                   Meal: {todo.context.mealName}
                   {todo.context.instructionNumber && ` (Step ${todo.context.instructionNumber})`}
                 </p>
               )}
               
               {todo.scheduledFor && (
-                <div className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-white/60">
-                  <Clock className="h-3 w-3 text-[#f3c969]" />
+                <div className="flex items-center gap-1 text-[11px] uppercase tracking-wide text-[var(--flow-text-muted)]">
+                  <Clock className="h-3 w-3 text-[var(--flow-warning)]" />
                   <span>{formatScheduledTime(todo.scheduledFor)}</span>
                 </div>
               )}
@@ -137,7 +139,7 @@ function TodoItemCard({
             
             {todo.context.estimatedDuration && (
               <div className="flex flex-col items-end gap-2">
-                <span className="text-xs text-white/60">
+                <span className="text-xs text-[var(--flow-text-muted)]">
                   ~{todo.context.estimatedDuration}min
                 </span>
               </div>
@@ -235,7 +237,7 @@ export function TodoList() {
         ))}
         <form onSubmit={handleQuickAdd}>
           <Card
-            className="border-dashed border-white/15 bg-[#151a21] hover:border-[#7ed2a7]/60 transition-colors"
+            className="border-dashed border-[color:var(--flow-border)] bg-[var(--flow-surface)] hover:border-[color:var(--flow-border-hover)] transition-colors"
             ref={quickAddCardRef}
           >
             <CardContent className="p-3 min-h-[72px]">
@@ -248,11 +250,11 @@ export function TodoList() {
                   }}
                   className="flex w-full items-center gap-3 text-left"
                 >
-                  <span className={`${quickIconBaseClass} border-white/20 text-white/70`}>
+                  <span className={`${quickIconBaseClass} border-[color:var(--flow-border)] text-[var(--flow-text-muted)]`}>
                     <Plus className="h-4 w-4" />
                   </span>
                   <div>
-                    <p className="text-sm font-medium text-white">Add a task</p>
+                    <p className="text-sm font-medium text-[var(--flow-text)]">Add a task</p>
                   </div>
                 </button>
               ) : (
@@ -263,7 +265,9 @@ export function TodoList() {
                     className="p-0 transition active:scale-95 disabled:opacity-50"
                     aria-label="Add a task"
                   >
-                    <span className={`${quickIconBaseClass} border-[#7ed2a7]/50 bg-[#7ed2a7]/10 text-[#7ed2a7]`}>
+                  <span
+                    className={`${quickIconBaseClass} border-[color:var(--flow-border-hover)] bg-[var(--flow-hover)] text-[var(--flow-accent)]`}
+                  >
                       <Check className="h-4 w-4 scale-110" />
                     </span>
                   </button>
@@ -273,7 +277,7 @@ export function TodoList() {
                     value={quickDescription}
                     onChange={(event) => setQuickDescription(event.target.value)}
                     placeholder="Add a task"
-                    className="h-9 flex-1 border-white/10 bg-[#0f1216] text-white placeholder:text-white/40 focus-visible:ring-[#7ed2a7]/30"
+                    className="h-9 flex-1 border-[color:var(--flow-border)] bg-[var(--flow-background)] text-[var(--flow-text)] placeholder:text-[var(--flow-text-muted)] focus-visible:ring-[color:var(--flow-accent)]/30"
                     disabled={createTodoMutation.isPending}
                   />
                 </div>
