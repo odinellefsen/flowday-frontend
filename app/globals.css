@@ -54,6 +54,7 @@
   --flow-accent: #2aa772;
   --flow-hover: rgba(15, 18, 22, 0.06);
   --flow-shadow: 0 10px 30px rgba(15, 18, 22, 0.08);
+  --flow-overlay: rgba(15, 18, 22, 0.35);
   --flow-danger-bg: #ffe8e8;
   --flow-danger-text: #cc4b4b;
   --flow-success-bg: #e5f6ee;
@@ -102,6 +103,7 @@
   --flow-accent: #7ed2a7;
   --flow-hover: rgba(255, 255, 255, 0.1);
   --flow-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  --flow-overlay: rgba(0, 0, 0, 0.6);
   --flow-danger-bg: #2a1313;
   --flow-danger-text: #f08a8a;
   --flow-success-bg: #10261f;
