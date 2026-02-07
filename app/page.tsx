@@ -91,32 +91,46 @@ export default function Home() {
                     </span>
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuLabel>{displayName}</DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuLabel className="text-xs uppercase tracking-wide text-muted-foreground">
+                <DropdownMenuContent
+                  align="end"
+                  className="w-56 rounded-xl border border-white/10 bg-[#151a21] text-white/80 shadow-[0_18px_40px_rgba(0,0,0,0.45)]"
+                >
+                  <DropdownMenuLabel className="text-sm font-medium text-white">
+                    {displayName}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator className="bg-white/10" />
+                  <DropdownMenuLabel className="text-xs uppercase tracking-wide text-white/50">
                     Theme
                   </DropdownMenuLabel>
                   <DropdownMenuRadioGroup
                     value={theme ?? 'system'}
                     onValueChange={setTheme}
                   >
-                    <DropdownMenuRadioItem value="light" className="cursor-pointer">
+                    <DropdownMenuRadioItem
+                      value="light"
+                      className="cursor-pointer text-white/80 focus:bg-white/10 focus:text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white"
+                    >
                       <Sun className="h-4 w-4" />
                       Light
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="dark" className="cursor-pointer">
+                    <DropdownMenuRadioItem
+                      value="dark"
+                      className="cursor-pointer text-white/80 focus:bg-white/10 focus:text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white"
+                    >
                       <Moon className="h-4 w-4" />
                       Dark
                     </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem value="system" className="cursor-pointer">
+                    <DropdownMenuRadioItem
+                      value="system"
+                      className="cursor-pointer text-white/80 focus:bg-white/10 focus:text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white"
+                    >
                       <Monitor className="h-4 w-4" />
                       System
                     </DropdownMenuRadioItem>
                   </DropdownMenuRadioGroup>
-                  <DropdownMenuSeparator />
+                  <DropdownMenuSeparator className="bg-white/10" />
                   <DropdownMenuItem
-                    className="cursor-pointer"
+                    className="cursor-pointer text-white/80 focus:bg-white/10 focus:text-white data-[highlighted]:bg-white/10 data-[highlighted]:text-white"
                     onClick={() => signOut()}
                   >
                     Sign out
