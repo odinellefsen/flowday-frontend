@@ -32,24 +32,30 @@ interface PageProps {
 
 function MealHeader({ meal }: { meal: MealWithDetails }) {
   return (
-    <Card className="animate-fade-in">
+    <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
       <CardHeader>
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <CardTitle className="text-2xl">{meal.mealName}</CardTitle>
+              <CardTitle className="text-2xl text-[var(--flow-text)]">{meal.mealName}</CardTitle>
               {meal.recipes.length > 0 ? (
-                <Badge variant="default" className="text-xs">
+                <Badge
+                  variant="default"
+                  className="text-xs bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
+                >
                   {meal.recipes.length} recipe{meal.recipes.length !== 1 ? 's' : ''}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="text-xs">
+                <Badge
+                  variant="outline"
+                  className="text-xs border-[color:var(--flow-border)] text-[var(--flow-text-muted)]"
+                >
                   No recipes
                 </Badge>
               )}
             </div>
             
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <div className="flex items-center gap-4 text-sm text-[var(--flow-text-muted)]">
               <span className="flex items-center gap-1">
                 <List className="h-4 w-4" />
                 {meal.ingredients.length} ingredient{meal.ingredients.length !== 1 ? 's' : ''}
@@ -77,7 +83,7 @@ function RecipesSection({
   const [showAttachForm, setShowAttachForm] = useState(false)
 
   return (
-    <Card>
+    <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2">
@@ -90,7 +96,11 @@ function RecipesSection({
             open={showAttachForm}
             onOpenChange={setShowAttachForm}
           >
-            <Button size="sm" variant="outline">
+            <Button
+              size="sm"
+              variant="outline"
+              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Attach Recipe
             </Button>
@@ -100,9 +110,9 @@ function RecipesSection({
       <CardContent>
         {meal.recipes.length === 0 ? (
           <div className="text-center py-8">
-            <ChefHat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Recipes Attached</h3>
-            <p className="text-muted-foreground mb-4">
+            <ChefHat className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Recipes Attached</h3>
+            <p className="text-[var(--flow-text-muted)] mb-4">
               Attach recipes to this meal to build your meal plan.
             </p>
             <AttachRecipesForm
@@ -111,7 +121,10 @@ function RecipesSection({
               open={showAttachForm}
               onOpenChange={setShowAttachForm}
             >
-              <Button variant="outline">
+              <Button
+                variant="outline"
+                className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+              >
                 <Plus className="h-4 w-4 mr-2" />
                 Attach Your First Recipe
               </Button>
@@ -130,19 +143,19 @@ function RecipesSection({
               return (
                 <div 
                   key={recipe.recipeId}
-                  className="p-4 bg-muted/30 rounded-md hover:bg-muted/50 transition-colors cursor-pointer"
+                  className="p-4 bg-[var(--flow-hover)] rounded-md hover:bg-[var(--flow-hover)]/80 transition-colors cursor-pointer"
                   onClick={() => router.push(`/food/recipes/${recipe.recipeId}`)}
                 >
                   <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div>
-                      <span className="font-medium">{recipeDisplayName}</span>
-                      <p className="text-xs text-muted-foreground">
+                      <span className="font-medium text-[var(--flow-text)]">{recipeDisplayName}</span>
+                      <p className="text-xs text-[var(--flow-text-muted)]">
                         Recipe {recipeNumber} • Click to view recipe details
                       </p>
                     </div>
                   </div>
-                    <ChefHat className="h-4 w-4 text-muted-foreground" />
+                    <ChefHat className="h-4 w-4 text-[var(--flow-text-muted)]" />
                   </div>
                 </div>
               )
@@ -165,7 +178,7 @@ function IngredientsSection({ meal }: { meal: MealWithDetails }) {
   }, {} as Record<string, typeof meal.ingredients>)
 
   return (
-    <Card>
+    <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Utensils className="h-5 w-5" />
@@ -178,9 +191,9 @@ function IngredientsSection({ meal }: { meal: MealWithDetails }) {
       <CardContent>
         {meal.ingredients.length === 0 ? (
           <div className="text-center py-8">
-            <Utensils className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Ingredients Yet</h3>
-            <p className="text-muted-foreground mb-4">
+            <Utensils className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Ingredients Yet</h3>
+            <p className="text-[var(--flow-text-muted)] mb-4">
               Attach recipes to see their ingredients here.
             </p>
           </div>
@@ -188,12 +201,15 @@ function IngredientsSection({ meal }: { meal: MealWithDetails }) {
           <div className="space-y-4">
             {Object.entries(ingredientsByRecipe).map(([recipeId, ingredients], index) => (
               <div key={recipeId} className="space-y-2">
-                <h4 className="text-sm font-semibold text-muted-foreground">
+                <h4 className="text-sm font-semibold text-[var(--flow-text-muted)]">
                   Recipe {index + 1}
                 </h4>
                 <div className="space-y-2">
                   {ingredients.map((ingredient, idx) => (
-                    <div key={`${recipeId}-${idx}`} className="p-3 bg-muted/30 rounded-md">
+                    <div
+                      key={`${recipeId}-${idx}`}
+                      className="p-3 bg-[var(--flow-hover)] rounded-md text-[var(--flow-text)]"
+                    >
                       <span>{ingredient.ingredientText}</span>
                     </div>
                   ))}
@@ -218,7 +234,7 @@ function InstructionsSection({ meal }: { meal: MealWithDetails }) {
   }, {} as Record<string, typeof meal.instructions>)
 
   return (
-    <Card>
+    <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <BookOpen className="h-5 w-5" />
@@ -231,9 +247,9 @@ function InstructionsSection({ meal }: { meal: MealWithDetails }) {
       <CardContent>
         {meal.instructions.length === 0 ? (
           <div className="text-center py-8">
-            <BookOpen className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">No Instructions Yet</h3>
-            <p className="text-muted-foreground mb-4">
+            <BookOpen className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Instructions Yet</h3>
+            <p className="text-[var(--flow-text-muted)] mb-4">
               Attach recipes to see their instructions here.
             </p>
           </div>
@@ -241,18 +257,21 @@ function InstructionsSection({ meal }: { meal: MealWithDetails }) {
           <div className="space-y-6">
             {Object.entries(instructionsByRecipe).map(([recipeId, instructions], recipeIndex) => (
               <div key={recipeId} className="space-y-3">
-                <h4 className="text-sm font-semibold text-muted-foreground">
+                <h4 className="text-sm font-semibold text-[var(--flow-text-muted)]">
                   Recipe {recipeIndex + 1}
                 </h4>
                 <div className="space-y-4">
                   {instructions.map((step) => (
-                    <div key={`${recipeId}-${step.instructionNumber}`} className="border rounded-lg p-4">
+                    <div
+                      key={`${recipeId}-${step.instructionNumber}`}
+                      className="border border-[color:var(--flow-border)] rounded-lg p-4 bg-[var(--flow-surface)]"
+                    >
                       <div className="flex items-start gap-3">
-                        <div className="flex-shrink-0 w-8 h-8 bg-primary/10 text-primary rounded-full flex items-center justify-center text-sm font-semibold">
+                        <div className="flex-shrink-0 w-8 h-8 bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] rounded-full flex items-center justify-center text-sm font-semibold">
                           {step.instructionNumber}
                         </div>
                         <div className="flex-1">
-                          <p className="text-sm leading-relaxed">{step.instruction}</p>
+                          <p className="text-sm leading-relaxed text-[var(--flow-text)]">{step.instruction}</p>
                         </div>
                       </div>
                     </div>
@@ -331,11 +350,15 @@ export default function MealDetailPage({ params }: PageProps) {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[var(--flow-background)]">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           <header className="flex items-center gap-3 mb-8">
             <Link href="/food/meals">
-              <Button variant="ghost" size="sm" className="p-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+              >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
@@ -349,18 +372,22 @@ export default function MealDetailPage({ params }: PageProps) {
 
   if (error || !meal) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[var(--flow-background)]">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           <header className="flex items-center gap-3 mb-8">
             <Link href="/food/meals">
-              <Button variant="ghost" size="sm" className="p-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+              >
                 <ArrowLeft className="h-4 w-4" />
               </Button>
             </Link>
-            <h1 className="text-2xl font-bold">Meal Not Found</h1>
+            <h1 className="text-2xl font-bold text-[var(--flow-text)]">Meal Not Found</h1>
           </header>
           
-          <Card>
+          <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
             <CardHeader>
               <CardTitle className="text-destructive">Error Loading Meal</CardTitle>
               <CardDescription>
@@ -369,7 +396,10 @@ export default function MealDetailPage({ params }: PageProps) {
             </CardHeader>
             <CardContent>
               <Link href="/food/meals">
-                <Button variant="outline">
+                <Button
+                  variant="outline"
+                  className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                >
                   <ArrowLeft className="h-4 w-4 mr-2" />
                   Back to Meals
                 </Button>
@@ -382,19 +412,23 @@ export default function MealDetailPage({ params }: PageProps) {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--flow-background)]">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
         <header className="flex items-center gap-3 mb-8">
           <Link href="/food/meals">
-            <Button variant="ghost" size="sm" className="p-2">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+            >
               <ArrowLeft className="h-4 w-4" />
               <span className="sr-only">Back to meals</span>
             </Button>
           </Link>
           <div className="flex items-center gap-2">
-            <UtensilsCrossed className="h-6 w-6 text-primary" />
-            <h1 className="text-2xl sm:text-3xl font-bold">Meal Details</h1>
+            <UtensilsCrossed className="h-6 w-6 text-[var(--flow-accent)]" />
+            <h1 className="text-2xl sm:text-3xl font-bold text-[var(--flow-text)]">Meal Details</h1>
           </div>
         </header>
 
@@ -407,16 +441,25 @@ export default function MealDetailPage({ params }: PageProps) {
           
           {/* Meal Content Tabs */}
           <Tabs defaultValue="ingredients" className="animate-fade-in">
-            <TabsList className="grid w-full grid-cols-3 h-auto overflow-hidden">
-              <TabsTrigger value="ingredients" className="flex items-center gap-2">
+            <TabsList className="grid w-full grid-cols-3 h-auto overflow-hidden border border-[color:var(--flow-border)] bg-[var(--flow-surface)]">
+              <TabsTrigger
+                value="ingredients"
+                className="flex items-center gap-2 text-[var(--flow-text-muted)] data-[state=active]:text-[var(--flow-text)]"
+              >
                 <Utensils className="h-4 w-4" />
                 Ingredients
               </TabsTrigger>
-              <TabsTrigger value="instructions" className="flex items-center gap-2">
+              <TabsTrigger
+                value="instructions"
+                className="flex items-center gap-2 text-[var(--flow-text-muted)] data-[state=active]:text-[var(--flow-text)]"
+              >
                 <BookOpen className="h-4 w-4" />
                 Instructions
               </TabsTrigger>
-              <TabsTrigger value="habit" className="flex items-center gap-2">
+              <TabsTrigger
+                value="habit"
+                className="flex items-center gap-2 text-[var(--flow-text-muted)] data-[state=active]:text-[var(--flow-text)]"
+              >
                 <RefreshCw className="h-4 w-4" />
                 Habit
               </TabsTrigger>

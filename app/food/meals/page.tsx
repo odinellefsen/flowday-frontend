@@ -123,7 +123,11 @@ export default function MealsPage() {
                 open={showCreateForm} 
                 onOpenChange={setShowCreateForm}
               >
-                <Button size="sm" className="w-full sm:w-auto">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-full sm:w-auto border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Plan Meal
                 </Button>
@@ -160,7 +164,10 @@ export default function MealsPage() {
                     open={showCreateForm} 
                     onOpenChange={setShowCreateForm}
                   >
-                    <Button>
+                    <Button
+                      variant="outline"
+                      className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                    >
                       <Plus className="h-4 w-4 mr-2" />
                       Plan Your First Meal
                     </Button>
