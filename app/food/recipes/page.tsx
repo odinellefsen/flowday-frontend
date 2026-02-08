@@ -39,33 +39,30 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
     }
   }
 
-  const getMealTimingColor = (timing: MealTimingEnum) => {
-    switch (timing) {
-      case MealTimingEnum.BREAKFAST: return 'bg-yellow-100 text-yellow-800'
-      case MealTimingEnum.LUNCH: return 'bg-green-100 text-green-800'
-      case MealTimingEnum.DINNER: return 'bg-blue-100 text-blue-800'
-      case MealTimingEnum.SNACK: return 'bg-purple-100 text-purple-800'
-      default: return 'bg-gray-100 text-gray-800'
-    }
+  const getMealTimingColor = (_timing: MealTimingEnum) => {
+    return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
   }
 
   return (
     <Card 
-      className="transition-all duration-200 hover:shadow-md animate-slide-up cursor-pointer"
+      className="transition-all duration-200 animate-slide-up cursor-pointer border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] hover:border-[color:var(--flow-border-hover)]"
       onClick={() => router.push(`/food/recipes/${recipe.id}`)}
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-semibold text-lg">{recipe.nameOfTheRecipe}</h3>
-              <Badge variant={recipe.completeness === 'complete' ? 'default' : 'outline'} className="text-xs">
+              <h3 className="font-semibold text-lg text-[var(--flow-text)]">{recipe.nameOfTheRecipe}</h3>
+              <Badge
+                variant="outline"
+                className="text-xs border-[color:var(--flow-border)] text-[var(--flow-text-muted)]"
+              >
                 {recipe.completeness}
               </Badge>
             </div>
             
             {recipe.generalDescriptionOfTheRecipe && (
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-sm text-[var(--flow-text-muted)] mb-2">
                 {recipe.generalDescriptionOfTheRecipe}
               </p>
             )}
@@ -83,7 +80,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
               </div>
             )}
             
-            <div className="flex items-center gap-4 text-xs text-muted-foreground">
+            <div className="flex items-center gap-4 text-xs text-[var(--flow-text-muted)]">
               <span className="flex items-center gap-1">
                 <Users className="h-3 w-3" />
                 {recipe.ingredientCount} ingredient{recipe.ingredientCount !== 1 ? 's' : ''}
@@ -151,7 +148,7 @@ function RecipesSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(3)].map((_, i) => (
-        <Card key={i}>
+        <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]" key={i}>
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1 space-y-2">
@@ -191,15 +188,15 @@ export default function RecipesPage() {
   const recipesList = recipes?.data || []
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--flow-background)]">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
         <header className="space-y-5 mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-                  <ChefHat className="h-6 w-6 text-primary" />
+                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 text-[var(--flow-text)]">
+                  <ChefHat className="h-6 w-6 text-[var(--flow-accent)]" />
                   Recipes
                 </h1>
               </div>
@@ -209,7 +206,10 @@ export default function RecipesPage() {
                 open={showCreateForm} 
                 onOpenChange={setShowCreateForm}
               >
-                <Button size="sm" className="w-full sm:w-auto">
+                <Button
+                  size="sm"
+                  className="w-full sm:w-auto border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   New Recipe
                 </Button>
@@ -222,7 +222,7 @@ export default function RecipesPage() {
         {isLoading && <RecipesSkeleton />}
         
         {error && (
-          <Card>
+          <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
             <CardHeader>
               <CardTitle className="text-destructive">Error Loading Recipes</CardTitle>
               <CardDescription>
@@ -235,18 +235,18 @@ export default function RecipesPage() {
         {!isLoading && !error && (
           <>
             {recipesList.length === 0 ? (
-              <Card className="animate-fade-in">
+              <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                 <CardContent className="p-8 text-center">
-                  <ChefHat className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Recipes Yet</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <ChefHat className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Recipes Yet</h3>
+                  <p className="text-[var(--flow-text-muted)] mb-4">
                     Create your first recipe to start building your personal cookbook.
                   </p>
                   <CreateRecipeForm 
                     open={showCreateForm} 
                     onOpenChange={setShowCreateForm}
                   >
-                    <Button>
+                    <Button className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]">
                       <Plus className="h-4 w-4 mr-2" />
                       Create Your First Recipe
                     </Button>
@@ -256,8 +256,11 @@ export default function RecipesPage() {
             ) : (
               <div className="space-y-4 animate-fade-in">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold">Your Recipes</h2>
-                  <Badge variant="outline" className="text-xs">
+                  <h2 className="text-lg font-semibold text-[var(--flow-text)]">Your Recipes</h2>
+                  <Badge
+                    variant="outline"
+                    className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
+                  >
                     {recipesList.length} recipe{recipesList.length !== 1 ? 's' : ''}
                   </Badge>
                 </div>
