@@ -176,6 +176,19 @@
     scroll-behavior: smooth;
     background-color: var(--background);
   }
+
+  /* Hide browser scrollbars but keep scrolling */
+  html,
+  body {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  html::-webkit-scrollbar,
+  body::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
   
   /* Better text rendering */
   body {
