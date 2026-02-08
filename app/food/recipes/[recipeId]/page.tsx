@@ -9,7 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   ChefHat, 
-  ArrowLeft, 
   Plus, 
   Edit, 
   Clock, 
@@ -17,7 +16,6 @@ import {
   BookOpen,
   Utensils
 } from 'lucide-react'
-import Link from 'next/link'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
 import { ManageInstructionsForm } from '@/components/manage-instructions-form'
@@ -306,11 +304,6 @@ export default function RecipeDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           <header className="flex items-center gap-3 mb-8">
-            <Link href="/food/recipes">
-              <Button variant="ghost" size="sm" className="p-2">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <Skeleton className="h-8 w-48" />
           </header>
           <RecipeDetailSkeleton />
@@ -324,11 +317,6 @@ export default function RecipeDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-background">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           <header className="flex items-center gap-3 mb-8">
-            <Link href="/food/recipes">
-              <Button variant="ghost" size="sm" className="p-2">
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <h1 className="text-2xl font-bold">Recipe Not Found</h1>
           </header>
           
@@ -339,14 +327,6 @@ export default function RecipeDetailPage({ params }: PageProps) {
                 {error instanceof Error ? error.message : 'Recipe not found or failed to load.'}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Link href="/food/recipes">
-                <Button variant="outline">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Recipes
-                </Button>
-              </Link>
-            </CardContent>
           </Card>
         </div>
       </div>
@@ -358,12 +338,6 @@ export default function RecipeDetailPage({ params }: PageProps) {
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
         <header className="flex items-center gap-3 mb-8">
-          <Link href="/food/recipes">
-            <Button variant="ghost" size="sm" className="p-2">
-              <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Back to recipes</span>
-            </Button>
-          </Link>
           <div className="flex items-center gap-2">
             <ChefHat className="h-6 w-6 text-primary" />
             <h1 className="text-2xl sm:text-3xl font-bold">Recipe Details</h1>

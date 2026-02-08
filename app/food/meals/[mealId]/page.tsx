@@ -9,7 +9,6 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { 
   UtensilsCrossed, 
-  ArrowLeft, 
   Plus, 
   ChefHat,
   List, 
@@ -17,7 +16,6 @@ import {
   Utensils,
   RefreshCw
 } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedMealsAPI, useAuthenticatedRecipesAPI } from '@/src/lib/api'
 import type { MealWithDetails } from '@/src/lib/api/types/meals'
@@ -353,15 +351,6 @@ export default function MealDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-[var(--flow-background)]">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           <header className="flex items-center gap-3 mb-8">
-            <Link href="/food/meals">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <Skeleton className="h-8 w-48" />
           </header>
           <MealDetailSkeleton />
@@ -375,15 +364,6 @@ export default function MealDetailPage({ params }: PageProps) {
       <div className="min-h-screen bg-[var(--flow-background)]">
         <div className="container mx-auto px-4 py-6 max-w-4xl">
           <header className="flex items-center gap-3 mb-8">
-            <Link href="/food/meals">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-              </Button>
-            </Link>
             <h1 className="text-2xl font-bold text-[var(--flow-text)]">Meal Not Found</h1>
           </header>
           
@@ -394,17 +374,6 @@ export default function MealDetailPage({ params }: PageProps) {
                 {error instanceof Error ? error.message : 'Meal not found or failed to load.'}
               </CardDescription>
             </CardHeader>
-            <CardContent>
-              <Link href="/food/meals">
-                <Button
-                  variant="outline"
-                  className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-                >
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Meals
-                </Button>
-              </Link>
-            </CardContent>
           </Card>
         </div>
       </div>
@@ -416,16 +385,6 @@ export default function MealDetailPage({ params }: PageProps) {
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
         <header className="flex items-center gap-3 mb-8">
-          <Link href="/food/meals">
-            <Button
-              variant="ghost"
-              size="sm"
-              className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-            >
-              <ArrowLeft className="h-4 w-4" />
-              <span className="sr-only">Back to meals</span>
-            </Button>
-          </Link>
           <div className="flex items-center gap-2">
             <UtensilsCrossed className="h-6 w-6 text-[var(--flow-accent)]" />
             <h1 className="text-2xl sm:text-3xl font-bold text-[var(--flow-text)]">Meal Details</h1>

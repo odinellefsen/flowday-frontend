@@ -7,10 +7,8 @@ import {
   Apple, 
   ChefHat, 
   UtensilsCrossed, 
-  ArrowLeft,
   ArrowRight,
 } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 interface FoodSection {
@@ -71,16 +69,6 @@ export default function FoodPage() {
         {/* Header */}
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <Link href="/">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="sr-only">Back to home</span>
-              </Button>
-            </Link>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 text-[var(--flow-text)]">
                 <UtensilsCrossed className="h-6 w-6 text-[var(--flow-accent)]" />

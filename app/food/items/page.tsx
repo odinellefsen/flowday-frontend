@@ -200,7 +200,6 @@ export default function FoodItemsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [currentPath, setCurrentPath] = useState<string[]>([]) // Current navigation path
   const apiClient = useAuthenticatedFoodItemsAPI()
-  const router = useRouter()
 
   const { data: foodItems, isLoading, error } = useQuery({
     queryKey: ['foodItems'],
@@ -280,15 +279,6 @@ export default function FoodItemsPage() {
         <header className="space-y-5 mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2"
-                onClick={() => router.back()}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="sr-only">Back to food domain</span>
-              </Button>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
                   <Apple className="h-6 w-6 text-primary" />

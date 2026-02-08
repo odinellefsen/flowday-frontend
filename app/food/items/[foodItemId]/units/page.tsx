@@ -6,8 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ArrowLeft, Plus, Scale, MoreHorizontal, Trash2, Edit } from 'lucide-react'
-import Link from 'next/link'
+import { Plus, Scale, MoreHorizontal, Trash2, Edit } from 'lucide-react'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateUnitForm } from '@/components/create-unit-form'
 import type { FoodItemUnit } from '@/src/lib/api/types/food-items'
@@ -154,12 +153,6 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
         {/* Header */}
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <Link href="/food/items">
-              <Button variant="ghost" size="sm" className="p-2">
-                <ArrowLeft className="h-4 w-4" />
-                <span className="sr-only">Back to food items</span>
-              </Button>
-            </Link>
             <div>
               <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
                 <Scale className="h-6 w-6 text-primary" />

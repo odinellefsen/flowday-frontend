@@ -6,7 +6,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { UtensilsCrossed, ArrowLeft, Plus, ChefHat } from 'lucide-react'
+import { UtensilsCrossed, Plus, ChefHat } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
 import { CreateMealForm } from '@/components/create-meal-form'
@@ -88,7 +88,6 @@ function MealsSkeleton() {
 export default function MealsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const apiClient = useAuthenticatedMealsAPI()
-  const router = useRouter()
 
   const { data: meals, isLoading, error } = useQuery({
     queryKey: ['meals'],
@@ -104,15 +103,6 @@ export default function MealsPage() {
         <header className="space-y-5 mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="p-2 text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-                onClick={() => router.back()}
-              >
-                <ArrowLeft className="h-4 w-4" />
-                <span className="sr-only">Back to food domain</span>
-              </Button>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 text-[var(--flow-text)]">
                   <UtensilsCrossed className="h-6 w-6 text-[var(--flow-accent)]" />
