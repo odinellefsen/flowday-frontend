@@ -117,8 +117,7 @@ export default function MealsPage() {
               >
                 <Button
                   size="sm"
-                  variant="outline"
-                  className="w-full sm:w-auto border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                  className="w-full sm:w-auto border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
                 >
                   <Plus className="h-4 w-4 mr-2" />
                   Plan Meal
@@ -157,8 +156,7 @@ export default function MealsPage() {
                     onOpenChange={setShowCreateForm}
                   >
                     <Button
-                      variant="outline"
-                      className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                      className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
                     >
                       <Plus className="h-4 w-4 mr-2" />
                       Plan Your First Meal
