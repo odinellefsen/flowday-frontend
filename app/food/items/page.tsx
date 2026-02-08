@@ -15,7 +15,6 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Apple, ArrowLeft, Plus, MoreHorizontal, Trash2, Folder, FolderOpen, ChevronRight } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateFoodItemForm } from '../../../components/create-food-item-form'
@@ -201,6 +200,7 @@ export default function FoodItemsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const [currentPath, setCurrentPath] = useState<string[]>([]) // Current navigation path
   const apiClient = useAuthenticatedFoodItemsAPI()
+  const router = useRouter()
 
   const { data: foodItems, isLoading, error } = useQuery({
     queryKey: ['foodItems'],
@@ -280,12 +280,15 @@ export default function FoodItemsPage() {
         <header className="space-y-5 mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-              <Link href="/food">
-                <Button variant="ghost" size="sm" className="p-2">
-                  <ArrowLeft className="h-4 w-4" />
-                  <span className="sr-only">Back to food domain</span>
-                </Button>
-              </Link>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="p-2"
+                onClick={() => router.back()}
+              >
+                <ArrowLeft className="h-4 w-4" />
+                <span className="sr-only">Back to food domain</span>
+              </Button>
               <div>
                 <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
                   <Apple className="h-6 w-6 text-primary" />

@@ -7,7 +7,6 @@ import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { ChefHat, ArrowLeft, Plus, MoreHorizontal, Trash2, Edit, Clock, Users } from 'lucide-react'
-import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { CreateRecipeForm } from '@/components/create-recipe-form'
@@ -183,6 +182,7 @@ function RecipesSkeleton() {
 export default function RecipesPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const apiClient = useAuthenticatedRecipesAPI()
+  const router = useRouter()
 
   const { data: recipes, isLoading, error } = useQuery({
     queryKey: ['recipes'],
@@ -198,19 +198,17 @@ export default function RecipesPage() {
         <header className="space-y-5 mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
-            <Link href="/food">
-              <Button variant="ghost" size="sm" className="p-2">
+              <Button variant="ghost" size="sm" className="p-2" onClick={() => router.back()}>
                 <ArrowLeft className="h-4 w-4" />
                 <span className="sr-only">Back to food domain</span>
               </Button>
-            </Link>
-            <div>
-              <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-                <ChefHat className="h-6 w-6 text-primary" />
-                Recipes
-              </h1>
+              <div>
+                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
+                  <ChefHat className="h-6 w-6 text-primary" />
+                  Recipes
+                </h1>
+              </div>
             </div>
-          </div>
             <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
               <CreateRecipeForm 
                 open={showCreateForm} 
