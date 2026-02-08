@@ -18,8 +18,6 @@ import {
   UtensilsCrossed, 
   Dumbbell, 
   GraduationCap, 
-  ArrowRight,
-  Sparkles
 } from 'lucide-react'
 
 interface Domain {
@@ -140,9 +138,6 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
                       </p>
                     </div>
                   </div>
-                  {domain.implemented && (
-                    <ArrowRight className="h-4 w-4 text-muted-foreground" />
-                  )}
                 </div>
               </button>
             ))}

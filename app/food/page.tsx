@@ -7,7 +7,6 @@ import {
   Apple, 
   ChefHat, 
   UtensilsCrossed, 
-  ArrowRight,
 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
@@ -136,9 +135,6 @@ export default function FoodPage() {
                         </p>
                       </div>
                     </div>
-                    {section.implemented && (
-                      <ArrowRight className="h-5 w-5 text-[var(--flow-text-muted)]" />
-                    )}
                   </div>
                 </div>
               </CardContent>
