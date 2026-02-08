@@ -289,7 +289,7 @@ function InstructionsSection({ meal }: { meal: MealWithDetails }) {
 function MealDetailSkeleton() {
   return (
     <div className="space-y-6">
-      <Card>
+      <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
         <CardHeader>
           <div className="space-y-3">
             <div className="flex items-center gap-2">
@@ -306,7 +306,7 @@ function MealDetailSkeleton() {
       
       <div className="space-y-4">
         <Skeleton className="h-10 w-full" />
-        <Card>
+        <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
           <CardContent className="p-6">
             <div className="space-y-3">
               <Skeleton className="h-6 w-32" />

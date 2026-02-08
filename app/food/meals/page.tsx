@@ -64,7 +64,10 @@ function MealsSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(3)].map((_, i) => (
-        <Card key={i}>
+        <Card
+          key={i}
+          className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]"
+        >
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1 space-y-2">
@@ -180,7 +183,7 @@ export default function MealsPage() {
                   <h2 className="text-lg font-semibold text-[var(--flow-text)]">Your Meals</h2>
                   <Badge
                     variant="outline"
-                    className="text-xs border-[color:var(--flow-border)] text-[var(--flow-text-muted)]"
+                    className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
                   >
                     {mealsList.length} meal{mealsList.length !== 1 ? 's' : ''}
                   </Badge>

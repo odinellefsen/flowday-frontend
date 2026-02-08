@@ -194,13 +194,13 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
   }
 
   return (
-    <Card>
+    <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
       <CardHeader>
-        <CardTitle className="flex items-center gap-2">
+        <CardTitle className="flex items-center gap-2 text-[var(--flow-text)]">
           <RefreshCw className="h-5 w-5" />
           Create Weekly Meal Habit
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-[var(--flow-text-muted)]">
           Set up a recurring weekly schedule for &quot;{meal.mealName}&quot;. Prep tasks will be automatically
           scheduled based on your meal&apos;s recipe instructions.
         </CardDescription>
@@ -210,7 +210,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
             {/* Main Event Section */}
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm font-semibold text-muted-foreground">
+              <div className="flex items-center gap-2 text-sm font-semibold text-[var(--flow-text-muted)]">
                 <Calendar className="h-4 w-4" />
                 Main Event Schedule
               </div>
@@ -221,10 +221,10 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                   name="targetWeekday"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Weekday</FormLabel>
+                      <FormLabel className="text-[var(--flow-text)]">Weekday</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger>
+                          <SelectTrigger className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
                             <SelectValue placeholder="Select weekday" />
                           </SelectTrigger>
                         </FormControl>
@@ -246,19 +246,19 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                   name="targetTime"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Time (optional)</FormLabel>
+                      <FormLabel className="text-[var(--flow-text)]">Time (optional)</FormLabel>
                       <FormControl>
                         <div className="relative">
-                          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                          <Clock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--flow-text-muted)]" />
                           <Input
                             {...field}
                             type="time"
-                            className="pl-10"
+                            className="pl-10 border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                             placeholder="HH:MM"
                           />
                         </div>
                       </FormControl>
-                      <FormDescription className="text-xs">
+                      <FormDescription className="text-xs text-[var(--flow-text-muted)]">
                         24-hour format (e.g., 18:00)
                       </FormDescription>
                       <FormMessage />
@@ -271,11 +271,15 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                   name="startDate"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Start Date</FormLabel>
+                      <FormLabel className="text-[var(--flow-text)]">Start Date</FormLabel>
                       <FormControl>
-                        <Input {...field} type="date" />
+                        <Input
+                          {...field}
+                          type="date"
+                          className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
+                        />
                       </FormControl>
-                      <FormDescription className="text-xs">
+                      <FormDescription className="text-xs text-[var(--flow-text-muted)]">
                         When to begin
                       </FormDescription>
                       <FormMessage />
@@ -300,7 +304,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                             onCheckedChange={handleCustomizeChange}
                           />
                         </FormControl>
-                        <FormLabel className="text-sm font-normal cursor-pointer">
+                        <FormLabel className="text-sm font-normal cursor-pointer text-[var(--flow-text)]">
                           Customize prep task schedule
                         </FormLabel>
                       </FormItem>
@@ -311,6 +315,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                       type="button"
                       variant="ghost"
                       size="sm"
+                      className="text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
                       onClick={() => setShowAdvanced(!showAdvanced)}
                     >
                       {showAdvanced ? (
@@ -329,25 +334,25 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                 </div>
 
                 {form.watch('customizeInstructions') && showAdvanced && (
-                  <div className="space-y-3 pl-6 border-l-2">
-                    <p className="text-sm text-muted-foreground mb-4">
+                  <div className="space-y-3 pl-6 border-l-2 border-[color:var(--flow-border)]">
+                    <p className="text-sm text-[var(--flow-text-muted)] mb-4">
                       By default, all prep tasks are scheduled 30 minutes before the main event. 
                       Customize individual tasks below (e.g., marinate 2 days before).
                     </p>
                     {instructionSchedules.map((schedule, index) => (
                       <div
                         key={schedule.instructionId}
-                        className="p-4 bg-muted/30 rounded-lg space-y-3"
+                        className="p-4 bg-[var(--flow-hover)] rounded-lg space-y-3"
                       >
                         <div className="flex items-start gap-2">
-                          <div className="flex-shrink-0 w-6 h-6 bg-primary/10 text-primary rounded-full flex items-center justify-center text-xs font-semibold">
+                          <div className="flex-shrink-0 w-6 h-6 bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] rounded-full flex items-center justify-center text-xs font-semibold">
                             {schedule.instructionNumber}
                           </div>
-                          <p className="text-sm flex-1">{schedule.instructionText}</p>
+                          <p className="text-sm flex-1 text-[var(--flow-text)]">{schedule.instructionText}</p>
                         </div>
                         <div className="grid grid-cols-2 gap-3">
                           <div>
-                            <label className="text-xs text-muted-foreground mb-1 block">
+                            <label className="text-xs text-[var(--flow-text-muted)] mb-1 block">
                               Weekday
                             </label>
                             <Select
@@ -356,7 +361,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                                 updateInstructionSchedule(index, 'scheduledWeekday', value)
                               }
                             >
-                              <SelectTrigger className="h-9">
+                              <SelectTrigger className="h-9 border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
                                 <SelectValue />
                               </SelectTrigger>
                               <SelectContent>
@@ -369,7 +374,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                             </Select>
                           </div>
                           <div>
-                            <label className="text-xs text-muted-foreground mb-1 block">
+                            <label className="text-xs text-[var(--flow-text-muted)] mb-1 block">
                               Time
                             </label>
                             <Input
@@ -378,7 +383,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                               onChange={(e) =>
                                 updateInstructionSchedule(index, 'scheduledTime', e.target.value)
                               }
-                              className="h-9"
+                              className="h-9 border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                             />
                           </div>
                         </div>
@@ -390,8 +395,8 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
             )}
 
             {/* Info Box */}
-            <div className="p-4 bg-blue-50 dark:bg-blue-950/20 rounded-lg border border-blue-200 dark:border-blue-900">
-              <p className="text-sm text-blue-900 dark:text-blue-100">
+            <div className="p-4 rounded-lg border border-[color:var(--flow-border)] bg-[var(--flow-hover)]">
+              <p className="text-sm text-[var(--flow-text-muted)]">
                 <strong>Note:</strong> Todos will be generated automatically when you view your todo list 
                 on the scheduled days. The system will create prep tasks and a main &quot;Eat: {meal.mealName}&quot; 
                 todo every week.
@@ -401,13 +406,19 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
             {/* Actions */}
             <div className="flex justify-end gap-3">
               {onCancel && (
-                <Button type="button" variant="outline" onClick={onCancel}>
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={onCancel}
+                  className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                >
                   Cancel
                 </Button>
               )}
               <Button
                 type="submit"
                 disabled={createHabitMutation.isPending}
+                className="bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
               >
                 {createHabitMutation.isPending ? (
                   <>
