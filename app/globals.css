@@ -60,7 +60,7 @@
   --flow-success-bg: #e5f6ee;
   --flow-success-text: #2aa772;
   --flow-warning: #d59c2f;
-  --background: oklch(1 0 0);
+  --background: var(--flow-background);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -109,7 +109,7 @@
   --flow-success-bg: #10261f;
   --flow-success-text: #7ed2a7;
   --flow-warning: #f3c969;
-  --background: #0f1216;
+  --background: var(--flow-background);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
