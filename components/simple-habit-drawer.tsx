@@ -89,6 +89,16 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
       return
     }
 
+    if (targetTime && !/^\d{2}:\d{2}$/.test(targetTime)) {
+      toast.error('Time must be in HH:MM format')
+      return
+    }
+
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(startDate)) {
+      toast.error('Start date must be in YYYY-MM-DD format')
+      return
+    }
+
     createSimpleHabitMutation.mutate({
       description: trimmedDescription,
       recurrenceType: 'weekly',
@@ -153,9 +163,11 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
               </label>
               <Input
                 id="simple-habit-time"
-                type="time"
+                type="text"
+                inputMode="numeric"
                 value={targetTime}
                 onChange={(event) => setTargetTime(event.target.value)}
+                placeholder="HH:MM"
                 className="max-w-full border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
               />
             </div>
@@ -166,10 +178,12 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
               </label>
               <Input
                 id="simple-habit-start-date"
-                type="date"
+                type="text"
+                inputMode="numeric"
                 required
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
+                placeholder="YYYY-MM-DD"
                 className="max-w-full border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
               />
             </div>
