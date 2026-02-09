@@ -21,14 +21,8 @@ interface PageProps {
 function UnitCard({ unit }: { unit: FoodItemUnit }) {
   const [showActions, setShowActions] = useState(false)
 
-  const getSourceColor = (source: string) => {
-    switch (source) {
-      case 'user_measured': return 'default'
-      case 'package_label': return 'secondary'
-      case 'database': return 'outline'
-      case 'estimated': return 'destructive'
-      default: return 'outline'
-    }
+  const getSourceColor = (_source: string) => {
+    return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
   }
 
   const formatNutrition = (unit: FoodItemUnit) => {
@@ -41,24 +35,24 @@ function UnitCard({ unit }: { unit: FoodItemUnit }) {
   }
 
   return (
-    <Card className="transition-all duration-200 hover:shadow-md">
+    <Card className="transition-all duration-200 border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] hover:border-[color:var(--flow-border-hover)]">
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-semibold text-lg">{unit.unitOfMeasurement}</h3>
-              <Badge variant={getSourceColor(unit.source || 'unknown')} className="text-xs">
+              <h3 className="font-semibold text-lg text-[var(--flow-text)]">{unit.unitOfMeasurement}</h3>
+              <span className={`text-xs px-2 py-1 rounded-md ${getSourceColor(unit.source || 'unknown')}`}>
                 {unit.source ? unit.source.replace('_', ' ') : 'unknown'}
-              </Badge>
+              </span>
             </div>
             
             {unit.unitDescription && (
-              <p className="text-sm text-muted-foreground mb-2">
+              <p className="text-sm text-[var(--flow-text-muted)] mb-2">
                 {unit.unitDescription}
               </p>
             )}
             
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-[var(--flow-text-muted)]">
               {formatNutrition(unit)}
             </div>
           </div>
@@ -74,7 +68,7 @@ function UnitCard({ unit }: { unit: FoodItemUnit }) {
             </Button>
             
             {showActions && (
-              <div className="absolute right-0 top-8 bg-popover border rounded-md shadow-lg p-1 z-10 min-w-[120px]">
+              <div className="absolute right-0 top-8 bg-[var(--flow-surface)] border-[color:var(--flow-border)] rounded-md shadow-[var(--flow-shadow)] p-1 z-10 min-w-[120px]">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -112,7 +106,7 @@ function UnitsSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(3)].map((_, i) => (
-        <Card key={i}>
+        <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]" key={i}>
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1 space-y-2">
@@ -148,17 +142,17 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
   const foodItemName = units[0]?.foodItemName || 'Food Item'
   
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--flow-background)]">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
         <header className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-                <Scale className="h-6 w-6 text-primary" />
+              <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 text-[var(--flow-text)]">
+                <Scale className="h-6 w-6 text-[var(--flow-accent)]" />
                 {isLoading ? 'Food Item Units' : foodItemName}
               </h1>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-[var(--flow-text-muted)]">
                 Manage measurement units and nutritional information
               </p>
             </div>
@@ -169,7 +163,10 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
             open={showCreateForm} 
             onOpenChange={setShowCreateForm}
           >
-            <Button size="sm">
+            <Button
+              size="sm"
+              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
+            >
               <Plus className="h-4 w-4 mr-2" />
               Add Unit
             </Button>
@@ -180,7 +177,7 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
         {isLoading && <UnitsSkeleton />}
         
         {error && (
-          <Card>
+          <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
             <CardHeader>
               <CardTitle className="text-destructive">Error Loading Units</CardTitle>
               <CardDescription>
@@ -193,11 +190,11 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
         {!isLoading && !error && (
           <>
             {units.length === 0 ? (
-              <Card className="animate-fade-in">
+              <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                 <CardContent className="p-8 text-center">
-                  <Scale className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Measurement Units Yet</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Scale className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Measurement Units Yet</h3>
+                  <p className="text-[var(--flow-text-muted)] mb-4">
                     Add measurement units to define how this food item can be measured and used in recipes.
                   </p>
                   <CreateUnitForm 
@@ -206,7 +203,7 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
                     open={showCreateForm} 
                     onOpenChange={setShowCreateForm}
                   >
-                    <Button>
+                    <Button className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]">
                       <Plus className="h-4 w-4 mr-2" />
                       Add Your First Unit
                     </Button>
@@ -216,8 +213,11 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
             ) : (
               <div className="space-y-4 animate-fade-in">
                 <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold">Measurement Units</h2>
-                  <Badge variant="outline" className="text-xs">
+                  <h2 className="text-lg font-semibold text-[var(--flow-text)]">Measurement Units</h2>
+                  <Badge
+                    variant="outline"
+                    className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
+                  >
                     {units.length} unit{units.length !== 1 ? 's' : ''}
                   </Badge>
                 </div>
