@@ -101,8 +101,8 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
-      <DrawerContent className="max-h-[85vh]">
-        <div className="mx-auto w-full max-w-sm">
+      <DrawerContent className="max-h-[85vh] overflow-x-hidden">
+        <div className="mx-auto w-full max-w-sm overflow-x-hidden">
           <DrawerHeader className="text-center">
             <DrawerTitle className="flex items-center justify-center gap-2 text-[var(--flow-text)]">
               <Calendar className="h-5 w-5" />
@@ -113,7 +113,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
             </DrawerDescription>
           </DrawerHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4 p-4 pb-0">
+          <form onSubmit={handleSubmit} className="space-y-4 overflow-x-hidden p-4 pb-0">
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--flow-text)]" htmlFor="simple-habit-description">
                 Description
@@ -156,7 +156,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
                 type="time"
                 value={targetTime}
                 onChange={(event) => setTargetTime(event.target.value)}
-                className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
+                className="max-w-full border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
               />
             </div>
 
@@ -170,7 +170,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
                 required
                 value={startDate}
                 onChange={(event) => setStartDate(event.target.value)}
-                className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
+                className="max-w-full border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
               />
             </div>
 
