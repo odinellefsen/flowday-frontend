@@ -38,3 +38,18 @@ export interface CreateHabitBatchResponse {
   }
 }
 
+export interface CreateSimpleHabitRequest {
+  description: string
+  recurrenceType: "weekly"
+  targetWeekday: Weekday
+  targetTime?: string
+  startDate: string
+}
+
+export interface CreateSimpleHabitResponse {
+  data: {
+    domain: "simple"
+    description: string
+  }
+}
+

@@ -6,8 +6,9 @@ import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check, Repeat } from 'lucide-react'
 import { DomainDrawer } from './domain-drawer'
+import { SimpleHabitDrawer } from './simple-habit-drawer'
 
 function TodoItemCard({
   todo,
@@ -289,6 +290,16 @@ export function TodoList() {
 
       {/* Floating Action Buttons */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3 animate-scale-in">
+        <SimpleHabitDrawer>
+          <Button
+            size="lg"
+            className="h-12 w-12 rounded-full shadow-lg hover:shadow-xl transition-all duration-200 hover:scale-105 bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/25"
+          >
+            <Repeat className="h-5 w-5" />
+            <span className="sr-only">Create simple habit</span>
+          </Button>
+        </SimpleHabitDrawer>
+
         {/* Domain Drawer Button */}
         <DomainDrawer>
           <Button

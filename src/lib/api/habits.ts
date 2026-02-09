@@ -8,6 +8,8 @@ import type { ApiResponse } from './types'
 import type {
   CreateHabitBatchRequest,
   CreateHabitBatchResponse,
+  CreateSimpleHabitRequest,
+  CreateSimpleHabitResponse,
 } from './types/habits'
 
 import { getApiBaseUrl } from '@/src/lib/api/base-url'
@@ -43,6 +45,31 @@ export const habitsAPI = {
 
     return response.json()
   },
+
+  /**
+   * Create a simple recurring habit (auto-generates todos)
+   */
+  createSimple: async (
+    token: string | null,
+    habitData: CreateSimpleHabitRequest
+  ): Promise<ApiResponse<CreateSimpleHabitResponse['data']>> => {
+    const response = await fetch(`${BASE_URL}/api/habit/simple`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: JSON.stringify(habitData),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Simple habit creation error:', errorData)
+      throw new Error(errorData.message || errorData.error || `HTTP error! status: ${response.status}`)
+    }
+
+    return response.json()
+  },
 }
 
 /**
@@ -56,6 +83,12 @@ export function useAuthenticatedHabitsAPI() {
     createBatch: async (habitData: CreateHabitBatchRequest): Promise<ApiResponse<CreateHabitBatchResponse['data']>> => {
       const token = await getToken()
       return habitsAPI.createBatch(token, habitData)
+    },
+    createSimple: async (
+      habitData: CreateSimpleHabitRequest
+    ): Promise<ApiResponse<CreateSimpleHabitResponse['data']>> => {
+      const token = await getToken()
+      return habitsAPI.createSimple(token, habitData)
     },
   }
 }
