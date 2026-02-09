@@ -34,13 +34,13 @@ function CategoryCard({
 }) {
   return (
     <Card 
-      className="transition-all duration-200 hover:shadow-md cursor-pointer hover:bg-accent/50"
+      className="transition-all duration-200 cursor-pointer animate-slide-up border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] hover:border-[color:var(--flow-border-hover)] hover:bg-[var(--flow-hover)]"
       onClick={onClick}
     >
       <CardContent className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-md bg-primary/10 text-primary">
+            <div className="p-2 rounded-md bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]">
               {hasSubcategories ? (
                 <Folder className="h-5 w-5" />
               ) : (
@@ -48,14 +48,14 @@ function CategoryCard({
               )}
             </div>
             <div>
-              <h3 className="font-semibold">{categoryName}</h3>
-              <p className="text-sm text-muted-foreground">
+              <h3 className="font-semibold text-[var(--flow-text)]">{categoryName}</h3>
+              <p className="text-sm text-[var(--flow-text-muted)]">
                 {itemCount} item{itemCount !== 1 ? 's' : ''}
                 {hasSubcategories && ' and subcategories'}
               </p>
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-muted-foreground" />
+          <ChevronRight className="h-4 w-4 text-[var(--flow-text-muted)]" />
         </div>
       </CardContent>
     </Card>
@@ -90,21 +90,27 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
 
   return (
     <Card 
-      className="transition-all duration-200 hover:shadow-md animate-slide-up cursor-pointer"
+      className="transition-all duration-200 animate-slide-up cursor-pointer border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] hover:border-[color:var(--flow-border-hover)]"
       onClick={() => router.push(`/food/items/${foodItem.id}/units`)}
     >
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-semibold text-lg">{foodItem.name}</h3>
+              <h3 className="font-semibold text-lg text-[var(--flow-text)]">{foodItem.name}</h3>
               {foodItem.hasUnits && (
-                <Badge variant="default" className="text-xs">
+                <Badge
+                  variant="outline"
+                  className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
+                >
                   {foodItem.unitCount} unit{foodItem.unitCount !== 1 ? 's' : ''}
                 </Badge>
               )}
               {!foodItem.hasUnits && (
-                <Badge variant="outline" className="text-xs">
+                <Badge
+                  variant="outline"
+                  className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
+                >
                   No units
                 </Badge>
               )}
@@ -113,11 +119,14 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
             {foodItem.categoryHierarchy && foodItem.categoryHierarchy.length > 0 && (
               <div className="mb-2">
                 <div className="flex items-center gap-1 text-xs">
-                  <span className="text-muted-foreground">Category:</span>
+                  <span className="text-[var(--flow-text-muted)]">Category:</span>
                   {foodItem.categoryHierarchy.map((category, index) => (
                     <span key={category} className="flex items-center">
-                      {index > 0 && <span className="mx-1 text-muted-foreground">→</span>}
-                      <Badge variant="secondary" className="text-xs">
+                      {index > 0 && <span className="mx-1 text-[var(--flow-text-muted)]">→</span>}
+                      <Badge
+                        variant="outline"
+                        className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
+                      >
                         {category}
                       </Badge>
                     </span>
@@ -126,7 +135,7 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
               </div>
             )}
             
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-[var(--flow-text-muted)]">
               {foodItem.hasUnits 
                 ? `Ready to use in recipes with ${foodItem.unitCount} measurement option${foodItem.unitCount !== 1 ? 's' : ''}`
                 : 'Add measurement units to use in recipes'
@@ -148,7 +157,7 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
             </Button>
             
             {showActions && (
-              <div className="absolute right-0 top-8 bg-popover border rounded-md shadow-lg p-1 z-10 min-w-[120px]">
+              <div className="absolute right-0 top-8 bg-[var(--flow-surface)] border-[color:var(--flow-border)] rounded-md shadow-[var(--flow-shadow)] p-1 z-10 min-w-[120px]">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -176,7 +185,7 @@ function FoodItemsSkeleton() {
   return (
     <div className="space-y-4">
       {[...Array(3)].map((_, i) => (
-        <Card key={i}>
+        <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]" key={i}>
           <CardContent className="p-4">
             <div className="flex items-start justify-between">
               <div className="flex-1 space-y-2">
@@ -273,15 +282,15 @@ export default function FoodItemsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-[var(--flow-background)]">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
         <header className="space-y-5 mb-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div>
-                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-                  <Apple className="h-6 w-6 text-primary" />
+                <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2 text-[var(--flow-text)]">
+                  <Apple className="h-6 w-6 text-[var(--flow-accent)]" />
                   Food Items
                 </h1>
               </div>
@@ -291,7 +300,10 @@ export default function FoodItemsPage() {
                 open={showCreateForm} 
                 onOpenChange={setShowCreateForm}
               >
-                <Button size="sm" className="w-full sm:w-auto">
+                <Button
+                  size="sm"
+                  className="w-full sm:w-auto border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
+                >
                   <Plus className="h-4 w-4 mr-2" />
                   Add Item
                 </Button>
@@ -340,7 +352,12 @@ export default function FoodItemsPage() {
             </Breadcrumb>
             
             {currentPath.length > 0 && (
-              <Button variant="ghost" size="sm" onClick={navigateUp} className="w-fit">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={navigateUp}
+                className="w-fit text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+              >
                 <ArrowLeft className="h-3 w-3 mr-1" />
                 Back
               </Button>
@@ -352,7 +369,7 @@ export default function FoodItemsPage() {
         {isLoading && <FoodItemsSkeleton />}
         
         {error && (
-          <Card>
+          <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
             <CardHeader>
               <CardTitle className="text-destructive">Error Loading Food Items</CardTitle>
               <CardDescription>
@@ -365,18 +382,18 @@ export default function FoodItemsPage() {
         {!isLoading && !error && (
           <>
             {foodItemsList.length === 0 ? (
-              <Card className="animate-fade-in">
+              <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                 <CardContent className="p-8 text-center">
-                  <Apple className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <h3 className="text-lg font-semibold mb-2">No Food Items Yet</h3>
-                  <p className="text-muted-foreground mb-4">
+                  <Apple className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+                  <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Food Items Yet</h3>
+                  <p className="text-[var(--flow-text-muted)] mb-4">
                     Create your first food item to start tracking nutrition and building recipes.
                   </p>
                   <CreateFoodItemForm 
                     open={showCreateForm} 
                     onOpenChange={setShowCreateForm}
                   >
-                    <Button>
+                    <Button className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]">
                       <Plus className="h-4 w-4 mr-2" />
                       Create Your First Food Item
                     </Button>
@@ -388,7 +405,7 @@ export default function FoodItemsPage() {
                 {/* Show subcategories first */}
                 {subcategories.length > 0 && (
                   <div className="space-y-3">
-                    <h2 className="text-lg font-semibold">Categories</h2>
+                    <h2 className="text-lg font-semibold text-[var(--flow-text)]">Categories</h2>
                     <div className="space-y-2">
                       {subcategories.map((category) => (
                         <CategoryCard
@@ -406,7 +423,7 @@ export default function FoodItemsPage() {
                 {/* Show food items at current level */}
                 {currentItems.length > 0 && (
                   <div className="space-y-3">
-                    <h2 className="text-lg font-semibold">
+                    <h2 className="text-lg font-semibold text-[var(--flow-text)]">
                       {currentPath.length === 0 ? 'Uncategorized Items' : 'Items'}
                     </h2>
                     <div className="space-y-3">
@@ -419,14 +436,17 @@ export default function FoodItemsPage() {
 
                 {/* Show message if current level is empty */}
                 {subcategories.length === 0 && currentItems.length === 0 && (
-                  <Card>
+                  <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                     <CardContent className="p-8 text-center">
-                      <Folder className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                      <h3 className="text-lg font-semibold mb-2">No Items in This Category</h3>
-                      <p className="text-muted-foreground mb-4">
+                      <Folder className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
+                      <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Items in This Category</h3>
+                      <p className="text-[var(--flow-text-muted)] mb-4">
                         This category doesn&apos;t contain any food items yet.
                       </p>
-                      <Button variant="outline" onClick={navigateUp}>
+                      <Button
+                        className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
+                        onClick={navigateUp}
+                      >
                         <ArrowLeft className="h-4 w-4 mr-2" />
                         Go Back
                       </Button>
