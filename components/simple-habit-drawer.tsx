@@ -51,6 +51,8 @@ const dayMap: Weekday[] = [
   'saturday',
 ]
 
+type SimpleHabitRecurrenceType = 'daily' | 'weekly'
+
 interface SimpleHabitDrawerProps {
   children: React.ReactNode
 }
@@ -60,6 +62,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
   const habitsAPI = useAuthenticatedHabitsAPI()
   const [open, setOpen] = useState(false)
   const [description, setDescription] = useState('')
+  const [recurrenceType, setRecurrenceType] = useState<SimpleHabitRecurrenceType>('daily')
   const [targetWeekday, setTargetWeekday] = useState<Weekday>(dayMap[new Date().getDay()])
   const [targetTime, setTargetTime] = useState('')
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
@@ -70,6 +73,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
       toast.success('Simple habit created successfully')
       queryInvalidation.invalidateTodayTodos(queryClient)
       setDescription('')
+      setRecurrenceType('daily')
       setTargetTime('')
       setTargetWeekday(dayMap[new Date().getDay()])
       setStartDate(new Date().toISOString().split('T')[0])
@@ -99,13 +103,19 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
       return
     }
 
-    createSimpleHabitMutation.mutate({
+    const basePayload = {
       description: trimmedDescription,
-      recurrenceType: 'weekly',
-      targetWeekday,
+      recurrenceType,
       targetTime: targetTime || undefined,
       startDate,
-    })
+    }
+
+    const payload: CreateSimpleHabitRequest =
+      recurrenceType === 'weekly'
+        ? { ...basePayload, recurrenceType: 'weekly', targetWeekday }
+        : { ...basePayload, recurrenceType: 'daily' }
+
+    createSimpleHabitMutation.mutate(payload)
   }
 
   return (
@@ -140,22 +150,39 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--flow-text)]" htmlFor="simple-habit-weekday">
-                Weekday
+              <label className="text-sm font-medium text-[var(--flow-text)]" htmlFor="simple-habit-recurrence">
+                Recurrence
               </label>
               <select
-                id="simple-habit-weekday"
-                value={targetWeekday}
-                onChange={(event) => setTargetWeekday(event.target.value as Weekday)}
+                id="simple-habit-recurrence"
+                value={recurrenceType}
+                onChange={(event) => setRecurrenceType(event.target.value as SimpleHabitRecurrenceType)}
                 className="w-full rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-3 py-2 text-sm text-[var(--flow-text)]"
               >
-                {weekdays.map((day) => (
-                  <option key={day} value={day}>
-                    {weekdayLabels[day]}
-                  </option>
-                ))}
+                <option value="daily">Daily</option>
+                <option value="weekly">Weekly</option>
               </select>
             </div>
+
+            {recurrenceType === 'weekly' && (
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-[var(--flow-text)]" htmlFor="simple-habit-weekday">
+                  Weekday
+                </label>
+                <select
+                  id="simple-habit-weekday"
+                  value={targetWeekday}
+                  onChange={(event) => setTargetWeekday(event.target.value as Weekday)}
+                  className="w-full rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-3 py-2 text-sm text-[var(--flow-text)]"
+                >
+                  {weekdays.map((day) => (
+                    <option key={day} value={day}>
+                      {weekdayLabels[day]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             <div className="space-y-2">
               <label className="text-sm font-medium text-[var(--flow-text)]" htmlFor="simple-habit-time">

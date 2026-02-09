@@ -40,8 +40,8 @@ export interface CreateHabitBatchResponse {
 
 export interface CreateSimpleHabitRequest {
   description: string
-  recurrenceType: "weekly"
-  targetWeekday: Weekday
+  recurrenceType: "daily" | "weekly"
+  targetWeekday?: Weekday
   targetTime?: string
   startDate: string
 }
