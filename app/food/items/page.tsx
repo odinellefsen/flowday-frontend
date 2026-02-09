@@ -14,7 +14,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
-import { Apple, ArrowLeft, Plus, MoreHorizontal, Trash2, Folder, FolderOpen, ChevronRight } from 'lucide-react'
+import { Apple, ArrowLeft, Plus, MoreHorizontal, Trash2, Folder, FolderOpen } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateFoodItemForm } from '../../../components/create-food-item-form'
@@ -55,7 +55,6 @@ function CategoryCard({
               </p>
             </div>
           </div>
-          <ChevronRight className="h-4 w-4 text-[var(--flow-text-muted)]" />
         </div>
       </CardContent>
     </Card>
