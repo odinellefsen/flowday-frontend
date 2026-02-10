@@ -65,7 +65,45 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
     document.body.style.overscrollBehaviorY = 'none'
     document.documentElement.style.overscrollBehaviorY = 'none'
 
+    let startY = 0
+
+    const handleTouchStart = (event: TouchEvent) => {
+      startY = event.touches[0]?.clientY ?? 0
+    }
+
+    const handleTouchMove = (event: TouchEvent) => {
+      const target = event.target as HTMLElement | null
+      if (!target) return
+
+      const drawerScrollContainer = target.closest('[data-food-item-drawer-scroll]')
+      if (!drawerScrollContainer) {
+        // Block document-level pull-to-refresh gestures outside drawer content.
+        event.preventDefault()
+        return
+      }
+
+      const currentY = event.touches[0]?.clientY ?? 0
+      const deltaY = currentY - startY
+      const scrollTop = drawerScrollContainer.scrollTop
+      const scrollHeight = drawerScrollContainer.scrollHeight
+      const clientHeight = drawerScrollContainer.clientHeight
+      const isAtTop = scrollTop <= 0
+      const isAtBottom = scrollTop + clientHeight >= scrollHeight - 1
+      const isPullingDown = deltaY > 0
+      const isPullingUp = deltaY < 0
+
+      // Prevent bounce/chain outside the drawer scroll bounds.
+      if ((isAtTop && isPullingDown) || (isAtBottom && isPullingUp)) {
+        event.preventDefault()
+      }
+    }
+
+    document.addEventListener('touchstart', handleTouchStart, { passive: true })
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+
     return () => {
+      document.removeEventListener('touchstart', handleTouchStart)
+      document.removeEventListener('touchmove', handleTouchMove)
       document.body.style.overscrollBehaviorY = previousBodyOverscrollY
       document.documentElement.style.overscrollBehaviorY = previousHtmlOverscrollY
     }
@@ -133,7 +171,10 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
         {children}
       </DrawerTrigger>
       <DrawerContent className="h-[85vh] max-h-[85vh] overflow-hidden overscroll-none">
-        <div className="mx-auto h-full w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain">
+        <div
+          data-food-item-drawer-scroll
+          className="mx-auto h-full w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain"
+        >
           <DrawerHeader className="text-center">
             <DrawerTitle className="flex items-center justify-center gap-2 text-[var(--flow-text)]">
               <Apple className="h-5 w-5" />
