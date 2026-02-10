@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Apple, Plus, X, Tag } from 'lucide-react'
+import { Apple, Plus, X } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -50,29 +50,6 @@ interface CreateFoodItemFormProps {
   onOpenChange: (open: boolean) => void
 }
 
-// Hierarchical category structure - each array represents a path from general to specific
-const categoryHierarchies = [
-  ['Food', 'Fruits', 'Citrus'],
-  ['Food', 'Fruits', 'Berries'],
-  ['Food', 'Fruits', 'Tropical'],
-  ['Food', 'Vegetables', 'Leafy Greens'],
-  ['Food', 'Vegetables', 'Root Vegetables'],
-  ['Food', 'Vegetables', 'Cruciferous'],
-  ['Food', 'Proteins', 'Meat'],
-  ['Food', 'Proteins', 'Poultry'],
-  ['Food', 'Proteins', 'Seafood'],
-  ['Food', 'Proteins', 'Plant-based'],
-  ['Food', 'Grains', 'Whole Grains'],
-  ['Food', 'Grains', 'Refined Grains'],
-  ['Food', 'Dairy', 'Milk Products'],
-  ['Food', 'Dairy', 'Cheese'],
-  ['Food', 'Spices & Seasonings'],
-  ['Food', 'Beverages'],
-  ['Food', 'Snacks'],
-  ['Food', 'Condiments & Sauces'],
-  ['Food', 'Oils & Fats'],
-]
-
 export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodItemFormProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const queryClient = useQueryClient()
@@ -116,10 +93,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
 
   const onSubmit = (data: CreateFoodItemFormData) => {
     createFoodItemMutation.mutate(data)
-  }
-
-  const selectCategoryHierarchy = (hierarchy: string[]) => {
-    setSelectedCategories(hierarchy)
   }
 
   const addNewCategory = () => {
@@ -179,7 +152,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
             <div className="space-y-3">
               <FormLabel className="text-sm font-medium">Categories (Optional)</FormLabel>
               <p className="text-xs text-muted-foreground">
-                Choose a pre-defined hierarchy or create your own using comma-separated levels
+                Create your own category hierarchy using comma-separated levels
               </p>
               
               {/* Selected Category Hierarchy */}
@@ -205,33 +178,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                   </div>
                 </div>
               )}
-
-              {/* Hierarchical Categories */}
-              <div className="space-y-2">
-                <p className="text-xs text-muted-foreground">Choose a category hierarchy:</p>
-                <div className="space-y-2 max-h-32 overflow-y-auto">
-                  {categoryHierarchies.map((hierarchy, index) => (
-                    <Button
-                      key={index}
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      onClick={() => selectCategoryHierarchy(hierarchy)}
-                      className="text-xs h-auto p-2 w-full justify-start"
-                    >
-                      <Tag className="h-3 w-3 mr-2 flex-shrink-0" />
-                      <span className="flex items-center gap-1">
-                        {hierarchy.map((category, catIndex) => (
-                          <span key={category} className="flex items-center">
-                            {catIndex > 0 && <span className="mx-1 text-muted-foreground">→</span>}
-                            <span>{category}</span>
-                          </span>
-                        ))}
-                      </span>
-                    </Button>
-                  ))}
-                </div>
-              </div>
 
               {/* Custom Category Hierarchy Input */}
               <FormField
@@ -288,7 +234,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                       </div>
                     </FormControl>
                     <FormDescription className="text-xs text-muted-foreground">
-                      This will replace any selected hierarchy above
+                      Categories are optional
                     </FormDescription>
                   </FormItem>
                 )}
