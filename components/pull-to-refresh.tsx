@@ -18,7 +18,7 @@ export function PullToRefresh() {
 
       return Boolean(
         target.closest(
-          '[data-slot="drawer-content"], [data-slot="dialog-content"], [role="dialog"], [data-slot="popover-content"]'
+          '[data-ptr-ignore], [data-slot="drawer-content"], [data-slot="dialog-content"], [role="dialog"], [data-slot="popover-content"]'
         )
       )
     }

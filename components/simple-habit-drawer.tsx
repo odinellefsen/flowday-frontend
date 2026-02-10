@@ -121,8 +121,11 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
-      <DrawerContent className="max-h-[85vh] overflow-x-hidden">
-        <div className="mx-auto w-full max-w-sm overflow-x-hidden">
+      <DrawerContent
+        data-ptr-ignore
+        className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden overscroll-none"
+      >
+        <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain">
           <DrawerHeader className="text-center">
             <DrawerTitle className="flex items-center justify-center gap-2 text-[var(--flow-text)]">
               <Calendar className="h-5 w-5" />
