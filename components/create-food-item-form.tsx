@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -54,6 +54,22 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const queryClient = useQueryClient()
   const apiClient = useAuthenticatedFoodItemsAPI()
+
+  useEffect(() => {
+    if (!open) return
+
+    const previousBodyOverscrollY = document.body.style.overscrollBehaviorY
+    const previousHtmlOverscrollY = document.documentElement.style.overscrollBehaviorY
+
+    // Prevent pull-to-refresh while the drawer is open.
+    document.body.style.overscrollBehaviorY = 'none'
+    document.documentElement.style.overscrollBehaviorY = 'none'
+
+    return () => {
+      document.body.style.overscrollBehaviorY = previousBodyOverscrollY
+      document.documentElement.style.overscrollBehaviorY = previousHtmlOverscrollY
+    }
+  }, [open])
 
   const form = useForm<CreateFoodItemFormData>({
     resolver: zodResolver(createFoodItemSchema),
@@ -116,8 +132,8 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
-      <DrawerContent className="max-h-[85vh] overflow-hidden">
-        <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain">
+      <DrawerContent className="h-[85vh] max-h-[85vh] overflow-hidden overscroll-none">
+        <div className="mx-auto h-full w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain">
           <DrawerHeader className="text-center">
             <DrawerTitle className="flex items-center justify-center gap-2 text-[var(--flow-text)]">
               <Apple className="h-5 w-5" />
