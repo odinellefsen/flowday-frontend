@@ -112,7 +112,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange} handleOnly disablePreventScroll={false}>
+    <Drawer open={open} onOpenChange={onOpenChange}>
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
