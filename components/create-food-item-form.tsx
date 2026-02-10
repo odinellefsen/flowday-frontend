@@ -116,7 +116,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
-      <DrawerContent className="max-h-[85vh] overflow-x-hidden">
+      <DrawerContent className="max-h-[85vh] overflow-y-auto overflow-x-hidden overscroll-contain">
         <div className="mx-auto w-full max-w-sm overflow-x-hidden">
           <DrawerHeader className="text-center">
             <DrawerTitle className="flex items-center justify-center gap-2 text-[var(--flow-text)]">
