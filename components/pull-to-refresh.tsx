@@ -9,18 +9,46 @@ export function PullToRefresh() {
 
   useEffect(() => {
     const threshold = 80
+    const topEdgeActivationPx = 48
+
+    const isInsideOverlaySurface = (target: EventTarget | null) => {
+      if (!(target instanceof HTMLElement)) {
+        return false
+      }
+
+      return Boolean(
+        target.closest(
+          '[data-slot="drawer-content"], [data-slot="dialog-content"], [role="dialog"], [data-slot="popover-content"]'
+        )
+      )
+    }
 
     const handleTouchStart = (event: TouchEvent) => {
+      if (isInsideOverlaySurface(event.target)) {
+        return
+      }
+
       const scrollTop =
         document.scrollingElement?.scrollTop ?? window.scrollY
       if (scrollTop > 0) {
         return
       }
-      pullStartYRef.current = event.touches[0]?.clientY ?? null
+
+      const startY = event.touches[0]?.clientY ?? null
+      if (startY === null || startY > topEdgeActivationPx) {
+        return
+      }
+
+      pullStartYRef.current = startY
       shouldRefreshRef.current = false
     }
 
     const handleTouchMove = (event: TouchEvent) => {
+      if (isInsideOverlaySurface(event.target)) {
+        shouldRefreshRef.current = false
+        return
+      }
+
       if (pullStartYRef.current === null) {
         return
       }
