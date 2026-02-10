@@ -388,15 +388,13 @@ export default function FoodItemsPage() {
                   <p className="text-[var(--flow-text-muted)] mb-4">
                     Create your first food item to start tracking nutrition and building recipes.
                   </p>
-                  <CreateFoodItemForm 
-                    open={showCreateForm} 
-                    onOpenChange={setShowCreateForm}
+                  <Button
+                    onClick={() => setShowCreateForm(true)}
+                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
                   >
-                    <Button className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create Your First Food Item
-                    </Button>
-                  </CreateFoodItemForm>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Your First Food Item
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
