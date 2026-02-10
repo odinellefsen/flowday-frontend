@@ -227,18 +227,11 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                               </div>
                             )}
                             
-                            <p><strong>Examples:</strong></p>
-                            <ul className="ml-4 space-y-0.5">
-                              <li>• <code className="rounded bg-muted px-1">Food, Fruits, Tropical</code></li>
-                              <li>• <code className="rounded bg-muted px-1">Food, Proteins, Plant-based</code></li>
-                              <li>• <code className="rounded bg-muted px-1">Food, Spices & Seasonings</code></li>
-                            </ul>
+                            
                           </div>
                         </div>
                       </FormControl>
-                      <FormDescription className="text-xs text-[var(--flow-text-muted)]">
-                        Categories are optional
-                      </FormDescription>
+                      
                     </FormItem>
                   )}
                 />
