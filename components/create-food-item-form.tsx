@@ -152,10 +152,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
               />
 
               <div className="space-y-3">
-                <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Categories (Optional)</FormLabel>
-                <p className="text-xs text-[var(--flow-text-muted)]">
-                  Create your own category hierarchy using comma-separated levels
-                </p>
+                <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Categories</FormLabel>
                 
                 {/* Selected Category Hierarchy */}
                 {selectedCategories.length > 0 && (
@@ -187,7 +184,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                   name="newCategory"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-xs font-medium text-[var(--flow-text)]">Custom Category Hierarchy</FormLabel>
                       <FormControl>
                         <div className="space-y-2">
                           <div className="flex gap-2">
