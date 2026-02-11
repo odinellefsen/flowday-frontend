@@ -32,14 +32,12 @@ import { Badge } from '@/components/ui/badge'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import type { CreateFoodItemRequest } from '@/src/lib/api/types/food-items'
 
-// Form validation schema based on API documentation
 const createFoodItemSchema = z.object({
   foodItemName: z
     .string()
     .min(1, 'Food item name is required')
     .max(100, 'Food item name must be less than 100 characters'),
-  categoryHierarchy: z.array(z.string()).optional(),
-  newCategory: z.string().optional(), // For adding new categories
+  newCategory: z.string().optional(),
 })
 
 type CreateFoodItemFormData = z.infer<typeof createFoodItemSchema>
@@ -59,7 +57,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
     resolver: zodResolver(createFoodItemSchema),
     defaultValues: {
       foodItemName: '',
-      categoryHierarchy: [],
       newCategory: '',
     },
   })
@@ -70,7 +67,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
         foodItemName: data.foodItemName,
         categoryHierarchy: selectedCategories.length > 0 ? selectedCategories : undefined,
       }
-      
       return apiClient.create(foodItemData)
     },
     onSuccess: (data) => {
@@ -103,7 +99,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
         .split(',')
         .map(part => part.trim())
         .filter(part => part.length > 0)
-      
+
       if (hierarchyParts.length > 0) {
         setSelectedCategories(hierarchyParts)
         form.setValue('newCategory', '')
@@ -131,7 +127,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6 p-4 pb-8"
+              className="space-y-6 p-4"
               style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}
             >
               <FormField
@@ -157,8 +153,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
 
               <div className="space-y-3">
                 <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Categories</FormLabel>
-                
-                {/* Selected Category Hierarchy */}
+
                 {selectedCategories.length > 0 && (
                   <div className="rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-3">
                     <div className="flex items-center gap-1 text-sm">
@@ -182,7 +177,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                   </div>
                 )}
 
-                {/* Custom Category Hierarchy Input */}
                 <FormField
                   control={form.control}
                   name="newCategory"
@@ -209,8 +203,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                           </div>
                           <div className="space-y-1 text-xs text-[var(--flow-text-muted)]">
                             <p><strong>Format:</strong> Use commas to separate hierarchy levels</p>
-                            
-                            {/* Live preview of hierarchy */}
+
                             {field.value && field.value.trim() && (
                               <div className="rounded border border-[color:var(--flow-border)] bg-[var(--flow-hover)] p-2">
                                 <p className="mb-1 font-medium">Preview:</p>
@@ -226,12 +219,9 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                                 </div>
                               </div>
                             )}
-                            
-                            
                           </div>
                         </div>
                       </FormControl>
-                      
                     </FormItem>
                   )}
                 />
