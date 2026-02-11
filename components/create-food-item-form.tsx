@@ -129,7 +129,11 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
           </DrawerHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-4 pb-0">
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6 p-4 pb-8"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}
+            >
               <FormField
                 control={form.control}
                 name="foodItemName"
@@ -233,7 +237,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                 />
               </div>
 
-              <DrawerFooter className="px-0 pb-[max(env(safe-area-inset-bottom),1rem)]">
+              <DrawerFooter className="px-0">
                 <div className="flex justify-end gap-3">
                   <Button
                     type="button"
