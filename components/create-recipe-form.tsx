@@ -4,7 +4,6 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { ChefHat, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
@@ -55,10 +54,10 @@ interface CreateRecipeFormProps {
 }
 
 const mealTimingOptions = [
-  { value: MealTimingEnum.BREAKFAST, label: 'Breakfast', emoji: '🌅' },
-  { value: MealTimingEnum.LUNCH, label: 'Lunch', emoji: '☀️' },
-  { value: MealTimingEnum.DINNER, label: 'Dinner', emoji: '🌙' },
-  { value: MealTimingEnum.SNACK, label: 'Snack', emoji: '🍿' },
+  { value: MealTimingEnum.BREAKFAST, label: 'Breakfast' },
+  { value: MealTimingEnum.LUNCH, label: 'Lunch' },
+  { value: MealTimingEnum.DINNER, label: 'Dinner' },
+  { value: MealTimingEnum.SNACK, label: 'Snack' },
 ]
 
 export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeFormProps) {
@@ -136,11 +135,10 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
       <DrawerContent className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden">
         <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden">
           <DrawerHeader className="space-y-3 text-center">
-            <DrawerTitle className="flex items-center justify-center gap-2 text-xl">
-              <ChefHat className="h-5 w-5" />
+            <DrawerTitle className="text-xl text-[var(--flow-text)]">
               Create New Recipe
             </DrawerTitle>
-            <DrawerDescription>
+            <DrawerDescription className="text-[var(--flow-text-muted)]">
               Create a new recipe. You can add ingredients and instructions after creation.
             </DrawerDescription>
           </DrawerHeader>
@@ -151,20 +149,20 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
               className="space-y-6 p-4"
               style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}
             >
-            {/* Recipe Name */}
             <FormField
               control={form.control}
               name="nameOfTheRecipe"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Recipe Name</FormLabel>
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Recipe Name</FormLabel>
                   <FormControl>
                     <Input
                       placeholder="e.g., Chocolate Chip Cookies, Caesar Salad"
                       {...field}
+                      className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                     />
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-[var(--flow-text-muted)]">
                     {field.value.length}/75 characters
                   </FormDescription>
                   <FormMessage />
@@ -172,21 +170,20 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
               )}
             />
 
-            {/* Recipe Description */}
             <FormField
               control={form.control}
               name="generalDescriptionOfTheRecipe"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Description (Optional)</FormLabel>
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Description (Optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Brief description of the recipe..."
-                      className="min-h-[80px] resize-none"
+                      className="min-h-[80px] resize-none border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-[var(--flow-text-muted)]">
                     {field.value?.length || 0}/250 characters
                   </FormDescription>
                   <FormMessage />
@@ -194,17 +191,16 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
               )}
             />
 
-            {/* Meal Timing */}
             <FormField
               control={form.control}
               name="whenIsItConsumed"
               render={() => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">When is it consumed? (Optional)</FormLabel>
-                  <FormDescription className="text-xs text-muted-foreground mb-3">
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">When is it consumed? (Optional)</FormLabel>
+                  <FormDescription className="mb-3 text-xs text-[var(--flow-text-muted)]">
                     Select all meal times when this recipe is typically enjoyed
                   </FormDescription>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-2 gap-2">
                     {mealTimingOptions.map((option) => (
                       <FormField
                         key={option.value}
@@ -214,7 +210,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                           return (
                             <FormItem
                               key={option.value}
-                              className="flex flex-row items-start space-x-3 space-y-0"
+                              className="flex flex-row items-center space-x-2 space-y-0 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-3 py-2"
                             >
                               <FormControl>
                                 <Checkbox
@@ -230,11 +226,8 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                                   }}
                                 />
                               </FormControl>
-                              <FormLabel className="text-sm font-normal cursor-pointer">
-                                <span className="flex items-center gap-2">
-                                  <span>{option.emoji}</span>
-                                  <span>{option.label}</span>
-                                </span>
+                              <FormLabel className="cursor-pointer text-sm font-normal text-[var(--flow-text)]">
+                                {option.label}
                               </FormLabel>
                             </FormItem>
                           )
@@ -254,12 +247,14 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                     disabled={createRecipeMutation.isPending}
+                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={createRecipeMutation.isPending}
+                    className="bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
                   >
                     {createRecipeMutation.isPending ? (
                       <>
@@ -267,10 +262,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                         Creating...
                       </>
                     ) : (
-                      <>
-                        <Plus className="h-4 w-4 mr-2" />
-                        Create Recipe
-                      </>
+                      'Create Recipe'
                     )}
                   </Button>
                 </div>
