@@ -242,15 +242,13 @@ export default function RecipesPage() {
                   <p className="text-[var(--flow-text-muted)] mb-4">
                     Create your first recipe to start building your personal cookbook.
                   </p>
-                  <CreateRecipeForm 
-                    open={showCreateForm} 
-                    onOpenChange={setShowCreateForm}
+                  <Button
+                    onClick={() => setShowCreateForm(true)}
+                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
                   >
-                    <Button className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Create Your First Recipe
-                    </Button>
-                  </CreateRecipeForm>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Create Your First Recipe
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
