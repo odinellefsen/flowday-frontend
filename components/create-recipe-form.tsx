@@ -134,7 +134,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
       </DrawerTrigger>
       <DrawerContent className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden">
         <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden">
-          <DrawerHeader className="space-y-3 text-center">
+          <DrawerHeader className="space-y-1.5 pb-2 text-center">
             <DrawerTitle className="text-xl text-[var(--flow-text)]">
               Create New Recipe
             </DrawerTitle>
@@ -146,8 +146,8 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6 p-4"
-              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}
+              className="space-y-4 p-3 pt-2"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
             >
             <FormField
               control={form.control}
@@ -179,7 +179,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                   <FormControl>
                     <Textarea
                       placeholder="Brief description of the recipe..."
-                      className="min-h-[80px] resize-none border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
+                      className="min-h-[64px] resize-none border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                       {...field}
                     />
                   </FormControl>
@@ -197,10 +197,10 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
               render={() => (
                 <FormItem>
                   <FormLabel className="text-sm font-medium text-[var(--flow-text)]">When is it consumed? (Optional)</FormLabel>
-                  <FormDescription className="mb-3 text-xs text-[var(--flow-text-muted)]">
-                    Select all meal times when this recipe is typically enjoyed
+                  <FormDescription className="mb-2 text-xs text-[var(--flow-text-muted)]">
+                    Select all that apply
                   </FormDescription>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div className="grid grid-cols-2 gap-1.5">
                     {mealTimingOptions.map((option) => (
                       <FormField
                         key={option.value}
@@ -210,7 +210,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                           return (
                             <FormItem
                               key={option.value}
-                              className="flex flex-row items-center space-x-2 space-y-0 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-3 py-2"
+                              className="flex flex-row items-center space-x-2 space-y-0 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-2.5 py-1.5"
                             >
                               <FormControl>
                                 <Checkbox
@@ -240,7 +240,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
               )}
             />
 
-              <DrawerFooter className="px-0">
+              <DrawerFooter className="px-0 pt-1">
                 <div className="flex justify-end gap-3">
                   <Button
                     type="button"
