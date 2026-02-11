@@ -233,7 +233,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                 />
               </div>
 
-              <DrawerFooter className="px-0 pb-[calc(env(safe-area-inset-bottom)+0.75rem)]">
+              <DrawerFooter className="px-0 pb-[max(env(safe-area-inset-bottom),1rem)]">
                 <div className="flex justify-end gap-3">
                   <Button
                     type="button"
