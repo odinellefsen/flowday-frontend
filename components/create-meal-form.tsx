@@ -4,19 +4,18 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { UtensilsCrossed, Plus } from 'lucide-react'
 import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import {
   Form,
   FormControl,
@@ -104,84 +103,91 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerTrigger asChild>
         {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto animate-scale-in">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <UtensilsCrossed className="h-5 w-5" />
-            Plan New Meal
-          </DialogTitle>
-          <DialogDescription>
-            Create a new meal. You can attach recipes to it after creation.
-          </DialogDescription>
-        </DialogHeader>
+      </DrawerTrigger>
+      <DrawerContent
+        data-ptr-ignore
+        className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden"
+      >
+        <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain">
+          <DrawerHeader className="space-y-1.5 pb-2 text-center">
+            <DrawerTitle className="text-xl text-[var(--flow-text)]">
+              Plan New Meal
+            </DrawerTitle>
+            <DrawerDescription className="text-[var(--flow-text-muted)]">
+              Create a new meal. You can attach recipes to it after creation.
+            </DrawerDescription>
+          </DrawerHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            {/* Meal Name */}
-            <FormField
-              control={form.control}
-              name="mealName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium">Meal Name</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="e.g., Sunday Brunch, Weeknight Dinner"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
-                    {field.value.length}/100 characters
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={createMealMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={createMealMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                {createMealMutation.isPending ? (
-                  <>
-                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Meal
-                  </>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 p-3 pt-2"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+            >
+              <FormField
+                control={form.control}
+                name="mealName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Meal Name</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="e.g., Sunday Brunch, Weeknight Dinner"
+                        {...field}
+                        className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
+                      />
+                    </FormControl>
+                    <FormDescription className="text-xs text-[var(--flow-text-muted)]">
+                      {field.value.length}/100 characters
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
                 )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              />
 
-        {createMealMutation.isError && (
-          <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-            <p className="text-sm text-destructive">
-              Failed to create meal. Please try again.
-            </p>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+              <DrawerFooter className="px-0 pt-1">
+                <div className="flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onOpenChange(false)}
+                    disabled={createMealMutation.isPending}
+                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={createMealMutation.isPending}
+                    className="bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
+                  >
+                    {createMealMutation.isPending ? (
+                      <>
+                        <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        Creating...
+                      </>
+                    ) : (
+                      'Create Meal'
+                    )}
+                  </Button>
+                </div>
+              </DrawerFooter>
+            </form>
+          </Form>
+
+          {createMealMutation.isError && (
+            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+              <p className="text-sm text-destructive">
+                Failed to create meal. Please try again.
+              </p>
+            </div>
+          )}
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
 

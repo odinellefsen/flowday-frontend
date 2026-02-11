@@ -151,17 +151,13 @@ export default function MealsPage() {
                   <p className="text-[var(--flow-text-muted)] mb-4">
                     Create your first meal plan to start organizing your recipes and cooking schedule.
                   </p>
-                  <CreateMealForm 
-                    open={showCreateForm} 
-                    onOpenChange={setShowCreateForm}
+                  <Button
+                    onClick={() => setShowCreateForm(true)}
+                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
                   >
-                    <Button
-                      className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
-                    >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Plan Your First Meal
-                    </Button>
-                  </CreateMealForm>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Plan Your First Meal
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
