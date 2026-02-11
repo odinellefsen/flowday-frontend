@@ -9,14 +9,14 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import {
   Form,
   FormControl,
@@ -129,23 +129,28 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
+    <Drawer open={open} onOpenChange={onOpenChange}>
+      <DrawerTrigger asChild>
         {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto animate-scale-in">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <ChefHat className="h-5 w-5" />
-            Create New Recipe
-          </DialogTitle>
-          <DialogDescription>
-            Create a new recipe. You can add ingredients and instructions after creation.
-          </DialogDescription>
-        </DialogHeader>
+      </DrawerTrigger>
+      <DrawerContent className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden">
+        <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden">
+          <DrawerHeader className="space-y-3 text-center">
+            <DrawerTitle className="flex items-center justify-center gap-2 text-xl">
+              <ChefHat className="h-5 w-5" />
+              Create New Recipe
+            </DrawerTitle>
+            <DrawerDescription>
+              Create a new recipe. You can add ingredients and instructions after creation.
+            </DrawerDescription>
+          </DrawerHeader>
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-6 p-4"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}
+            >
             {/* Recipe Name */}
             <FormField
               control={form.control}
@@ -242,45 +247,46 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
               )}
             />
 
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => onOpenChange(false)}
-                disabled={createRecipeMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={createRecipeMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                {createRecipeMutation.isPending ? (
-                  <>
-                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create Recipe
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              <DrawerFooter className="px-0">
+                <div className="flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => onOpenChange(false)}
+                    disabled={createRecipeMutation.isPending}
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={createRecipeMutation.isPending}
+                  >
+                    {createRecipeMutation.isPending ? (
+                      <>
+                        <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Recipe
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </DrawerFooter>
+            </form>
+          </Form>
 
-        {createRecipeMutation.isError && (
-          <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-            <p className="text-sm text-destructive">
-              Failed to create recipe. Please try again.
-            </p>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          {createRecipeMutation.isError && (
+            <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
+              <p className="text-sm text-destructive">
+                Failed to create recipe. Please try again.
+              </p>
+            </div>
+          )}
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
