@@ -12,14 +12,13 @@ import {
   Plus, 
   Edit, 
   Clock, 
-  List, 
   BookOpen,
   Utensils
 } from 'lucide-react'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
 import { ManageInstructionsForm } from '@/components/manage-instructions-form'
-import type { RecipeWithDetails, MealTimingEnum } from '@/src/lib/api/types/recipes'
+import type { RecipeWithDetails } from '@/src/lib/api/types/recipes'
 
 interface PageProps {
   params: Promise<{
@@ -28,7 +27,7 @@ interface PageProps {
 }
 
 function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
-  const getMealTimingColor = (_timing: MealTimingEnum) => {
+  const getMealTimingColor = () => {
     return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
   }
 
@@ -54,14 +53,6 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
             )}
             
             <div className="flex items-center gap-4 text-sm text-[var(--flow-text-muted)]">
-              <span className="flex items-center gap-1">
-                <List className="h-4 w-4" />
-                {recipe.ingredientCount} ingredient{recipe.ingredientCount !== 1 ? 's' : ''}
-              </span>
-              <span className="flex items-center gap-1">
-                <BookOpen className="h-4 w-4" />
-                {recipe.instructions?.length || recipe.stepCount} step{(recipe.instructions?.length || recipe.stepCount) !== 1 ? 's' : ''}
-              </span>
               {recipe.metadata.estimatedTotalTime && (
                 <span className="flex items-center gap-1">
                   <Clock className="h-4 w-4" />
@@ -75,7 +66,7 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
                 {recipe.whenIsItConsumed.map((timing) => (
                   <span
                     key={timing}
-                    className={`text-xs px-2 py-1 rounded-md ${getMealTimingColor(timing)}`}
+                    className={`text-xs px-2 py-1 rounded-md ${getMealTimingColor()}`}
                   >
                     {timing.toLowerCase()}
                   </span>
