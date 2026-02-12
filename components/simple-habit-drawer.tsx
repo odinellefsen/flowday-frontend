@@ -202,22 +202,6 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
               />
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-[var(--flow-text)]" htmlFor="simple-habit-start-date">
-                Start date
-              </label>
-              <Input
-                id="simple-habit-start-date"
-                type="text"
-                inputMode="numeric"
-                required
-                value={startDate}
-                onChange={(event) => setStartDate(event.target.value)}
-                placeholder="YYYY-MM-DD"
-                className="max-w-full border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
-              />
-            </div>
-
             <DrawerFooter className="px-0">
               <div className="flex justify-end gap-3">
                 <DrawerClose asChild>
