@@ -60,6 +60,13 @@ const mealTimingOptions = [
   { value: MealTimingEnum.SNACK, label: 'Snack' },
 ]
 
+const normalizeMealTimings = (timings?: Array<string | MealTimingEnum>): MealTimingEnum[] => {
+  const allowed = new Set(Object.values(MealTimingEnum))
+  return (timings ?? [])
+    .map((timing) => timing.toString().trim().toUpperCase())
+    .filter((timing): timing is MealTimingEnum => allowed.has(timing as MealTimingEnum))
+}
+
 export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRecipeFormProps) {
   const queryClient = useQueryClient()
   const apiClient = useAuthenticatedRecipesAPI()
@@ -69,7 +76,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
     defaultValues: {
       nameOfTheRecipe: recipe.nameOfTheRecipe,
       generalDescriptionOfTheRecipe: recipe.generalDescriptionOfTheRecipe ?? '',
-      whenIsItConsumed: recipe.whenIsItConsumed ?? [],
+      whenIsItConsumed: normalizeMealTimings(recipe.whenIsItConsumed),
     },
   })
 
@@ -78,7 +85,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
       form.reset({
         nameOfTheRecipe: recipe.nameOfTheRecipe,
         generalDescriptionOfTheRecipe: recipe.generalDescriptionOfTheRecipe ?? '',
-        whenIsItConsumed: recipe.whenIsItConsumed ?? [],
+        whenIsItConsumed: normalizeMealTimings(recipe.whenIsItConsumed),
       })
     }
   }, [open, recipe, form])
@@ -95,9 +102,8 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
         recipeData.generalDescriptionOfTheRecipe = description
       }
 
-      if (data.whenIsItConsumed && data.whenIsItConsumed.length > 0) {
-        recipeData.whenIsItConsumed = data.whenIsItConsumed
-      }
+      // Always send timing selection so users can also clear all timings.
+      recipeData.whenIsItConsumed = data.whenIsItConsumed ?? []
 
       return apiClient.update(recipeData)
     },
@@ -204,12 +210,17 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
                             >
                               <FormControl>
                                 <Checkbox
-                                  checked={field.value?.includes(option.value)}
+                                  checked={normalizeMealTimings(field.value).includes(option.value)}
                                   onCheckedChange={(checked) => {
+                                    const normalizedCurrent = normalizeMealTimings(field.value)
                                     return checked
-                                      ? field.onChange([...(field.value || []), option.value])
+                                      ? field.onChange(
+                                          normalizedCurrent.includes(option.value)
+                                            ? normalizedCurrent
+                                            : [...normalizedCurrent, option.value]
+                                        )
                                       : field.onChange(
-                                          field.value?.filter((value) => value !== option.value)
+                                          normalizedCurrent.filter((value) => value !== option.value)
                                         )
                                   }}
                                 />
