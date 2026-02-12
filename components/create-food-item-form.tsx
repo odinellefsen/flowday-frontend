@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -97,10 +97,24 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
     if (!nextOpen) {
       form.reset()
       setSelectedCategories([])
+      if (!isClosingAfterSubmit) {
+        createFoodItemMutation.reset()
+      }
+    } else {
       setIsClosingAfterSubmit(false)
-      createFoodItemMutation.reset()
     }
   }
+
+  useEffect(() => {
+    if (!open && isClosingAfterSubmit) {
+      const timeoutId = window.setTimeout(() => {
+        setIsClosingAfterSubmit(false)
+        createFoodItemMutation.reset()
+      }, 300)
+
+      return () => window.clearTimeout(timeoutId)
+    }
+  }, [open, isClosingAfterSubmit, createFoodItemMutation])
 
   const isBusy = createFoodItemMutation.isPending || isClosingAfterSubmit
 
