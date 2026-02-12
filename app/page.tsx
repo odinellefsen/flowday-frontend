@@ -3,24 +3,19 @@
 import { useAuth, useUser } from '@clerk/nextjs'
 import { SignInButton, SignUpButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
-import { Monitor, Moon, Sun } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
-import { useTheme } from 'next-themes'
 
 export default function Home() {
   const { isSignedIn, isLoaded, signOut } = useAuth()
-  const { theme, setTheme } = useTheme()
   const { user } = useUser()
   const displayName =
     user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0] || 'Account'
@@ -103,36 +98,6 @@ export default function Home() {
                   <DropdownMenuLabel className="text-sm font-medium text-[var(--flow-text)]">
                     {displayName}
                   </DropdownMenuLabel>
-                  <DropdownMenuSeparator className="bg-[var(--flow-border)]" />
-                  <DropdownMenuLabel className="text-xs uppercase tracking-wide text-[var(--flow-text-muted)]">
-                    Theme
-                  </DropdownMenuLabel>
-                  <DropdownMenuRadioGroup
-                    value={theme ?? 'system'}
-                    onValueChange={setTheme}
-                  >
-                    <DropdownMenuRadioItem
-                      value="light"
-                      className="cursor-pointer text-[var(--flow-text-muted)] focus:bg-[var(--flow-hover)] focus:text-[var(--flow-text)] data-[highlighted]:bg-[var(--flow-hover)] data-[highlighted]:text-[var(--flow-text)]"
-                    >
-                      <Sun className="h-4 w-4" />
-                      Light
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem
-                      value="dark"
-                      className="cursor-pointer text-[var(--flow-text-muted)] focus:bg-[var(--flow-hover)] focus:text-[var(--flow-text)] data-[highlighted]:bg-[var(--flow-hover)] data-[highlighted]:text-[var(--flow-text)]"
-                    >
-                      <Moon className="h-4 w-4" />
-                      Dark
-                    </DropdownMenuRadioItem>
-                    <DropdownMenuRadioItem
-                      value="system"
-                      className="cursor-pointer text-[var(--flow-text-muted)] focus:bg-[var(--flow-hover)] focus:text-[var(--flow-text)] data-[highlighted]:bg-[var(--flow-hover)] data-[highlighted]:text-[var(--flow-text)]"
-                    >
-                      <Monitor className="h-4 w-4" />
-                      System
-                    </DropdownMenuRadioItem>
-                  </DropdownMenuRadioGroup>
                   <DropdownMenuSeparator className="bg-[var(--flow-border)]" />
                   <DropdownMenuItem
                     className="cursor-pointer text-[var(--flow-text-muted)] focus:bg-[var(--flow-hover)] focus:text-[var(--flow-text)] data-[highlighted]:bg-[var(--flow-hover)] data-[highlighted]:text-[var(--flow-text)]"

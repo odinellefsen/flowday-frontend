@@ -77,7 +77,7 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem forcedTheme="system">
             <div className="min-h-[100dvh] bg-background safe-area">
               <QueryProvider>
                 <PullToRefresh />
