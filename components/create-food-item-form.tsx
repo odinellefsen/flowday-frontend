@@ -50,6 +50,7 @@ interface CreateFoodItemFormProps {
 
 export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodItemFormProps) {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
+  const [isClosingAfterSubmit, setIsClosingAfterSubmit] = useState(false)
   const queryClient = useQueryClient()
   const apiClient = useAuthenticatedFoodItemsAPI()
 
@@ -72,13 +73,12 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['foodItems'] })
       onOpenChange(false)
-      form.reset()
-      setSelectedCategories([])
       toast.success('Food item created successfully! 🎉', {
         description: `${data.data?.name} has been added to your food items.`,
       })
     },
     onError: (error) => {
+      setIsClosingAfterSubmit(false)
       console.error('Failed to create food item:', error)
       const errorMessage = error instanceof Error ? error.message : 'Unknown error'
       toast.error('Failed to create food item', {
@@ -88,8 +88,21 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   })
 
   const onSubmit = (data: CreateFoodItemFormData) => {
+    setIsClosingAfterSubmit(true)
     createFoodItemMutation.mutate(data)
   }
+
+  const handleOpenChange = (nextOpen: boolean) => {
+    onOpenChange(nextOpen)
+    if (!nextOpen) {
+      form.reset()
+      setSelectedCategories([])
+      setIsClosingAfterSubmit(false)
+      createFoodItemMutation.reset()
+    }
+  }
+
+  const isBusy = createFoodItemMutation.isPending || isClosingAfterSubmit
 
   const addNewCategory = () => {
     const newCategory = form.getValues('newCategory')
@@ -108,7 +121,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={handleOpenChange}>
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
@@ -232,18 +245,18 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                   <Button
                     type="button"
                     variant="outline"
-                    onClick={() => onOpenChange(false)}
-                    disabled={createFoodItemMutation.isPending}
+                    onClick={() => handleOpenChange(false)}
+                    disabled={isBusy}
                     className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
-                    disabled={createFoodItemMutation.isPending}
+                    disabled={isBusy}
                     className="bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
                   >
-                    {createFoodItemMutation.isPending ? (
+                    {isBusy ? (
                       <>
                         <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                         Creating...
