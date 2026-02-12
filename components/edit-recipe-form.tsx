@@ -79,6 +79,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
       whenIsItConsumed: normalizeMealTimings(recipe.whenIsItConsumed),
     },
   })
+  const selectedTimings = normalizeMealTimings(form.watch('whenIsItConsumed'))
 
   useEffect(() => {
     if (open) {
@@ -191,7 +192,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
               <FormField
                 control={form.control}
                 name="whenIsItConsumed"
-                render={() => (
+                render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-sm font-medium text-[var(--flow-text)]">When is it consumed? (Optional)</FormLabel>
                     <FormDescription className="mb-2 text-xs text-[var(--flow-text-muted)]">
@@ -199,40 +200,35 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
                     </FormDescription>
                     <div className="grid grid-cols-2 gap-1.5">
                       {mealTimingOptions.map((option) => (
-                        <FormField
+                        <FormItem
                           key={option.value}
-                          control={form.control}
-                          name="whenIsItConsumed"
-                          render={({ field }) => (
-                            <FormItem
-                              key={option.value}
-                              className="flex flex-row items-center space-x-2 space-y-0 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-2.5 py-1.5"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  checked={normalizeMealTimings(field.value).includes(option.value)}
-                                  onCheckedChange={(checked) => {
-                                    const normalizedCurrent = normalizeMealTimings(field.value)
-                                    return checked
-                                      ? field.onChange(
-                                          normalizedCurrent.includes(option.value)
-                                            ? normalizedCurrent
-                                            : [...normalizedCurrent, option.value]
-                                        )
-                                      : field.onChange(
-                                          normalizedCurrent.filter((value) => value !== option.value)
-                                        )
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="cursor-pointer text-sm font-normal text-[var(--flow-text)]">
-                                {option.label}
-                              </FormLabel>
-                            </FormItem>
-                          )}
-                        />
+                          className="flex flex-row items-center space-x-2 space-y-0 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-2.5 py-1.5"
+                        >
+                          <FormControl>
+                            <Checkbox
+                              checked={selectedTimings.includes(option.value)}
+                              onCheckedChange={(checked) => {
+                                const nextValues = checked
+                                  ? selectedTimings.includes(option.value)
+                                    ? selectedTimings
+                                    : [...selectedTimings, option.value]
+                                  : selectedTimings.filter((value) => value !== option.value)
+
+                                form.setValue('whenIsItConsumed', nextValues, {
+                                  shouldDirty: true,
+                                  shouldTouch: true,
+                                  shouldValidate: true,
+                                })
+                              }}
+                            />
+                          </FormControl>
+                          <FormLabel className="cursor-pointer text-sm font-normal text-[var(--flow-text)]">
+                            {option.label}
+                          </FormLabel>
+                        </FormItem>
                       ))}
                     </div>
+                    <input type="hidden" value={(field.value ?? []).join(',')} readOnly />
                     <FormMessage />
                   </FormItem>
                 )}
