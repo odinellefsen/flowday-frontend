@@ -7,6 +7,7 @@ import { useAuth } from '@clerk/nextjs'
 import type { ApiResponse } from './types'
 import type {
   CreateRecipeRequest,
+  UpdateRecipeRequest,
   CreateRecipeIngredientsRequest,
   CreateRecipeInstructionsRequest,
   UpdateRecipeInstructionsRequest,
@@ -73,6 +74,30 @@ export const recipesAPI = {
   ): Promise<ApiResponse<CreateRecipeResponse['data']>> => {
     const response = await fetch(`${BASE_URL}/api/recipe`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: JSON.stringify(recipeData),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      throw new Error(errorData.message || `HTTP error! status: ${response.status}`)
+    }
+
+    return response.json()
+  },
+
+  /**
+   * Update recipe metadata
+   */
+  update: async (
+    token: string | null,
+    recipeData: UpdateRecipeRequest
+  ): Promise<ApiResponse<CreateRecipeResponse['data']>> => {
+    const response = await fetch(`${BASE_URL}/api/recipe`, {
+      method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         ...(token && { Authorization: `Bearer ${token}` }),
@@ -201,6 +226,10 @@ export function useAuthenticatedRecipesAPI() {
     create: async (recipeData: CreateRecipeRequest): Promise<ApiResponse<CreateRecipeResponse['data']>> => {
       const token = await getToken()
       return recipesAPI.create(token, recipeData)
+    },
+    update: async (recipeData: UpdateRecipeRequest): Promise<ApiResponse<CreateRecipeResponse['data']>> => {
+      const token = await getToken()
+      return recipesAPI.update(token, recipeData)
     },
     delete: async (nameOfTheRecipe: string): Promise<ApiResponse<unknown>> => {
       const token = await getToken()

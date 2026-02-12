@@ -57,6 +57,13 @@ export interface CreateRecipeRequest {
   whenIsItConsumed?: MealTimingEnum[]
 }
 
+export interface UpdateRecipeRequest {
+  recipeId: string
+  nameOfTheRecipe: string
+  generalDescriptionOfTheRecipe?: string
+  whenIsItConsumed?: MealTimingEnum[]
+}
+
 export interface CreateRecipeIngredientsRequest {
   recipeId: string
   ingredients: Array<{

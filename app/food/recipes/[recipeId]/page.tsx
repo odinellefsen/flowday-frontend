@@ -16,6 +16,7 @@ import {
   Utensils
 } from 'lucide-react'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
+import { EditRecipeForm } from '@/components/edit-recipe-form'
 import { ManageIngredientsForm } from '@/components/manage-ingredients-form'
 import { ManageInstructionsForm } from '@/components/manage-instructions-form'
 import type { RecipeWithDetails } from '@/src/lib/api/types/recipes'
@@ -27,6 +28,8 @@ interface PageProps {
 }
 
 function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
+  const [showEditRecipeForm, setShowEditRecipeForm] = useState(false)
+
   const getMealTimingColor = () => {
     return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
   }
@@ -38,9 +41,6 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <CardTitle className="text-2xl text-[var(--flow-text)]">{recipe.nameOfTheRecipe}</CardTitle>
-              <Badge variant={recipe.completeness === 'complete' ? 'default' : 'outline'} className="text-xs">
-                {recipe.completeness}
-              </Badge>
               <Badge variant="outline" className="text-xs border-[color:var(--flow-border)] text-[var(--flow-text-muted)]">
                 v{recipe.version}
               </Badge>
@@ -75,14 +75,20 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
             )}
           </div>
           
-          <Button
-            variant="outline"
-            size="sm"
-            className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+          <EditRecipeForm
+            recipe={recipe}
+            open={showEditRecipeForm}
+            onOpenChange={setShowEditRecipeForm}
           >
-            <Edit className="h-4 w-4 mr-2" />
-            Edit Recipe
-          </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+            >
+              <Edit className="h-4 w-4 mr-2" />
+              Edit Recipe
+            </Button>
+          </EditRecipeForm>
         </div>
       </CardHeader>
     </Card>
