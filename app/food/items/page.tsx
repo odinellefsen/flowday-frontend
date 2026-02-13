@@ -271,7 +271,7 @@ export default function FoodItemsPage() {
     <div className="min-h-screen bg-[var(--flow-background)]">
       <div className="container mx-auto px-4 py-6 max-w-4xl">
         {/* Header */}
-        <header className="space-y-5 mb-8">
+        <header className="space-y-5 mb-4">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-3">
               <div>
