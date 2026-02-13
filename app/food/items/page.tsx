@@ -178,6 +178,10 @@ export default function FoodItemsPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentPath = searchParams.getAll('category')
+  const maxVisiblePathSegments = 3
+  const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
+  const visiblePathStartIndex = hiddenPathCount
+  const visiblePath = currentPath.slice(visiblePathStartIndex)
 
   const getFoodItemsUrl = (pathSegments: string[]) => {
     if (pathSegments.length === 0) return '/food/items'
@@ -303,24 +307,37 @@ export default function FoodItemsPage() {
                   All Items
                 </button>
 
-                {currentPath.map((pathSegment, index) => (
-                  <div key={`${pathSegment}-${index}`} className="flex items-center gap-1">
+                {hiddenPathCount > 0 && (
+                  <div className="flex items-center gap-1">
                     <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
-                    {index === currentPath.length - 1 ? (
+                    <span className="rounded-md px-2 py-1 text-[10px] font-medium text-[var(--flow-text-muted)]">
+                      +{hiddenPathCount}
+                    </span>
+                  </div>
+                )}
+
+                {visiblePath.map((pathSegment, index) => {
+                  const realPathIndex = visiblePathStartIndex + index
+
+                  return (
+                    <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
+                      <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                      {realPathIndex === currentPath.length - 1 ? (
                       <span className="rounded-md bg-[var(--flow-accent)]/12 px-2.5 py-1.5 text-xs font-medium text-[var(--flow-accent)]">
                         {pathSegment}
                       </span>
                     ) : (
                       <button
                         type="button"
-                        onClick={() => navigateToPath(index)}
+                        onClick={() => navigateToPath(realPathIndex)}
                         className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
                       >
                         {pathSegment}
                       </button>
                     )}
-                  </div>
-                ))}
+                    </div>
+                  )
+                })}
               </div>
             </div>
 
