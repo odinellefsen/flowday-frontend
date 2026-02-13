@@ -183,23 +183,25 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
 
                 {selectedCategories.length > 0 && (
                   <div className="rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-3">
-                    <div className="flex items-center gap-1 text-sm">
-                      <span className="text-[var(--flow-text-muted)]">Category path:</span>
-                      {selectedCategories.map((category, index) => (
-                        <span key={category} className="flex items-center">
-                          {index > 0 && <span className="mx-1 text-[var(--flow-text-muted)]">→</span>}
-                          <Badge variant="secondary" className="text-xs">
-                            {category}
-                          </Badge>
-                        </span>
-                      ))}
-                      <button
-                        type="button"
-                        onClick={() => setSelectedCategories([])}
-                        className="ml-2 text-[var(--flow-text-muted)] hover:text-destructive"
-                      >
-                        <X className="h-3 w-3" />
-                      </button>
+                    <div className="space-y-2 text-sm">
+                      <span className="block text-[var(--flow-text-muted)]">Category path:</span>
+                      <div className="flex flex-wrap items-center gap-1">
+                        {selectedCategories.map((category, index) => (
+                          <span key={`${category}-${index}`} className="flex max-w-full items-center">
+                            {index > 0 && <span className="mx-1 text-[var(--flow-text-muted)]">→</span>}
+                            <Badge variant="secondary" className="max-w-full break-all text-xs">
+                              {category}
+                            </Badge>
+                          </span>
+                        ))}
+                        <button
+                          type="button"
+                          onClick={() => setSelectedCategories([])}
+                          className="ml-1 text-[var(--flow-text-muted)] hover:text-destructive"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -234,11 +236,11 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                             {field.value && field.value.trim() && (
                               <div className="rounded border border-[color:var(--flow-border)] bg-[var(--flow-hover)] p-2">
                                 <p className="mb-1 font-medium">Preview:</p>
-                                <div className="flex items-center gap-1">
+                                <div className="flex flex-wrap items-center gap-1">
                                   {field.value.split(',').map((part, index) => (
-                                    <span key={index} className="flex items-center">
+                                    <span key={index} className="flex max-w-full items-center">
                                       {index > 0 && <span className="mx-1 text-[var(--flow-text-muted)]">→</span>}
-                                      <Badge variant="secondary" className="text-xs">
+                                      <Badge variant="secondary" className="max-w-full break-all text-xs">
                                         {part.trim()}
                                       </Badge>
                                     </span>
