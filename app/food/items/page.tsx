@@ -70,17 +70,20 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   useEffect(() => {
     if (!showActions) return
 
-    const handleClickOutside = (event: MouseEvent) => {
+    const handlePointerDownOutside = (event: PointerEvent) => {
       if (!actionsMenuRef.current) return
       if (!actionsMenuRef.current.contains(event.target as Node)) {
+        // Consume the first outside interaction so it only closes the menu.
+        event.preventDefault()
+        event.stopPropagation()
         setShowActions(false)
       }
     }
 
-    document.addEventListener('mousedown', handleClickOutside)
+    document.addEventListener('pointerdown', handlePointerDownOutside, true)
 
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
+      document.removeEventListener('pointerdown', handlePointerDownOutside, true)
     }
   }, [showActions])
 
