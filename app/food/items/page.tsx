@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   Breadcrumb,
@@ -95,48 +94,11 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <h3 className="font-semibold text-lg text-[var(--flow-text)]">{foodItem.name}</h3>
-              {foodItem.hasUnits && (
-                <Badge
-                  variant="outline"
-                  className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
-                >
-                  {foodItem.unitCount} unit{foodItem.unitCount !== 1 ? 's' : ''}
-                </Badge>
-              )}
-              {!foodItem.hasUnits && (
-                <Badge
-                  variant="outline"
-                  className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
-                >
-                  No units
-                </Badge>
-              )}
-            </div>
-            
-            {foodItem.categoryHierarchy && foodItem.categoryHierarchy.length > 0 && (
-              <div className="mb-2">
-                <div className="flex items-center gap-1 text-xs">
-                  <span className="text-[var(--flow-text-muted)]">Category:</span>
-                  {foodItem.categoryHierarchy.map((category, index) => (
-                    <span key={category} className="flex items-center">
-                      {index > 0 && <span className="mx-1 text-[var(--flow-text-muted)]">→</span>}
-                      <Badge
-                        variant="outline"
-                        className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
-                      >
-                        {category}
-                      </Badge>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
+            <h3 className="mb-2 font-semibold text-lg text-[var(--flow-text)]">{foodItem.name}</h3>
             
             <p className="text-sm text-[var(--flow-text-muted)]">
               {foodItem.hasUnits 
-                ? `Ready to use in recipes with ${foodItem.unitCount} measurement option${foodItem.unitCount !== 1 ? 's' : ''}`
+                ? 'Ready to use in recipes'
                 : 'Add measurement units to use in recipes'
               }
             </p>
