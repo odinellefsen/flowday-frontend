@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -62,30 +62,9 @@ function CategoryCard({
 
 function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   const [showActions, setShowActions] = useState(false)
-  const actionsMenuRef = useRef<HTMLDivElement | null>(null)
   const apiClient = useAuthenticatedFoodItemsAPI()
   const queryClient = useQueryClient()
   const router = useRouter()
-
-  useEffect(() => {
-    if (!showActions) return
-
-    const handlePointerDownOutside = (event: PointerEvent) => {
-      if (!actionsMenuRef.current) return
-      if (!actionsMenuRef.current.contains(event.target as Node)) {
-        // Consume the first outside interaction so it only closes the menu.
-        event.preventDefault()
-        event.stopPropagation()
-        setShowActions(false)
-      }
-    }
-
-    document.addEventListener('pointerdown', handlePointerDownOutside, true)
-
-    return () => {
-      document.removeEventListener('pointerdown', handlePointerDownOutside, true)
-    }
-  }, [showActions])
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
@@ -125,11 +104,11 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
             </p>
           </div>
           
-          <div ref={actionsMenuRef} className="relative">
+          <div className="relative">
             <Button
               variant="ghost"
               size="sm"
-              className="p-2"
+              className="relative z-20 p-2"
               onClick={(e) => {
                 e.stopPropagation() // Prevent card click when clicking menu
                 setShowActions(!showActions)
@@ -139,22 +118,36 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
             </Button>
             
             {showActions && (
-              <div className="absolute right-0 top-8 bg-[var(--flow-surface)] border-[color:var(--flow-border)] rounded-md shadow-[var(--flow-shadow)] p-1 z-10 min-w-[120px]">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start text-xs text-destructive hover:text-destructive"
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onPointerDown={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                  }}
                   onClick={(e) => {
+                    e.preventDefault()
                     e.stopPropagation()
                     setShowActions(false)
-                    handleDelete()
                   }}
-                  disabled={deleteMutation.isPending}
-                >
-                  <Trash2 className="h-3 w-3 mr-2" />
-                  Delete
-                </Button>
-              </div>
+                />
+                <div className="absolute right-0 top-8 z-20 min-w-[120px] rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-1 shadow-[var(--flow-shadow)]">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-xs text-destructive hover:text-destructive"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowActions(false)
+                      handleDelete()
+                    }}
+                    disabled={deleteMutation.isPending}
+                  >
+                    <Trash2 className="h-3 w-3 mr-2" />
+                    Delete
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         </div>
