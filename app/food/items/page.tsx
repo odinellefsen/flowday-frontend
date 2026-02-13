@@ -5,14 +5,6 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import {
-  Breadcrumb,
-  BreadcrumbItem,
-  BreadcrumbLink,
-  BreadcrumbList,
-  BreadcrumbPage,
-  BreadcrumbSeparator,
-} from '@/components/ui/breadcrumb'
 import { Apple, ArrowLeft, Plus, MoreHorizontal, Trash2, Folder, FolderOpen } from 'lucide-react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
@@ -295,52 +287,49 @@ export default function FoodItemsPage() {
             </div>
           </div>
 
-          {/* Breadcrumb Navigation */}
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem>
-                  <BreadcrumbLink 
-                    href="#" 
-                    onClick={(e) => {
-                      e.preventDefault()
-                      router.push('/food/items')
-                    }}
-                    className="cursor-pointer"
-                  >
-                    All Items
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
+          {/* Category Path Navigation */}
+          <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
+            <div className="min-w-0 flex-1 overflow-x-auto">
+              <div className="flex w-max items-center gap-1">
+                <button
+                  type="button"
+                  onClick={() => router.push('/food/items')}
+                  className={`rounded-md px-2.5 py-1.5 text-xs font-medium transition-colors ${
+                    currentPath.length === 0
+                      ? 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
+                      : 'text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]'
+                  }`}
+                >
+                  All Items
+                </button>
+
                 {currentPath.map((pathSegment, index) => (
-                  <div key={pathSegment} className="flex items-center">
-                    <BreadcrumbSeparator />
-                    <BreadcrumbItem>
-                      {index === currentPath.length - 1 ? (
-                        <BreadcrumbPage>{pathSegment}</BreadcrumbPage>
-                      ) : (
-                        <BreadcrumbLink 
-                          href="#" 
-                          onClick={(e) => {
-                            e.preventDefault()
-                            navigateToPath(index)
-                          }}
-                          className="cursor-pointer"
-                        >
-                          {pathSegment}
-                        </BreadcrumbLink>
-                      )}
-                    </BreadcrumbItem>
+                  <div key={`${pathSegment}-${index}`} className="flex items-center gap-1">
+                    <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                    {index === currentPath.length - 1 ? (
+                      <span className="rounded-md bg-[var(--flow-accent)]/12 px-2.5 py-1.5 text-xs font-medium text-[var(--flow-accent)]">
+                        {pathSegment}
+                      </span>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => navigateToPath(index)}
+                        className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                      >
+                        {pathSegment}
+                      </button>
+                    )}
                   </div>
                 ))}
-              </BreadcrumbList>
-            </Breadcrumb>
-            
+              </div>
+            </div>
+
             {currentPath.length > 0 && (
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
                 onClick={navigateUp}
-                className="w-fit text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                className="h-8 shrink-0 gap-1.5 border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-2.5 text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
               >
                 <ArrowLeft className="h-3 w-3 mr-1" />
                 Back
