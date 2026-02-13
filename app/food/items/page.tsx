@@ -14,7 +14,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb'
 import { Apple, ArrowLeft, Plus, MoreHorizontal, Trash2, Folder, FolderOpen } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateFoodItemForm } from '../../../components/create-food-item-form'
 import type { FoodItem } from '@/src/lib/api/types/food-items'
@@ -182,8 +182,17 @@ function FoodItemsSkeleton() {
 
 export default function FoodItemsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
-  const [currentPath, setCurrentPath] = useState<string[]>([]) // Current navigation path
   const apiClient = useAuthenticatedFoodItemsAPI()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const currentPath = searchParams.getAll('category')
+
+  const getFoodItemsUrl = (pathSegments: string[]) => {
+    if (pathSegments.length === 0) return '/food/items'
+    const params = new URLSearchParams()
+    pathSegments.forEach((segment) => params.append('category', segment))
+    return `/food/items?${params.toString()}`
+  }
 
   const { data: foodItems, isLoading, error } = useQuery({
     queryKey: ['foodItems'],
@@ -245,15 +254,15 @@ export default function FoodItemsPage() {
   const { items: currentItems, subcategories } = getCurrentLevelData()
 
   const navigateToCategory = (categoryName: string) => {
-    setCurrentPath([...currentPath, categoryName])
+    router.push(getFoodItemsUrl([...currentPath, categoryName]))
   }
 
   const navigateUp = () => {
-    setCurrentPath(currentPath.slice(0, -1))
+    router.push(getFoodItemsUrl(currentPath.slice(0, -1)))
   }
 
   const navigateToPath = (pathIndex: number) => {
-    setCurrentPath(currentPath.slice(0, pathIndex + 1))
+    router.push(getFoodItemsUrl(currentPath.slice(0, pathIndex + 1)))
   }
 
   return (
@@ -295,7 +304,7 @@ export default function FoodItemsPage() {
                     href="#" 
                     onClick={(e) => {
                       e.preventDefault()
-                      setCurrentPath([])
+                      router.push('/food/items')
                     }}
                     className="cursor-pointer"
                   >
