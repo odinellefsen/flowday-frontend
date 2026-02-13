@@ -9,7 +9,6 @@ export function PullToRefresh() {
 
   useEffect(() => {
     const threshold = 80
-    const topEdgeActivationPx = 48
 
     const isInsideOverlaySurface = (target: EventTarget | null) => {
       if (!(target instanceof HTMLElement)) {
@@ -24,6 +23,10 @@ export function PullToRefresh() {
     }
 
     const handleTouchStart = (event: TouchEvent) => {
+      if (isRefreshing) {
+        return
+      }
+
       if (isInsideOverlaySurface(event.target)) {
         return
       }
@@ -35,7 +38,7 @@ export function PullToRefresh() {
       }
 
       const startY = event.touches[0]?.clientY ?? null
-      if (startY === null || startY > topEdgeActivationPx) {
+      if (startY === null) {
         return
       }
 
@@ -54,7 +57,11 @@ export function PullToRefresh() {
       }
       const currentY = event.touches[0]?.clientY ?? 0
       const deltaY = currentY - pullStartYRef.current
-      if (deltaY > threshold) {
+      const scrollTop =
+        document.scrollingElement?.scrollTop ?? window.scrollY
+
+      // Only arm pull-to-refresh while the page is still pinned to top.
+      if (scrollTop <= 0 && deltaY > threshold) {
         shouldRefreshRef.current = true
       } else {
         shouldRefreshRef.current = false
@@ -70,16 +77,23 @@ export function PullToRefresh() {
       shouldRefreshRef.current = false
     }
 
+    const handleTouchCancel = () => {
+      pullStartYRef.current = null
+      shouldRefreshRef.current = false
+    }
+
     document.addEventListener("touchstart", handleTouchStart, { passive: true })
     document.addEventListener("touchmove", handleTouchMove, { passive: true })
     document.addEventListener("touchend", handleTouchEnd, { passive: true })
+    document.addEventListener("touchcancel", handleTouchCancel, { passive: true })
 
     return () => {
       document.removeEventListener("touchstart", handleTouchStart)
       document.removeEventListener("touchmove", handleTouchMove)
       document.removeEventListener("touchend", handleTouchEnd)
+      document.removeEventListener("touchcancel", handleTouchCancel)
     }
-  }, [])
+  }, [isRefreshing])
 
   if (!isRefreshing) {
     return null
@@ -87,7 +101,7 @@ export function PullToRefresh() {
 
   return (
     <div className="pointer-events-none fixed left-0 right-0 top-0 z-50 flex justify-center">
-      <div className="mt-2 rounded-full border bg-card px-4 py-1 text-xs text-muted-foreground shadow-sm">
+      <div className="mt-[calc(env(safe-area-inset-top)+0.5rem)] rounded-full border bg-card px-4 py-1 text-xs text-muted-foreground shadow-sm">
         Refreshing...
       </div>
     </div>
