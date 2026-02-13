@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -62,9 +62,27 @@ function CategoryCard({
 
 function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   const [showActions, setShowActions] = useState(false)
+  const actionsMenuRef = useRef<HTMLDivElement | null>(null)
   const apiClient = useAuthenticatedFoodItemsAPI()
   const queryClient = useQueryClient()
   const router = useRouter()
+
+  useEffect(() => {
+    if (!showActions) return
+
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!actionsMenuRef.current) return
+      if (!actionsMenuRef.current.contains(event.target as Node)) {
+        setShowActions(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [showActions])
 
   const deleteMutation = useMutation({
     mutationFn: async () => {
@@ -104,7 +122,7 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
             </p>
           </div>
           
-          <div className="relative">
+          <div ref={actionsMenuRef} className="relative">
             <Button
               variant="ghost"
               size="sm"
