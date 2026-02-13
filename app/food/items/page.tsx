@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -174,14 +174,20 @@ function FoodItemsSkeleton() {
 
 export default function FoodItemsPage() {
   const [showCreateForm, setShowCreateForm] = useState(false)
+  const pathScrollRef = useRef<HTMLDivElement | null>(null)
   const apiClient = useAuthenticatedFoodItemsAPI()
   const router = useRouter()
   const searchParams = useSearchParams()
   const currentPath = searchParams.getAll('category')
-  const maxVisiblePathSegments = 3
+  const maxVisiblePathSegments = 2
   const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
   const visiblePathStartIndex = hiddenPathCount
   const visiblePath = currentPath.slice(visiblePathStartIndex)
+
+  useEffect(() => {
+    if (!pathScrollRef.current) return
+    pathScrollRef.current.scrollLeft = pathScrollRef.current.scrollWidth
+  }, [currentPath])
 
   const getFoodItemsUrl = (pathSegments: string[]) => {
     if (pathSegments.length === 0) return '/food/items'
@@ -293,7 +299,7 @@ export default function FoodItemsPage() {
 
           {/* Category Path Navigation */}
           <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
-            <div className="min-w-0 flex-1 overflow-x-auto">
+            <div ref={pathScrollRef} className="min-w-0 flex-1 overflow-x-auto">
               <div className="flex w-max items-center gap-1">
                 <button
                   type="button"
