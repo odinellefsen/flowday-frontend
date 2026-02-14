@@ -4,8 +4,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Scale, Plus, Info } from 'lucide-react'
+import { Scale, Plus, Info, ChevronDown, ChevronUp } from 'lucide-react'
 import { toast } from 'sonner'
+import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -106,6 +107,7 @@ const unitCategories = {
 export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpenChange }: CreateUnitFormProps) {
   const queryClient = useQueryClient()
   const apiClient = useAuthenticatedFoodItemsAPI()
+  const [showAdvancedNutrition, setShowAdvancedNutrition] = useState(false)
 
   const form = useForm<CreateUnitFormData>({
     resolver: zodResolver(createUnitSchema),
@@ -149,6 +151,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
       queryClient.invalidateQueries({ queryKey: ['foodItemUnits', foodItemId] })
       queryClient.invalidateQueries({ queryKey: ['foodItems'] }) // Update the main list too
       onOpenChange(false)
+      setShowAdvancedNutrition(false)
       form.reset()
       toast.success('Unit created successfully', {
         description: 'The measurement unit has been added to this food item.',
@@ -270,139 +273,155 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                 )}
               />
 
-              {/* Macronutrients Grid */}
-              <div className="grid grid-cols-2 gap-4">
-                <FormField
-                  control={form.control}
-                  name="proteinInGrams"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Protein (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="1000"
-                          step="0.1"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+              <div className="rounded-lg border border-[color:var(--flow-border)]">
+                <button
+                  type="button"
+                  onClick={() => setShowAdvancedNutrition((prev) => !prev)}
+                  className="flex w-full items-center justify-between px-3 py-2 text-left text-sm font-medium text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                >
+                  <span>Advanced nutrition</span>
+                  {showAdvancedNutrition ? (
+                    <ChevronUp className="h-4 w-4 text-[var(--flow-text-muted)]" />
+                  ) : (
+                    <ChevronDown className="h-4 w-4 text-[var(--flow-text-muted)]" />
                   )}
-                />
+                </button>
 
-                <FormField
-                  control={form.control}
-                  name="carbohydratesInGrams"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Carbs (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="1000"
-                          step="0.1"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {showAdvancedNutrition && (
+                  <div className="grid grid-cols-2 gap-4 border-t border-[color:var(--flow-border)] p-3">
+                    <FormField
+                      control={form.control}
+                      name="proteinInGrams"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Protein (g)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="1000"
+                              step="0.1"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name="fatInGrams"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Fat (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="1000"
-                          step="0.1"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      control={form.control}
+                      name="carbohydratesInGrams"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Carbs (g)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="1000"
+                              step="0.1"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name="fiberInGrams"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Fiber (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="1000"
-                          step="0.1"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      control={form.control}
+                      name="fatInGrams"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Fat (g)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="1000"
+                              step="0.1"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name="sugarInGrams"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Sugar (g)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="1000"
-                          step="0.1"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      control={form.control}
+                      name="fiberInGrams"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Fiber (g)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="1000"
+                              step="0.1"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name="sodiumInMilligrams"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-sm font-medium">Sodium (mg)</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min="0"
-                          max="10000"
-                          step="0.1"
-                          placeholder="0"
-                          {...field}
-                          onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      control={form.control}
+                      name="sugarInGrams"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Sugar (g)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="1000"
+                              step="0.1"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="sodiumInMilligrams"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-sm font-medium">Sodium (mg)</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              min="0"
+                              max="10000"
+                              step="0.1"
+                              placeholder="0"
+                              {...field}
+                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                )}
               </div>
             </div>
 
@@ -438,7 +457,10 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => onOpenChange(false)}
+                onClick={() => {
+                  setShowAdvancedNutrition(false)
+                  onOpenChange(false)
+                }}
                 disabled={createUnitMutation.isPending}
                 className="w-full sm:w-auto"
               >
