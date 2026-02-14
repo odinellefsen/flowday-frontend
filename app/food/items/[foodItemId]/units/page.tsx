@@ -157,20 +157,14 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
               </p>
             </div>
           </div>
-          <CreateUnitForm 
-            foodItemId={foodItemId}
-            foodItemName={foodItemName}
-            open={showCreateForm} 
-            onOpenChange={setShowCreateForm}
+          <Button
+            size="sm"
+            onClick={() => setShowCreateForm(true)}
+            className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
           >
-            <Button
-              size="sm"
-              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
-            >
-              <Plus className="h-4 w-4 mr-2" />
-              Add Unit
-            </Button>
-          </CreateUnitForm>
+            <Plus className="h-4 w-4 mr-2" />
+            Add Unit
+          </Button>
         </header>
 
         {/* Content */}
@@ -197,17 +191,13 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
                   <p className="text-[var(--flow-text-muted)] mb-4">
                     Add measurement units to define how this food item can be measured and used in recipes.
                   </p>
-                  <CreateUnitForm 
-                    foodItemId={foodItemId}
-                    foodItemName={foodItemName}
-                    open={showCreateForm} 
-                    onOpenChange={setShowCreateForm}
+                  <Button
+                    onClick={() => setShowCreateForm(true)}
+                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]"
                   >
-                    <Button className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] shadow-[var(--flow-shadow)]">
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Your First Unit
-                    </Button>
-                  </CreateUnitForm>
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Your First Unit
+                  </Button>
                 </CardContent>
               </Card>
             ) : (
@@ -233,6 +223,14 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
           </>
         )}
       </div>
+      <CreateUnitForm
+        foodItemId={foodItemId}
+        foodItemName={foodItemName}
+        open={showCreateForm}
+        onOpenChange={setShowCreateForm}
+      >
+        <span className="hidden" />
+      </CreateUnitForm>
     </div>
   )
 }

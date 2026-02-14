@@ -247,22 +247,27 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                     variant="outline"
                     onClick={() => onOpenChange(false)}
                     disabled={createRecipeMutation.isPending}
-                    className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+                    className="min-w-[100px] justify-center border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] transition-none hover:bg-[var(--flow-hover)]"
                   >
                     Cancel
                   </Button>
                   <Button
                     type="submit"
                     disabled={createRecipeMutation.isPending}
-                    className="bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
+                    className="min-w-[140px] justify-center bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] transition-none hover:bg-[var(--flow-accent)]/20"
                   >
                     {createRecipeMutation.isPending ? (
                       <>
-                        <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        </span>
                         Creating...
                       </>
                     ) : (
-                      'Create Recipe'
+                      <>
+                        <span className="mr-2 inline-flex h-4 w-4" />
+                        Create Recipe
+                      </>
                     )}
                   </Button>
                 </div>
