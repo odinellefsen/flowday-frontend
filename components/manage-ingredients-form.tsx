@@ -91,7 +91,7 @@ export function ManageIngredientsForm({
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
       onOpenChange(false)
       form.reset()
-      toast.success('Ingredients added successfully! 🥕', {
+      toast.success('Ingredients added successfully', {
         description: `New ingredients have been added to ${recipeName}.`,
       })
     },

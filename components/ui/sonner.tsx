@@ -13,26 +13,12 @@ const Toaster = ({ className, ...props }: ToasterProps) => {
       position="bottom-center"
       offset={{ top: "12px", left: "12px", right: "12px", bottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
       mobileOffset={{ top: "12px", left: "12px", right: "12px", bottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
-      richColors
-      closeButton
-      expand
-      visibleToasts={3}
       className={cn("toaster group", className)}
-      toastOptions={{
-        classNames: {
-          toast: "flow-toast",
-          title: "flow-toast-title",
-          description: "flow-toast-description",
-          actionButton: "flow-toast-action",
-          cancelButton: "flow-toast-cancel",
-          closeButton: "flow-toast-close",
-        },
-      }}
       style={
         {
-          "--normal-bg": "var(--flow-surface)",
-          "--normal-text": "var(--flow-text)",
-          "--normal-border": "var(--flow-border)",
+          "--normal-bg": "var(--popover)",
+          "--normal-text": "var(--popover-foreground)",
+          "--normal-border": "var(--border)",
         } as React.CSSProperties
       }
       {...props}

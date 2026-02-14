@@ -104,7 +104,7 @@ export function CreateTodoForm({
         description: '',
         scheduledFor: '',
       })
-      toast.success('Task created successfully! 🎉', {
+      toast.success('Task created successfully', {
         description: 'Your new task has been added to today\'s schedule.',
       })
     } catch (error) {

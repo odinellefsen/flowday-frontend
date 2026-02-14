@@ -104,7 +104,7 @@ export function AttachRecipesForm({
       setSearchQuery('')
       
       const count = data.data?.mealRecipe.recipes.length || 0
-      toast.success(`${count} recipe${count !== 1 ? 's' : ''} attached successfully! 🎉`, {
+      toast.success(`${count} recipe${count !== 1 ? 's' : ''} attached successfully`, {
         description: `Recipes have been added to ${mealName}.`,
       })
     },

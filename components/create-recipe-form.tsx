@@ -109,7 +109,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
       sessionStorage.removeItem(CREATE_RECIPE_DRAFT_KEY)
       onOpenChange(false)
       form.reset(CREATE_RECIPE_DEFAULT_VALUES)
-      toast.success('Recipe created successfully! 🎉', {
+      toast.success('Recipe created successfully', {
         description: `${data.data?.nameOfTheRecipe} has been added to your recipes.`,
       })
       

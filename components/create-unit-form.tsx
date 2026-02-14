@@ -150,7 +150,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
       queryClient.invalidateQueries({ queryKey: ['foodItems'] }) // Update the main list too
       onOpenChange(false)
       form.reset()
-      toast.success('Unit created successfully! 🎉', {
+      toast.success('Unit created successfully', {
         description: 'The measurement unit has been added to this food item.',
       })
     },

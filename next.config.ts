@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
     CLERK_LOGGING: 'false',
     CLERK_DEBUG: 'false',
   },
+  devIndicators: false,
   // Explicitly set the workspace root to silence lockfile warning
   turbopack: {
     root: __dirname,

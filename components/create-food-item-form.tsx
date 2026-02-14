@@ -78,7 +78,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
       form.reset(CREATE_FOOD_ITEM_DEFAULT_VALUES)
       setSelectedCategories([])
       onOpenChange(false)
-      toast.success('Food item created successfully! 🎉', {
+      toast.success('Food item created successfully', {
         description: `${data.data?.name} has been added to your food items.`,
       })
     },

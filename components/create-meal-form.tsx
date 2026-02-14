@@ -84,7 +84,7 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
       sessionStorage.removeItem(CREATE_MEAL_DRAFT_KEY)
       onOpenChange(false)
       form.reset(CREATE_MEAL_DEFAULT_VALUES)
-      toast.success('Meal created successfully! 🎉', {
+      toast.success('Meal created successfully', {
         description: `${data.data?.meal.mealName} has been added to your meals.`,
       })
 

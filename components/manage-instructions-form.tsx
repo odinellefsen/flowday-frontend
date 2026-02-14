@@ -135,7 +135,7 @@ export function ManageInstructionsForm({
       onOpenChange(false)
       form.reset()
       setAttachedUnits({}) // Clear attached units
-      toast.success('Instructions added successfully! 📝', {
+      toast.success('Instructions added successfully', {
         description: `New instructions have been added to ${recipeName}.`,
       })
     },
