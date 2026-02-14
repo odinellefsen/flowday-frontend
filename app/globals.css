@@ -283,11 +283,6 @@
   --toast-shadow: 0 18px 40px rgba(0, 0, 0, 0.38);
 }
 
-.toaster[data-sonner-toaster][data-y-position="top"] {
-  top: 0 !important;
-  padding-top: max(56px, calc(env(safe-area-inset-top) + 28px)) !important;
-}
-
 .toaster [data-sonner-toast] {
   border: 1px solid var(--flow-border);
   border-radius: 14px;

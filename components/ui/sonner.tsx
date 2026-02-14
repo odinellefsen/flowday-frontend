@@ -10,9 +10,9 @@ const Toaster = ({ className, ...props }: ToasterProps) => {
   return (
     <Sonner
       theme={theme as ToasterProps["theme"]}
-      position="top-center"
-      offset={64}
-      mobileOffset={64}
+      position="bottom-center"
+      offset={{ top: "12px", left: "12px", right: "12px", bottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
+      mobileOffset={{ top: "12px", left: "12px", right: "12px", bottom: "calc(env(safe-area-inset-bottom) + 12px)" }}
       richColors
       closeButton
       expand
