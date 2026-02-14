@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -39,6 +40,10 @@ const createMealSchema = z.object({
 })
 
 type CreateMealFormData = z.infer<typeof createMealSchema>
+const CREATE_MEAL_DEFAULT_VALUES: CreateMealFormData = {
+  mealName: '',
+}
+const CREATE_MEAL_DRAFT_KEY = 'draft:create-meal'
 
 interface CreateMealFormProps {
   children: React.ReactNode
@@ -53,9 +58,7 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
 
   const form = useForm<CreateMealFormData>({
     resolver: zodResolver(createMealSchema),
-    defaultValues: {
-      mealName: '',
-    },
+    defaultValues: CREATE_MEAL_DEFAULT_VALUES,
   })
 
   const createMealMutation = useMutation({
@@ -78,8 +81,9 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['meals'] })
+      sessionStorage.removeItem(CREATE_MEAL_DRAFT_KEY)
       onOpenChange(false)
-      form.reset()
+      form.reset(CREATE_MEAL_DEFAULT_VALUES)
       toast.success('Meal created successfully! 🎉', {
         description: `${data.data?.meal.mealName} has been added to your meals.`,
       })
@@ -101,6 +105,29 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
   const onSubmit = (data: CreateMealFormData) => {
     createMealMutation.mutate(data)
   }
+
+  useEffect(() => {
+    const rawDraft = sessionStorage.getItem(CREATE_MEAL_DRAFT_KEY)
+    if (!rawDraft) return
+
+    try {
+      const draft = JSON.parse(rawDraft) as Partial<CreateMealFormData>
+      form.reset({
+        ...CREATE_MEAL_DEFAULT_VALUES,
+        ...draft,
+      })
+    } catch {
+      sessionStorage.removeItem(CREATE_MEAL_DRAFT_KEY)
+    }
+  }, [form])
+
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      sessionStorage.setItem(CREATE_MEAL_DRAFT_KEY, JSON.stringify(values))
+    })
+
+    return () => subscription.unsubscribe()
+  }, [form])
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

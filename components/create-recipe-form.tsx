@@ -1,5 +1,6 @@
 'use client'
 
+import { useEffect } from 'react'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -46,6 +47,12 @@ const createRecipeSchema = z.object({
 })
 
 type CreateRecipeFormData = z.infer<typeof createRecipeSchema>
+const CREATE_RECIPE_DEFAULT_VALUES: CreateRecipeFormData = {
+  nameOfTheRecipe: '',
+  generalDescriptionOfTheRecipe: '',
+  whenIsItConsumed: [],
+}
+const CREATE_RECIPE_DRAFT_KEY = 'draft:create-recipe'
 
 interface CreateRecipeFormProps {
   children: React.ReactNode
@@ -67,11 +74,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
 
   const form = useForm<CreateRecipeFormData>({
     resolver: zodResolver(createRecipeSchema),
-    defaultValues: {
-      nameOfTheRecipe: '',
-      generalDescriptionOfTheRecipe: '',
-      whenIsItConsumed: [],
-    },
+    defaultValues: CREATE_RECIPE_DEFAULT_VALUES,
   })
 
   const createRecipeMutation = useMutation({
@@ -103,8 +106,9 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['recipes'] })
+      sessionStorage.removeItem(CREATE_RECIPE_DRAFT_KEY)
       onOpenChange(false)
-      form.reset()
+      form.reset(CREATE_RECIPE_DEFAULT_VALUES)
       toast.success('Recipe created successfully! 🎉', {
         description: `${data.data?.nameOfTheRecipe} has been added to your recipes.`,
       })
@@ -126,6 +130,29 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
   const onSubmit = (data: CreateRecipeFormData) => {
     createRecipeMutation.mutate(data)
   }
+
+  useEffect(() => {
+    const rawDraft = sessionStorage.getItem(CREATE_RECIPE_DRAFT_KEY)
+    if (!rawDraft) return
+
+    try {
+      const draft = JSON.parse(rawDraft) as Partial<CreateRecipeFormData>
+      form.reset({
+        ...CREATE_RECIPE_DEFAULT_VALUES,
+        ...draft,
+      })
+    } catch {
+      sessionStorage.removeItem(CREATE_RECIPE_DRAFT_KEY)
+    }
+  }, [form])
+
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      sessionStorage.setItem(CREATE_RECIPE_DRAFT_KEY, JSON.stringify(values))
+    })
+
+    return () => subscription.unsubscribe()
+  }, [form])
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange}>

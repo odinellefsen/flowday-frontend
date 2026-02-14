@@ -41,6 +41,11 @@ const createFoodItemSchema = z.object({
 })
 
 type CreateFoodItemFormData = z.infer<typeof createFoodItemSchema>
+const CREATE_FOOD_ITEM_DEFAULT_VALUES: CreateFoodItemFormData = {
+  foodItemName: '',
+  newCategory: '',
+}
+const CREATE_FOOD_ITEM_DRAFT_KEY = 'draft:create-food-item'
 
 interface CreateFoodItemFormProps {
   children: React.ReactNode
@@ -56,10 +61,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
 
   const form = useForm<CreateFoodItemFormData>({
     resolver: zodResolver(createFoodItemSchema),
-    defaultValues: {
-      foodItemName: '',
-      newCategory: '',
-    },
+    defaultValues: CREATE_FOOD_ITEM_DEFAULT_VALUES,
   })
 
   const createFoodItemMutation = useMutation({
@@ -72,6 +74,9 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['foodItems'] })
+      sessionStorage.removeItem(CREATE_FOOD_ITEM_DRAFT_KEY)
+      form.reset(CREATE_FOOD_ITEM_DEFAULT_VALUES)
+      setSelectedCategories([])
       onOpenChange(false)
       toast.success('Food item created successfully! 🎉', {
         description: `${data.data?.name} has been added to your food items.`,
@@ -95,8 +100,6 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   const handleOpenChange = (nextOpen: boolean) => {
     onOpenChange(nextOpen)
     if (!nextOpen) {
-      form.reset()
-      setSelectedCategories([])
       if (!isClosingAfterSubmit) {
         createFoodItemMutation.reset()
       }
@@ -104,6 +107,55 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
       setIsClosingAfterSubmit(false)
     }
   }
+
+  useEffect(() => {
+    const rawDraft = sessionStorage.getItem(CREATE_FOOD_ITEM_DRAFT_KEY)
+    if (!rawDraft) return
+
+    try {
+      const draft = JSON.parse(rawDraft) as {
+        formValues?: Partial<CreateFoodItemFormData>
+        selectedCategories?: string[]
+      }
+
+      if (draft.formValues) {
+        form.reset({
+          ...CREATE_FOOD_ITEM_DEFAULT_VALUES,
+          ...draft.formValues,
+        })
+      }
+
+      if (Array.isArray(draft.selectedCategories)) {
+        setSelectedCategories(draft.selectedCategories)
+      }
+    } catch {
+      sessionStorage.removeItem(CREATE_FOOD_ITEM_DRAFT_KEY)
+    }
+  }, [form])
+
+  useEffect(() => {
+    const subscription = form.watch((values) => {
+      sessionStorage.setItem(
+        CREATE_FOOD_ITEM_DRAFT_KEY,
+        JSON.stringify({
+          formValues: values,
+          selectedCategories,
+        })
+      )
+    })
+
+    return () => subscription.unsubscribe()
+  }, [form, selectedCategories])
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      CREATE_FOOD_ITEM_DRAFT_KEY,
+      JSON.stringify({
+        formValues: form.getValues(),
+        selectedCategories,
+      })
+    )
+  }, [form, selectedCategories])
 
   useEffect(() => {
     if (!open && isClosingAfterSubmit) {
