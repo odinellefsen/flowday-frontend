@@ -10,14 +10,14 @@ import { useState } from 'react'
 
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import {
   Form,
   FormControl,
@@ -170,34 +170,46 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
     createUnitMutation.mutate(data)
   }
 
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
-        {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto animate-scale-in">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
-            <Scale className="h-5 w-5" />
-            Add Measurement Unit
-          </DialogTitle>
-          <DialogDescription>
-            Define how this food item can be measured and add nutritional information for this unit.
-          </DialogDescription>
-        </DialogHeader>
+  const handleOpenChange = (nextOpen: boolean) => {
+    if (!nextOpen) {
+      setShowAdvancedNutrition(false)
+    }
+    onOpenChange(nextOpen)
+  }
 
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+  return (
+    <Drawer open={open} onOpenChange={handleOpenChange}>
+      <DrawerTrigger asChild>
+        {children}
+      </DrawerTrigger>
+      <DrawerContent className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden">
+        <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden overscroll-contain">
+          <DrawerHeader className="space-y-1.5 pb-2 text-center">
+            <DrawerTitle className="flex items-center justify-center gap-2 text-xl text-[var(--flow-text)]">
+              <Scale className="h-5 w-5" />
+              Add Measurement Unit
+            </DrawerTitle>
+            <DrawerDescription className="text-[var(--flow-text-muted)]">
+              Define how this food item can be measured and add nutritional information for this unit.
+            </DrawerDescription>
+          </DrawerHeader>
+
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="space-y-4 p-3 pt-2"
+              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+            >
             {/* Unit of Measurement */}
             <FormField
               control={form.control}
               name="unitOfMeasurement"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Unit of Measurement</FormLabel>
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Unit of Measurement</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
                         <SelectValue placeholder="Select a unit" />
                       </SelectTrigger>
                     </FormControl>
@@ -227,15 +239,15 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
               name="unitDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Description (Optional)</FormLabel>
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Description (Optional)</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="e.g., Medium-sized slice, Large apple, etc."
-                      className="min-h-[60px] resize-none"
+                      className="min-h-[60px] resize-none border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-[var(--flow-text-muted)]">
                     Describe this specific unit measurement
                   </FormDescription>
                   <FormMessage />
@@ -246,8 +258,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
             {/* Nutrition Information */}
             <div className="space-y-4">
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-medium">Nutritional Information</h3>
-                <Info className="h-4 w-4 text-muted-foreground" />
+                <h3 className="text-sm font-medium text-[var(--flow-text)]">Nutritional Information</h3>
+                <Info className="h-4 w-4 text-[var(--flow-text-muted)]" />
               </div>
               
               {/* Calories (Required) */}
@@ -256,7 +268,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                 name="calories"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-sm font-medium">Calories *</FormLabel>
+                    <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Calories *</FormLabel>
                     <FormControl>
                       <Input
                         type="number"
@@ -264,6 +276,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                         max="10000"
                         step="0.1"
                         placeholder="0"
+                        className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                         {...field}
                         onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
                       />
@@ -302,6 +315,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               max="1000"
                               step="0.1"
                               placeholder="0"
+                              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
                             />
@@ -324,6 +338,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               max="1000"
                               step="0.1"
                               placeholder="0"
+                              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
                             />
@@ -346,6 +361,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               max="1000"
                               step="0.1"
                               placeholder="0"
+                              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
                             />
@@ -368,6 +384,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               max="1000"
                               step="0.1"
                               placeholder="0"
+                              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
                             />
@@ -390,6 +407,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               max="1000"
                               step="0.1"
                               placeholder="0"
+                              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
                             />
@@ -412,6 +430,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               max="10000"
                               step="0.1"
                               placeholder="0"
+                              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
                               onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
                             />
@@ -431,10 +450,10 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
               name="source"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium">Data Source</FormLabel>
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Data Source</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value}>
                     <FormControl>
-                      <SelectTrigger>
+                      <SelectTrigger className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
                         <SelectValue />
                       </SelectTrigger>
                     </FormControl>
@@ -445,7 +464,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                       <SelectItem value="estimated">Estimated</SelectItem>
                     </SelectContent>
                   </Select>
-                  <FormDescription className="text-xs text-muted-foreground">
+                  <FormDescription className="text-xs text-[var(--flow-text-muted)]">
                     How was this nutritional information obtained?
                   </FormDescription>
                   <FormMessage />
@@ -453,48 +472,52 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
               )}
             />
 
-            <DialogFooter className="flex-col sm:flex-row gap-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setShowAdvancedNutrition(false)
-                  onOpenChange(false)
-                }}
-                disabled={createUnitMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                Cancel
-              </Button>
-              <Button
-                type="submit"
-                disabled={createUnitMutation.isPending}
-                className="w-full sm:w-auto"
-              >
-                {createUnitMutation.isPending ? (
-                  <>
-                    <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Creating...
-                  </>
-                ) : (
-                  <>
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add Unit
-                  </>
-                )}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+              <DrawerFooter className="px-0 pt-1">
+                <div className="flex justify-end gap-3">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => handleOpenChange(false)}
+                    disabled={createUnitMutation.isPending}
+                    className="min-w-[100px] justify-center border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] transition-none hover:bg-[var(--flow-hover)]"
+                  >
+                    Cancel
+                  </Button>
+                  <Button
+                    type="submit"
+                    disabled={createUnitMutation.isPending}
+                    className="min-w-[130px] justify-center bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] transition-none hover:bg-[var(--flow-accent)]/20"
+                  >
+                    {createUnitMutation.isPending ? (
+                      <>
+                        <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
+                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        </span>
+                        Creating...
+                      </>
+                    ) : (
+                      <>
+                        <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
+                          <Plus className="h-4 w-4" />
+                        </span>
+                        Add Unit
+                      </>
+                    )}
+                  </Button>
+                </div>
+              </DrawerFooter>
+            </form>
+          </Form>
 
-        {createUnitMutation.isError && (
-          <div className="mt-4 p-3 bg-destructive/10 border border-destructive/20 rounded-md">
-            <p className="text-sm text-destructive">
-              Failed to create unit. Please try again.
-            </p>
-          </div>
-        )}
-      </DialogContent>
-    </Dialog>
+          {createUnitMutation.isError && (
+            <div className="mt-4 rounded-md border border-destructive/20 bg-destructive/10 p-3">
+              <p className="text-sm text-destructive">
+                Failed to create unit. Please try again.
+              </p>
+            </div>
+          )}
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
