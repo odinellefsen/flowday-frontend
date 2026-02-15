@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
-import { useCancelTodo, useCompleteTodo, useCreateTodo, useTodayTodos } from '@/src/hooks/useQueries'
+import { useCancelTodo, useCompleteTodo, useCreateTodo, useDeleteHabit, useTodayTodos } from '@/src/hooks/useQueries'
 import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -287,9 +287,9 @@ export function TodoList() {
   const createTodoMutation = useCreateTodo()
   const completeTodoMutation = useCompleteTodo()
   const cancelTodoMutation = useCancelTodo()
+  const deleteHabitMutation = useDeleteHabit()
   const [quickDescription, setQuickDescription] = useState('')
   const [showQuickInput, setShowQuickInput] = useState(false)
-  const [stoppingHabitTodoId, setStoppingHabitTodoId] = useState<string | null>(null)
   const quickInputRef = useRef<HTMLInputElement | null>(null)
   const quickAddCardRef = useRef<HTMLDivElement | null>(null)
   const quickIconBaseClass =
@@ -342,6 +342,7 @@ export function TodoList() {
   const todos = data?.todos || []
   const completingTodoId = completeTodoMutation.isPending ? completeTodoMutation.variables : null
   const cancellingTodoId = cancelTodoMutation.isPending ? cancelTodoMutation.variables : null
+  const stoppingHabitTodoId = deleteHabitMutation.isPending ? deleteHabitMutation.variables : null
 
   const handleCompleteTodo = async (todoId: string) => {
     if (completeTodoMutation.isPending) return
@@ -353,12 +354,27 @@ export function TodoList() {
     await cancelTodoMutation.mutateAsync(todoId)
   }
 
-  const handleStopHabitTodo = async (_todo: TodoItem) => {
-    setStoppingHabitTodoId(_todo.id)
-    toast.info('Stop habit action is coming next', {
-      description: 'Long-press actions are now enabled. Habit stopping needs API support to complete.',
-    })
-    setStoppingHabitTodoId(null)
+  const handleStopHabitTodo = async (todo: TodoItem) => {
+    const contextMaybe = todo.context as TodoItem['context'] & { habitId?: string }
+    const todoMaybe = todo as TodoItem & { habitId?: string; recurringHabitId?: string }
+    const habitId = contextMaybe.habitId || todoMaybe.habitId || todoMaybe.recurringHabitId
+
+    if (!habitId) {
+      toast.error('Unable to stop this habit', {
+        description: 'This todo does not include a habit ID yet.',
+      })
+      return
+    }
+
+    try {
+      await deleteHabitMutation.mutateAsync(habitId)
+      toast.success('Habit stopped')
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      toast.error('Failed to stop habit', {
+        description: message,
+      })
+    }
   }
 
   return (

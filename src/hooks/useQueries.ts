@@ -3,6 +3,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { queryKeys, queryInvalidation } from "@/src/lib/query-client";
 import { useAuthenticatedTodosAPI } from "@/src/lib/api/todos";
+import { useAuthenticatedHabitsAPI } from "@/src/lib/api/habits";
 import type {
   TodayTodosResponse,
   CreateTodoRequest,
@@ -157,6 +158,30 @@ export function useCancelTodo() {
     },
     onError: (error) => {
       console.error('Failed to cancel todo:', error);
+    },
+  });
+}
+
+/**
+ * Hook to delete/stop a habit
+ */
+export function useDeleteHabit() {
+  const queryClient = useQueryClient();
+  const api = useAuthenticatedHabitsAPI();
+
+  return useMutation({
+    mutationFn: async (habitId: string) => {
+      const response = await api.delete({ habitId });
+      if (!response.success || !response.data) {
+        throw new Error(response.message || 'Failed to stop habit');
+      }
+      return response.data;
+    },
+    onSuccess: () => {
+      queryInvalidation.invalidateTodayTodos(queryClient);
+    },
+    onError: (error) => {
+      console.error('Failed to stop habit:', error);
     },
   });
 }

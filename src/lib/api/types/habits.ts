@@ -53,3 +53,13 @@ export interface CreateSimpleHabitResponse {
   }
 }
 
+export interface DeleteHabitRequest {
+  habitId: string
+}
+
+export interface DeleteHabitResponse {
+  data: {
+    habitId: string
+  }
+}
+

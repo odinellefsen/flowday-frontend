@@ -10,6 +10,8 @@ import type {
   CreateHabitBatchResponse,
   CreateSimpleHabitRequest,
   CreateSimpleHabitResponse,
+  DeleteHabitRequest,
+  DeleteHabitResponse,
 } from './types/habits'
 
 import { getApiBaseUrl } from '@/src/lib/api/base-url'
@@ -70,6 +72,31 @@ export const habitsAPI = {
 
     return response.json()
   },
+
+  /**
+   * Delete/stop a habit
+   */
+  delete: async (
+    token: string | null,
+    habitData: DeleteHabitRequest
+  ): Promise<ApiResponse<DeleteHabitResponse['data']>> => {
+    const response = await fetch(`${BASE_URL}/api/habit`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        ...(token && { Authorization: `Bearer ${token}` }),
+      },
+      body: JSON.stringify(habitData),
+    })
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}))
+      console.error('Habit delete error:', errorData)
+      throw new Error(errorData.message || errorData.error || `HTTP error! status: ${response.status}`)
+    }
+
+    return response.json()
+  },
 }
 
 /**
@@ -89,6 +116,10 @@ export function useAuthenticatedHabitsAPI() {
     ): Promise<ApiResponse<CreateSimpleHabitResponse['data']>> => {
       const token = await getToken()
       return habitsAPI.createSimple(token, habitData)
+    },
+    delete: async (habitData: DeleteHabitRequest): Promise<ApiResponse<DeleteHabitResponse['data']>> => {
+      const token = await getToken()
+      return habitsAPI.delete(token, habitData)
     },
   }
 }
