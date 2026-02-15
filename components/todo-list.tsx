@@ -7,6 +7,13 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check, Repeat, Hand, Ban } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
 import { DomainDrawer } from './domain-drawer'
 import { SimpleHabitDrawer } from './simple-habit-drawer'
 import { toast } from 'sonner'
@@ -191,14 +198,19 @@ function TodoItemCard({
         </CardContent>
       </Card>
 
-      {showActions && !todo.completed && (
-        <>
-          <div className="fixed inset-0 z-10" onClick={() => setShowActions(false)} />
-          <div className="absolute right-3 top-3 z-20 min-w-[170px] rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-1 shadow-[var(--flow-shadow)]">
+      {!todo.completed && (
+        <Dialog open={showActions} onOpenChange={setShowActions}>
+          <DialogContent className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
+            <DialogHeader>
+              <DialogTitle>Todo actions</DialogTitle>
+              <DialogDescription className="text-[var(--flow-text-muted)]">
+                Choose what to do with this task.
+              </DialogDescription>
+            </DialogHeader>
+            <div className="space-y-2">
             <Button
-              variant="ghost"
-              size="sm"
-              className="w-full justify-start text-xs text-[var(--flow-danger-text)] hover:bg-[var(--flow-danger-bg)] hover:text-[var(--flow-danger-text)]"
+              variant="outline"
+              className="w-full justify-start border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-danger-text)] hover:bg-[var(--flow-danger-bg)] hover:text-[var(--flow-danger-text)]"
               disabled={isBusy}
               onClick={async () => {
                 setShowActions(false)
@@ -210,9 +222,8 @@ function TodoItemCard({
             </Button>
             {isHabitTodo && (
               <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-xs text-[var(--flow-text)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                variant="outline"
+                className="w-full justify-start border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
                 disabled={isBusy}
                 onClick={async () => {
                   setShowActions(false)
@@ -223,8 +234,17 @@ function TodoItemCard({
                 Stop habit
               </Button>
             )}
-          </div>
-        </>
+            <Button
+              type="button"
+              variant="ghost"
+              className="w-full justify-center text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+              onClick={() => setShowActions(false)}
+            >
+              Close
+            </Button>
+            </div>
+          </DialogContent>
+        </Dialog>
       )}
     </div>
   )
