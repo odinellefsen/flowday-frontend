@@ -45,10 +45,12 @@ function TodoItemCard({
   const startYRef = useRef(0)
   const dragXRef = useRef(0)
   const longPressTimerRef = useRef<number | null>(null)
+  const pressFeedbackTimerRef = useRef<number | null>(null)
   const longPressTriggeredRef = useRef(false)
   const SWIPE_COMPLETE_THRESHOLD = 90
   const MAX_SWIPE = 140
   const LONG_PRESS_MS = 450
+  const PRESS_FEEDBACK_MS = 160
   const LONG_PRESS_MOVE_TOLERANCE = 12
   const isBusy = isCompleting || isCancelling || isStoppingHabit
   const showSwipeBackground = isDragging && Math.abs(translateX) > 8 && !showActions && !todo.completed
@@ -74,6 +76,13 @@ function TodoItemCard({
     }
   }
 
+  const clearPressFeedbackTimer = () => {
+    if (pressFeedbackTimerRef.current) {
+      window.clearTimeout(pressFeedbackTimerRef.current)
+      pressFeedbackTimerRef.current = null
+    }
+  }
+
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
     if (todo.completed || isBusy || showActions) return
     startXRef.current = event.clientX
@@ -81,9 +90,13 @@ function TodoItemCard({
     dragXRef.current = 0
     longPressTriggeredRef.current = false
     setIsDragging(true)
-    setIsPressing(true)
+    setIsPressing(false)
     event.currentTarget.setPointerCapture(event.pointerId)
     clearLongPressTimer()
+    clearPressFeedbackTimer()
+    pressFeedbackTimerRef.current = window.setTimeout(() => {
+      setIsPressing(true)
+    }, PRESS_FEEDBACK_MS)
     longPressTimerRef.current = window.setTimeout(() => {
       longPressTriggeredRef.current = true
       dragXRef.current = 0
@@ -100,6 +113,8 @@ function TodoItemCard({
     const deltaX = event.clientX - startXRef.current
     if (Math.abs(deltaX) > LONG_PRESS_MOVE_TOLERANCE || Math.abs(deltaY) > LONG_PRESS_MOVE_TOLERANCE) {
       clearLongPressTimer()
+      clearPressFeedbackTimer()
+      setIsPressing(false)
     }
     if (deltaX >= 0) {
       const clamped = Math.min(deltaX, MAX_SWIPE)
@@ -114,6 +129,7 @@ function TodoItemCard({
 
   const handlePointerEnd = async (event: React.PointerEvent<HTMLDivElement>) => {
     clearLongPressTimer()
+    clearPressFeedbackTimer()
     setIsPressing(false)
     if (!isDragging) return
     setIsDragging(false)
