@@ -28,7 +28,7 @@ export default function Home() {
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-[var(--flow-background)]">
         <div className="container mx-auto px-4 py-6 max-w-2xl">
           {/* Header Skeleton */}
           <header className="flex justify-between items-center mb-8">
@@ -47,7 +47,7 @@ export default function Home() {
                 <Skeleton className="h-6 w-48 mx-auto" />
               </div>
               
-              <div className="bg-card rounded-lg border p-6 sm:p-8 space-y-4">
+              <div className="rounded-lg border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-6 sm:p-8 space-y-4 shadow-[var(--flow-shadow)]">
                 <Skeleton className="h-8 w-32 mx-auto" />
                 <Skeleton className="h-4 w-full" />
                 <Skeleton className="h-4 w-3/4 mx-auto" />
@@ -124,34 +124,34 @@ export default function Home() {
           ) : (
             <div className="text-center space-y-8">
               <div className="space-y-4">
-                <p className="text-xs uppercase tracking-[0.25em] text-muted-foreground">
+                <p className="text-xs uppercase tracking-[0.25em] text-[var(--flow-text-muted)]">
                   A gentle rhythm for your day
                 </p>
-                <h2 className="text-3xl sm:text-5xl font-bold">
+                <h2 className="text-3xl sm:text-5xl font-bold text-[var(--flow-text)]">
                   Flowday turns busy into balanced
                 </h2>
-                <p className="text-base sm:text-lg text-muted-foreground">
+                <p className="text-base sm:text-lg text-[var(--flow-text-muted)]">
                   Plan tasks, meals, and routines in one calm space. Keep focus without
                   the noise.
                 </p>
               </div>
 
               <div className="grid gap-4 sm:grid-cols-3 text-left">
-                <div className="rounded-lg border bg-card p-4">
-                  <h4 className="font-semibold">Flow first</h4>
-                  <p className="text-sm text-muted-foreground">
+                <div className="rounded-lg border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-4 shadow-[var(--flow-shadow)]">
+                  <h4 className="font-semibold text-[var(--flow-text)]">Flow first</h4>
+                  <p className="text-sm text-[var(--flow-text-muted)]">
                     Capture tasks fast, then shape a realistic flow for the day.
                   </p>
                 </div>
-                <div className="rounded-lg border bg-card p-4">
-                  <h4 className="font-semibold">Meals included</h4>
-                  <p className="text-sm text-muted-foreground">
+                <div className="rounded-lg border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-4 shadow-[var(--flow-shadow)]">
+                  <h4 className="font-semibold text-[var(--flow-text)]">Meals included</h4>
+                  <p className="text-sm text-[var(--flow-text-muted)]">
                     Tie prep and recipes to your schedule so food feels effortless.
                   </p>
                 </div>
-                <div className="rounded-lg border bg-card p-4">
-                  <h4 className="font-semibold">Habit gentle</h4>
-                  <p className="text-sm text-muted-foreground">
+                <div className="rounded-lg border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-4 shadow-[var(--flow-shadow)]">
+                  <h4 className="font-semibold text-[var(--flow-text)]">Habit gentle</h4>
+                  <p className="text-sm text-[var(--flow-text-muted)]">
                     Small routines, steady progress, and space to breathe.
                   </p>
                 </div>
