@@ -50,6 +50,7 @@ function TodoItemCard({
   const LONG_PRESS_MS = 450
   const LONG_PRESS_MOVE_TOLERANCE = 12
   const isBusy = isCompleting || isCancelling || isStoppingHabit
+  const showSwipeBackground = isDragging && Math.abs(translateX) > 8 && !showActions && !todo.completed
   const contextMaybe = todo.context as TodoItem['context'] & { type?: string; habitId?: string }
   const todoMaybe = todo as TodoItem & { habitId?: string; recurringHabitId?: string }
   const habitId = contextMaybe.habitId || todoMaybe.habitId || todoMaybe.recurringHabitId
@@ -136,7 +137,11 @@ function TodoItemCard({
 
   return (
     <div className="relative">
-      <div className="absolute inset-0 flex items-center justify-between rounded-lg border border-transparent px-4 text-xs uppercase tracking-[0.2em]">
+      <div
+        className={`pointer-events-none absolute inset-0 flex items-center justify-between rounded-lg border border-transparent px-4 text-xs uppercase tracking-[0.2em] transition-opacity duration-100 ${
+          showSwipeBackground ? 'opacity-100' : 'opacity-0'
+        }`}
+      >
         <span className="inline-flex items-center gap-2 rounded-full bg-[var(--flow-success-bg)] px-3 py-1 text-[var(--flow-success-text)]">
           <CheckCircle2 className="h-4 w-4" />
           Complete
