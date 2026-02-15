@@ -39,6 +39,7 @@ function TodoItemCard({
 }) {
   const [translateX, setTranslateX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [isPressing, setIsPressing] = useState(false)
   const [showActions, setShowActions] = useState(false)
   const startXRef = useRef(0)
   const startYRef = useRef(0)
@@ -80,6 +81,7 @@ function TodoItemCard({
     dragXRef.current = 0
     longPressTriggeredRef.current = false
     setIsDragging(true)
+    setIsPressing(true)
     event.currentTarget.setPointerCapture(event.pointerId)
     clearLongPressTimer()
     longPressTimerRef.current = window.setTimeout(() => {
@@ -87,6 +89,7 @@ function TodoItemCard({
       dragXRef.current = 0
       setTranslateX(0)
       setIsDragging(false)
+      setIsPressing(false)
       setShowActions(true)
     }, LONG_PRESS_MS)
   }
@@ -111,6 +114,7 @@ function TodoItemCard({
 
   const handlePointerEnd = async (event: React.PointerEvent<HTMLDivElement>) => {
     clearLongPressTimer()
+    setIsPressing(false)
     if (!isDragging) return
     setIsDragging(false)
     if (longPressTriggeredRef.current) {
@@ -132,6 +136,7 @@ function TodoItemCard({
     if (!todo.completed) return
     setTranslateX(0)
     setIsDragging(false)
+    setIsPressing(false)
     setShowActions(false)
   }, [todo.completed])
 
@@ -154,7 +159,9 @@ function TodoItemCard({
       <Card
         className={`relative overflow-hidden border border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] transition-all duration-200 hover:border-[color:var(--flow-border-hover)] ${
           todo.completed ? 'opacity-70' : ''
-        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[var(--flow-accent)] select-none`}
+        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[var(--flow-accent)] select-none ${
+          isPressing ? 'border-[color:var(--flow-border-hover)] bg-[var(--flow-hover)]' : ''
+        }`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
@@ -162,7 +169,7 @@ function TodoItemCard({
         onContextMenu={(event) => event.preventDefault()}
         onDragStart={(event) => event.preventDefault()}
         style={{
-          transform: `translateX(${translateX}px)`,
+          transform: `translateX(${translateX}px) scale(${isPressing ? 0.985 : 1})`,
           transition: isDragging ? 'none' : 'transform 160ms ease',
           touchAction: 'pan-y',
           WebkitTapHighlightColor: 'transparent',
@@ -172,6 +179,12 @@ function TodoItemCard({
         }}
       >
         <CardContent className="p-4 pl-5 sm:p-5 sm:pl-6">
+          {isPressing && !todo.completed && (
+            <div className="mb-2 inline-flex items-center gap-1 rounded-full bg-[var(--flow-accent)]/12 px-2 py-1 text-[10px] font-medium uppercase tracking-wide text-[var(--flow-accent)]">
+              <Hand className="h-3 w-3" />
+              Hold for actions
+            </div>
+          )}
           <div className="flex items-start justify-between gap-3">
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-2">
