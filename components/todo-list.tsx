@@ -9,6 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check, Repeat, Hand, Ban } from 'lucide-react'
 import {
   Dialog,
+  DialogOverlay,
+  DialogPortal,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -200,50 +202,56 @@ function TodoItemCard({
 
       {!todo.completed && (
         <Dialog open={showActions} onOpenChange={setShowActions}>
-          <DialogContent className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
-            <DialogHeader>
-              <DialogTitle>Todo actions</DialogTitle>
-              <DialogDescription className="text-[var(--flow-text-muted)]">
-                Choose what to do with this task.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-2">
-            <Button
-              variant="outline"
-              className="w-full justify-start border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-danger-text)] hover:bg-[var(--flow-danger-bg)] hover:text-[var(--flow-danger-text)]"
-              disabled={isBusy}
-              onClick={async () => {
-                setShowActions(false)
-                await onCancel(todo.id)
-              }}
+          <DialogPortal>
+            <DialogOverlay className="bg-transparent" />
+            <DialogContent
+              showCloseButton={false}
+              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
             >
-              <Ban className="mr-2 h-3.5 w-3.5" />
-              Cancel
-            </Button>
-            {isHabitTodo && (
-              <Button
-                variant="outline"
-                className="w-full justify-start border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-                disabled={isBusy}
-                onClick={async () => {
-                  setShowActions(false)
-                  await onStopHabit(todo)
-                }}
-              >
-                <Hand className="mr-2 h-3.5 w-3.5" />
-                Stop habit
-              </Button>
-            )}
-            <Button
-              type="button"
-              variant="ghost"
-              className="w-full justify-center text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-              onClick={() => setShowActions(false)}
-            >
-              Close
-            </Button>
-            </div>
-          </DialogContent>
+              <DialogHeader>
+                <DialogTitle>Todo actions</DialogTitle>
+                <DialogDescription className="text-[var(--flow-text-muted)]">
+                  Choose what to do with this task.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full justify-start border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-danger-text)] hover:bg-[var(--flow-danger-bg)] hover:text-[var(--flow-danger-text)]"
+                  disabled={isBusy}
+                  onClick={async () => {
+                    setShowActions(false)
+                    await onCancel(todo.id)
+                  }}
+                >
+                  <Ban className="mr-2 h-3.5 w-3.5" />
+                  Cancel
+                </Button>
+                {isHabitTodo && (
+                  <Button
+                    variant="outline"
+                    className="w-full justify-start border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                    disabled={isBusy}
+                    onClick={async () => {
+                      setShowActions(false)
+                      await onStopHabit(todo)
+                    }}
+                  >
+                    <Hand className="mr-2 h-3.5 w-3.5" />
+                    Stop habit
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full justify-center text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                  onClick={() => setShowActions(false)}
+                >
+                  Close
+                </Button>
+              </div>
+            </DialogContent>
+          </DialogPortal>
         </Dialog>
       )}
     </div>
