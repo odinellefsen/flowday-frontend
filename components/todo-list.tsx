@@ -149,15 +149,21 @@ function TodoItemCard({
       <Card
         className={`relative overflow-hidden border border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)] transition-all duration-200 hover:border-[color:var(--flow-border-hover)] ${
           todo.completed ? 'opacity-70' : ''
-        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[var(--flow-accent)]`}
+        } before:absolute before:left-0 before:top-0 before:h-full before:w-0.5 before:bg-[var(--flow-accent)] select-none`}
         onPointerDown={handlePointerDown}
         onPointerMove={handlePointerMove}
         onPointerUp={handlePointerEnd}
         onPointerCancel={handlePointerEnd}
+        onContextMenu={(event) => event.preventDefault()}
+        onDragStart={(event) => event.preventDefault()}
         style={{
           transform: `translateX(${translateX}px)`,
           transition: isDragging ? 'none' : 'transform 160ms ease',
           touchAction: 'pan-y',
+          WebkitTapHighlightColor: 'transparent',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+          userSelect: 'none',
         }}
       >
         <CardContent className="p-4 pl-5 sm:p-5 sm:pl-6">
