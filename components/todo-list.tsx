@@ -6,30 +6,45 @@ import type { TodoItem } from '@/src/lib/api/types/todos'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check, Repeat } from 'lucide-react'
+import { Clock, CheckCircle2, AlertCircle, Plus, Grid3X3, Check, Repeat, Hand, Ban } from 'lucide-react'
 import { DomainDrawer } from './domain-drawer'
 import { SimpleHabitDrawer } from './simple-habit-drawer'
+import { toast } from 'sonner'
 
 function TodoItemCard({
   todo,
   onComplete,
   onCancel,
+  onStopHabit,
   isCompleting,
   isCancelling,
+  isStoppingHabit,
 }: {
   todo: TodoItem
   onComplete: (todoId: string) => Promise<void>
   onCancel: (todoId: string) => Promise<void>
+  onStopHabit: (todo: TodoItem) => Promise<void>
   isCompleting: boolean
   isCancelling: boolean
+  isStoppingHabit: boolean
 }) {
   const [translateX, setTranslateX] = useState(0)
   const [isDragging, setIsDragging] = useState(false)
+  const [showActions, setShowActions] = useState(false)
   const startXRef = useRef(0)
+  const startYRef = useRef(0)
   const dragXRef = useRef(0)
+  const longPressTimerRef = useRef<number | null>(null)
+  const longPressTriggeredRef = useRef(false)
   const SWIPE_COMPLETE_THRESHOLD = 90
-  const SWIPE_CANCEL_THRESHOLD = -90
   const MAX_SWIPE = 140
+  const LONG_PRESS_MS = 450
+  const LONG_PRESS_MOVE_TOLERANCE = 12
+  const isBusy = isCompleting || isCancelling || isStoppingHabit
+  const contextMaybe = todo.context as TodoItem['context'] & { type?: string; habitId?: string }
+  const todoMaybe = todo as TodoItem & { habitId?: string; recurringHabitId?: string }
+  const habitId = contextMaybe.habitId || todoMaybe.habitId || todoMaybe.recurringHabitId
+  const isHabitTodo = contextMaybe.type === 'habit' || Boolean(habitId)
 
   const formatScheduledTime = (scheduledFor?: string) => {
     if (!scheduledFor) return null
@@ -41,17 +56,38 @@ function TodoItemCard({
     })
   }
 
+  const clearLongPressTimer = () => {
+    if (longPressTimerRef.current) {
+      window.clearTimeout(longPressTimerRef.current)
+      longPressTimerRef.current = null
+    }
+  }
+
   const handlePointerDown = (event: React.PointerEvent<HTMLDivElement>) => {
-    if (todo.completed || isCompleting || isCancelling) return
+    if (todo.completed || isBusy || showActions) return
     startXRef.current = event.clientX
+    startYRef.current = event.clientY
     dragXRef.current = 0
+    longPressTriggeredRef.current = false
     setIsDragging(true)
     event.currentTarget.setPointerCapture(event.pointerId)
+    clearLongPressTimer()
+    longPressTimerRef.current = window.setTimeout(() => {
+      longPressTriggeredRef.current = true
+      dragXRef.current = 0
+      setTranslateX(0)
+      setIsDragging(false)
+      setShowActions(true)
+    }, LONG_PRESS_MS)
   }
 
   const handlePointerMove = (event: React.PointerEvent<HTMLDivElement>) => {
     if (!isDragging) return
+    const deltaY = event.clientY - startYRef.current
     const deltaX = event.clientX - startXRef.current
+    if (Math.abs(deltaX) > LONG_PRESS_MOVE_TOLERANCE || Math.abs(deltaY) > LONG_PRESS_MOVE_TOLERANCE) {
+      clearLongPressTimer()
+    }
     if (deltaX >= 0) {
       const clamped = Math.min(deltaX, MAX_SWIPE)
       dragXRef.current = clamped
@@ -64,17 +100,21 @@ function TodoItemCard({
   }
 
   const handlePointerEnd = async (event: React.PointerEvent<HTMLDivElement>) => {
+    clearLongPressTimer()
     if (!isDragging) return
     setIsDragging(false)
+    if (longPressTriggeredRef.current) {
+      longPressTriggeredRef.current = false
+      setTranslateX(0)
+      event.currentTarget.releasePointerCapture(event.pointerId)
+      return
+    }
     const deltaX = dragXRef.current
-    const shouldComplete = deltaX <= SWIPE_CANCEL_THRESHOLD
-    const shouldCancel = deltaX >= SWIPE_COMPLETE_THRESHOLD
+    const shouldComplete = Math.abs(deltaX) >= SWIPE_COMPLETE_THRESHOLD
     setTranslateX(0)
     event.currentTarget.releasePointerCapture(event.pointerId)
     if (shouldComplete) {
       await onComplete(todo.id)
-    } else if (shouldCancel) {
-      await onCancel(todo.id)
     }
   }
 
@@ -82,13 +122,15 @@ function TodoItemCard({
     if (!todo.completed) return
     setTranslateX(0)
     setIsDragging(false)
+    setShowActions(false)
   }, [todo.completed])
 
   return (
     <div className="relative">
       <div className="absolute inset-0 flex items-center justify-between rounded-lg border border-transparent px-4 text-xs uppercase tracking-[0.2em]">
-        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--flow-danger-bg)] px-3 py-1 text-[var(--flow-danger-text)]">
-          Cancel
+        <span className="inline-flex items-center gap-2 rounded-full bg-[var(--flow-success-bg)] px-3 py-1 text-[var(--flow-success-text)]">
+          <CheckCircle2 className="h-4 w-4" />
+          Complete
         </span>
         <span className="inline-flex items-center gap-2 rounded-full bg-[var(--flow-success-bg)] px-3 py-1 text-[var(--flow-success-text)]">
           <CheckCircle2 className="h-4 w-4" />
@@ -148,6 +190,42 @@ function TodoItemCard({
           </div>
         </CardContent>
       </Card>
+
+      {showActions && !todo.completed && (
+        <>
+          <div className="fixed inset-0 z-10" onClick={() => setShowActions(false)} />
+          <div className="absolute right-3 top-3 z-20 min-w-[170px] rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-1 shadow-[var(--flow-shadow)]">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="w-full justify-start text-xs text-[var(--flow-danger-text)] hover:bg-[var(--flow-danger-bg)] hover:text-[var(--flow-danger-text)]"
+              disabled={isBusy}
+              onClick={async () => {
+                setShowActions(false)
+                await onCancel(todo.id)
+              }}
+            >
+              <Ban className="mr-2 h-3.5 w-3.5" />
+              Cancel
+            </Button>
+            {isHabitTodo && (
+              <Button
+                variant="ghost"
+                size="sm"
+                className="w-full justify-start text-xs text-[var(--flow-text)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                disabled={isBusy}
+                onClick={async () => {
+                  setShowActions(false)
+                  await onStopHabit(todo)
+                }}
+              >
+                <Hand className="mr-2 h-3.5 w-3.5" />
+                Stop habit
+              </Button>
+            )}
+          </div>
+        </>
+      )}
     </div>
   )
 }
@@ -159,6 +237,7 @@ export function TodoList() {
   const cancelTodoMutation = useCancelTodo()
   const [quickDescription, setQuickDescription] = useState('')
   const [showQuickInput, setShowQuickInput] = useState(false)
+  const [stoppingHabitTodoId, setStoppingHabitTodoId] = useState<string | null>(null)
   const quickInputRef = useRef<HTMLInputElement | null>(null)
   const quickAddCardRef = useRef<HTMLDivElement | null>(null)
   const quickIconBaseClass =
@@ -222,6 +301,14 @@ export function TodoList() {
     await cancelTodoMutation.mutateAsync(todoId)
   }
 
+  const handleStopHabitTodo = async (_todo: TodoItem) => {
+    setStoppingHabitTodoId(_todo.id)
+    toast.info('Stop habit action is coming next', {
+      description: 'Long-press actions are now enabled. Habit stopping needs API support to complete.',
+    })
+    setStoppingHabitTodoId(null)
+  }
+
   return (
     <div className="space-y-5 animate-fade-in">
       {/* Todo Items */}
@@ -232,8 +319,10 @@ export function TodoList() {
             todo={todo}
             onComplete={handleCompleteTodo}
             onCancel={handleCancelTodo}
+            onStopHabit={handleStopHabitTodo}
             isCompleting={completingTodoId === todo.id}
             isCancelling={cancellingTodoId === todo.id}
+            isStoppingHabit={stoppingHabitTodoId === todo.id}
           />
         ))}
         <form onSubmit={handleQuickAdd}>
