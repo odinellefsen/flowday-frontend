@@ -189,6 +189,31 @@ export default function FoodItemsPage() {
     pathScrollRef.current.scrollLeft = pathScrollRef.current.scrollWidth
   }, [currentPath])
 
+  useEffect(() => {
+    if (currentPath.length !== 0) return
+
+    const sentinelKey = '__foodItemsRootBackToFood'
+    const state = window.history.state as Record<string, unknown> | null
+
+    // Add a same-page history entry so iOS/Android swipe-back can be intercepted reliably.
+    if (!state?.[sentinelKey]) {
+      window.history.pushState(
+        { ...(state ?? {}), [sentinelKey]: true },
+        '',
+        window.location.href
+      )
+    }
+
+    const handlePopState = () => {
+      if (window.location.pathname === '/food/items') {
+        router.replace('/food')
+      }
+    }
+
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
+  }, [currentPath.length, router])
+
   const getFoodItemsUrl = (pathSegments: string[]) => {
     if (pathSegments.length === 0) return '/food/items'
     const params = new URLSearchParams()
