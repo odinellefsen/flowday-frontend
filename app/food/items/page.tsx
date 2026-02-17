@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -172,7 +172,7 @@ function FoodItemsSkeleton() {
   )
 }
 
-export default function FoodItemsPage() {
+function FoodItemsPageContent() {
   const [showCreateForm, setShowCreateForm] = useState(false)
   const pathScrollRef = useRef<HTMLDivElement | null>(null)
   const apiClient = useAuthenticatedFoodItemsAPI()
@@ -492,5 +492,21 @@ export default function FoodItemsPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function FoodItemsPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[var(--flow-background)]">
+          <div className="container mx-auto max-w-4xl px-4 py-6">
+            <FoodItemsSkeleton />
+          </div>
+        </div>
+      }
+    >
+      <FoodItemsPageContent />
+    </Suspense>
   )
 }

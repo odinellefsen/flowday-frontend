@@ -54,10 +54,10 @@ function TodoItemCard({
   const LONG_PRESS_MOVE_TOLERANCE = 12
   const isBusy = isCompleting || isCancelling || isStoppingHabit
   const showSwipeBackground = isDragging && Math.abs(translateX) > 8 && !showActions && !todo.completed
-  const contextMaybe = todo.context as TodoItem['context'] & { type?: string; habitId?: string }
+  const contextMaybe = todo.context as TodoItem['context'] & { habitId?: string }
   const todoMaybe = todo as TodoItem & { habitId?: string; recurringHabitId?: string }
   const habitId = contextMaybe.habitId || todoMaybe.habitId || todoMaybe.recurringHabitId
-  const isHabitTodo = contextMaybe.type === 'habit' || Boolean(habitId)
+  const isHabitTodo = Boolean(habitId)
 
   const formatScheduledTime = (scheduledFor?: string) => {
     if (!scheduledFor) return null
