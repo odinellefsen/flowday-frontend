@@ -346,18 +346,6 @@ export default function FoodItemsPage() {
                 })}
               </div>
             </div>
-
-            {currentPath.length > 0 && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={navigateUp}
-                className="h-8 shrink-0 gap-1.5 border-[color:var(--flow-border)] bg-[var(--flow-surface)] px-2.5 text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-              >
-                <ArrowLeft className="h-3 w-3 mr-1" />
-                Back
-              </Button>
-            )}
           </div>
         </header>
 
