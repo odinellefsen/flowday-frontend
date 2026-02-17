@@ -256,15 +256,41 @@ export default function FoodItemsPage() {
   const { items: currentItems, subcategories } = getCurrentLevelData()
 
   const navigateToCategory = (categoryName: string) => {
-    router.push(getFoodItemsUrl([...currentPath, categoryName]))
+    const nextUrl = getFoodItemsUrl([...currentPath, categoryName])
+
+    // Keep root `/food/items` as the single back target while browsing nested categories.
+    if (currentPath.length === 0) {
+      router.push(nextUrl)
+      return
+    }
+
+    router.replace(nextUrl)
   }
 
   const navigateUp = () => {
-    router.push(getFoodItemsUrl(currentPath.slice(0, -1)))
+    const nextPath = currentPath.slice(0, -1)
+    const nextUrl = getFoodItemsUrl(nextPath)
+
+    // Preserve root as the "previous page" destination from any nested level.
+    if (nextPath.length === 0) {
+      router.push(nextUrl)
+      return
+    }
+
+    router.replace(nextUrl)
   }
 
   const navigateToPath = (pathIndex: number) => {
-    router.push(getFoodItemsUrl(currentPath.slice(0, pathIndex + 1)))
+    const nextPath = currentPath.slice(0, pathIndex + 1)
+    const nextUrl = getFoodItemsUrl(nextPath)
+
+    // Breadcrumb jumps inside category browsing should not stack browser history.
+    if (nextPath.length === 0) {
+      router.push(nextUrl)
+      return
+    }
+
+    router.replace(nextUrl)
   }
 
   return (
