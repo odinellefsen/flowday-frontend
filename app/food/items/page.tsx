@@ -12,6 +12,9 @@ import { CreateFoodItemForm } from '../../../components/create-food-item-form'
 import type { FoodItem } from '@/src/lib/api/types/food-items'
 import { toast } from 'sonner'
 
+const normalizeCategorySegment = (segment: string | null | undefined) =>
+  (segment ?? '').replace(/[\p{Cc}\p{Cf}]/gu, '').trim()
+
 function CategoryCard({ 
   categoryName, 
   itemCount, 
@@ -178,7 +181,10 @@ function FoodItemsPageContent() {
   const apiClient = useAuthenticatedFoodItemsAPI()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const currentPath = searchParams.getAll('category')
+  const currentPath = searchParams
+    .getAll('category')
+    .map((segment) => normalizeCategorySegment(segment))
+    .filter(Boolean)
   const maxVisiblePathSegments = 2
   const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
   const visiblePathStartIndex = hiddenPathCount
@@ -242,6 +248,15 @@ function FoodItemsPageContent() {
         }
       } else {
         const hierarchy = foodItem.categoryHierarchy
+          .map((segment) => normalizeCategorySegment(segment))
+          .filter(Boolean)
+
+        if (hierarchy.length === 0) {
+          if (currentPath.length === 0) {
+            currentItems.push(foodItem)
+          }
+          return
+        }
         
         // Check if this item's hierarchy matches the current path exactly
         const isExactMatch = currentPath.every((pathSegment, index) => 
@@ -254,7 +269,7 @@ function FoodItemsPageContent() {
             currentItems.push(foodItem)
           } else if (hierarchy.length > currentPath.length) {
             // This item is deeper - show its next category level
-            const nextCategory = hierarchy[currentPath.length]?.trim()
+            const nextCategory = normalizeCategorySegment(hierarchy[currentPath.length])
             if (!nextCategory) {
               return
             }
@@ -284,7 +299,7 @@ function FoodItemsPageContent() {
 
   const { items: currentItems, subcategories } = getCurrentLevelData()
   const visibleSubcategories = subcategories.filter(
-    (category) => category.name.replace(/[\s\u200B-\u200D\uFEFF]/g, '').length > 0,
+    (category) => normalizeCategorySegment(category.name).length > 0,
   )
 
   const navigateToCategory = (categoryName: string) => {
