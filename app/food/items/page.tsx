@@ -183,6 +183,7 @@ function FoodItemsPageContent() {
   const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
   const visiblePathStartIndex = hiddenPathCount
   const visiblePath = currentPath.slice(visiblePathStartIndex)
+  const showAllItemsBreadcrumb = currentPath.length === 1
 
   useEffect(() => {
     if (!pathScrollRef.current) return
@@ -253,7 +254,10 @@ function FoodItemsPageContent() {
             currentItems.push(foodItem)
           } else if (hierarchy.length > currentPath.length) {
             // This item is deeper - show its next category level
-            const nextCategory = hierarchy[currentPath.length]
+            const nextCategory = hierarchy[currentPath.length]?.trim()
+            if (!nextCategory) {
+              return
+            }
             const hasMoreLevels = hierarchy.length > currentPath.length + 1
 
             if (!subcategories.has(nextCategory)) {
@@ -352,6 +356,15 @@ function FoodItemsPageContent() {
           <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
             <div ref={pathScrollRef} className="min-w-0 flex-1 overflow-x-auto">
               <div className="flex w-max items-center gap-1">
+                {showAllItemsBreadcrumb && (
+                  <button
+                    type="button"
+                    onClick={() => router.push('/food/items')}
+                    className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                  >
+                    All Items
+                  </button>
+                )}
 
                 {hiddenPathCount > 0 && (
                   <div className="flex items-center gap-1">
@@ -367,7 +380,7 @@ function FoodItemsPageContent() {
 
                   return (
                     <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
-                      {(hiddenPathCount > 0 || index > 0) && (
+                      {(showAllItemsBreadcrumb || hiddenPathCount > 0 || index > 0) && (
                         <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
                       )}
                       {realPathIndex === currentPath.length - 1 ? (
