@@ -185,6 +185,7 @@ function FoodItemsPageContent() {
     .getAll('category')
     .map((segment) => normalizeCategorySegment(segment))
     .filter(Boolean)
+  const currentPathKey = currentPath.join('\u001F')
   const maxVisiblePathSegments = 2
   const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
   const hiddenPathSegments = currentPath.slice(0, hiddenPathCount)
@@ -196,7 +197,7 @@ function FoodItemsPageContent() {
   useEffect(() => {
     if (!pathScrollRef.current) return
     pathScrollRef.current.scrollLeft = pathScrollRef.current.scrollWidth
-  }, [currentPath])
+  }, [currentPathKey])
 
   useEffect(() => {
     if (currentPath.length !== 0) return
