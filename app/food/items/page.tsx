@@ -187,6 +187,7 @@ function FoodItemsPageContent() {
     .filter(Boolean)
   const maxVisiblePathSegments = 2
   const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
+  const hiddenPathSegments = currentPath.slice(0, hiddenPathCount)
   const visiblePathStartIndex = hiddenPathCount
   const visiblePath = currentPath.slice(visiblePathStartIndex)
   const showPathNavigation = currentPath.length > 0
@@ -386,14 +387,14 @@ function FoodItemsPageContent() {
                     </button>
                   )}
 
-                  {hiddenPathCount > 0 && (
-                    <div className="flex items-center gap-1">
-                      <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
-                      <span className="rounded-md px-2 py-1 text-[10px] font-medium text-[var(--flow-text-muted)]">
-                        +{hiddenPathCount}
-                      </span>
+                  {hiddenPathSegments.map((pathSegment, index) => (
+                    <div key={`hidden-${pathSegment}-${index}`} className="flex items-center gap-1">
+                      {(showAllItemsBreadcrumb || index > 0) && (
+                        <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                      )}
+                      <span className="text-xs text-[var(--flow-text-muted)]">{pathSegment}</span>
                     </div>
-                  )}
+                  ))}
 
                   {visiblePath.map((pathSegment, index) => {
                     const realPathIndex = visiblePathStartIndex + index
