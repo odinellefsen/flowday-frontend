@@ -367,7 +367,9 @@ function FoodItemsPageContent() {
 
                   return (
                     <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
-                      <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                      {(hiddenPathCount > 0 || index > 0) && (
+                        <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                      )}
                       {realPathIndex === currentPath.length - 1 ? (
                       <span className="rounded-md bg-[var(--flow-accent)]/12 px-2.5 py-1.5 text-xs font-medium text-[var(--flow-accent)]">
                         {pathSegment}
