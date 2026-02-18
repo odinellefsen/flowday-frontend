@@ -28,6 +28,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { Textarea } from '@/components/ui/textarea'
 import {
   Select,
@@ -491,7 +492,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                     {createUnitMutation.isPending ? (
                       <>
                         <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          <LoadingSpinner />
                         </span>
                         Creating...
                       </>

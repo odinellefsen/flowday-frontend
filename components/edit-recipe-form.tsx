@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { Textarea } from '@/components/ui/textarea'
 import { Checkbox } from '@/components/ui/checkbox'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
@@ -252,7 +253,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
                   >
                     {updateRecipeMutation.isPending ? (
                       <>
-                        <div className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                        <LoadingSpinner className="mr-2" />
                         Saving...
                       </>
                     ) : (

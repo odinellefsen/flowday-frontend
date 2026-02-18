@@ -31,6 +31,7 @@ import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import type { CreateFoodItemRequest } from '@/src/lib/api/types/food-items'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 
 const createFoodItemSchema = z.object({
   foodItemName: z
@@ -327,7 +328,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                     {isBusy ? (
                       <>
                         <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          <LoadingSpinner />
                         </span>
                         Creating...
                       </>

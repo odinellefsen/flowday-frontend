@@ -27,6 +27,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { LoadingSpinner } from '@/components/ui/loading-spinner'
 import { useAuthenticatedMealsAPI } from '@/src/lib/api/meals'
 import { CreateMealRequest } from '@/src/lib/api/types/meals'
 import { useRouter } from 'next/navigation'
@@ -194,7 +195,7 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
                     {createMealMutation.isPending ? (
                       <>
                         <span className="mr-2 inline-flex h-4 w-4 items-center justify-center">
-                          <div className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                          <LoadingSpinner />
                         </span>
                         Creating...
                       </>
