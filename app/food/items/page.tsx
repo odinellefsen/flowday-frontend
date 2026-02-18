@@ -376,7 +376,10 @@ function FoodItemsPageContent() {
           {/* Category Path Navigation */}
           {showPathNavigation && (
             <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
-              <div ref={pathScrollRef} className="min-w-0 flex-1 overflow-x-auto">
+              <div
+                ref={pathScrollRef}
+                className="min-w-0 flex-1 overflow-x-auto"
+              >
                 <div className="flex w-max items-center gap-1">
                   {showAllItemsBreadcrumb && (
                     <button
