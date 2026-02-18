@@ -189,6 +189,7 @@ function FoodItemsPageContent() {
   const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
   const visiblePathStartIndex = hiddenPathCount
   const visiblePath = currentPath.slice(visiblePathStartIndex)
+  const showPathNavigation = currentPath.length > 0
   const showAllItemsBreadcrumb = currentPath.length === 1
 
   useEffect(() => {
@@ -371,55 +372,57 @@ function FoodItemsPageContent() {
           </div>
 
           {/* Category Path Navigation */}
-          <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
-            <div ref={pathScrollRef} className="min-w-0 flex-1 overflow-x-auto">
-              <div className="flex w-max items-center gap-1">
-                {showAllItemsBreadcrumb && (
-                  <button
-                    type="button"
-                    onClick={() => router.push('/food/items')}
-                    className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-                  >
-                    All Items
-                  </button>
-                )}
+          {showPathNavigation && (
+            <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
+              <div ref={pathScrollRef} className="min-w-0 flex-1 overflow-x-auto">
+                <div className="flex w-max items-center gap-1">
+                  {showAllItemsBreadcrumb && (
+                    <button
+                      type="button"
+                      onClick={() => router.push('/food/items')}
+                      className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                    >
+                      All Items
+                    </button>
+                  )}
 
-                {hiddenPathCount > 0 && (
-                  <div className="flex items-center gap-1">
-                    <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
-                    <span className="rounded-md px-2 py-1 text-[10px] font-medium text-[var(--flow-text-muted)]">
-                      +{hiddenPathCount}
-                    </span>
-                  </div>
-                )}
-
-                {visiblePath.map((pathSegment, index) => {
-                  const realPathIndex = visiblePathStartIndex + index
-
-                  return (
-                    <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
-                      {(showAllItemsBreadcrumb || hiddenPathCount > 0 || index > 0) && (
-                        <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
-                      )}
-                      {realPathIndex === currentPath.length - 1 ? (
-                      <span className="rounded-md bg-[var(--flow-accent)]/12 px-2.5 py-1.5 text-xs font-medium text-[var(--flow-accent)]">
-                        {pathSegment}
+                  {hiddenPathCount > 0 && (
+                    <div className="flex items-center gap-1">
+                      <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                      <span className="rounded-md px-2 py-1 text-[10px] font-medium text-[var(--flow-text-muted)]">
+                        +{hiddenPathCount}
                       </span>
-                    ) : (
-                      <button
-                        type="button"
-                        onClick={() => navigateToPath(realPathIndex)}
-                        className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-                      >
-                        {pathSegment}
-                      </button>
-                    )}
                     </div>
-                  )
-                })}
+                  )}
+
+                  {visiblePath.map((pathSegment, index) => {
+                    const realPathIndex = visiblePathStartIndex + index
+
+                    return (
+                      <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
+                        {(showAllItemsBreadcrumb || hiddenPathCount > 0 || index > 0) && (
+                          <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
+                        )}
+                        {realPathIndex === currentPath.length - 1 ? (
+                        <span className="rounded-md bg-[var(--flow-accent)]/12 px-2.5 py-1.5 text-xs font-medium text-[var(--flow-accent)]">
+                          {pathSegment}
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={() => navigateToPath(realPathIndex)}
+                          className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                        >
+                          {pathSegment}
+                        </button>
+                      )}
+                      </div>
+                    )
+                  })}
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </header>
 
         {/* Content */}
