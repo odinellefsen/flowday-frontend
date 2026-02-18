@@ -283,6 +283,9 @@ function FoodItemsPageContent() {
   }
 
   const { items: currentItems, subcategories } = getCurrentLevelData()
+  const visibleSubcategories = subcategories.filter(
+    (category) => category.name.replace(/[\s\u200B-\u200D\uFEFF]/g, '').length > 0,
+  )
 
   const navigateToCategory = (categoryName: string) => {
     const nextUrl = getFoodItemsUrl([...currentPath, categoryName])
@@ -440,11 +443,11 @@ function FoodItemsPageContent() {
             ) : (
               <div className="space-y-6 animate-fade-in">
                 {/* Show subcategories first */}
-                {subcategories.length > 0 && (
+                {visibleSubcategories.length > 0 && (
                   <div className="space-y-3">
                     <h2 className="text-lg font-semibold text-[var(--flow-text)]">Categories</h2>
                     <div className="space-y-2">
-                      {subcategories.map((category) => (
+                      {visibleSubcategories.map((category) => (
                         <CategoryCard
                           key={category.name}
                           categoryName={category.name}
@@ -472,7 +475,7 @@ function FoodItemsPageContent() {
                 )}
 
                 {/* Show message if current level is empty */}
-                {subcategories.length === 0 && currentItems.length === 0 && (
+                {visibleSubcategories.length === 0 && currentItems.length === 0 && (
                   <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                     <CardContent className="p-8 text-center">
                       <Folder className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
