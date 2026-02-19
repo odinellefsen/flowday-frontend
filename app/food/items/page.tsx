@@ -1,6 +1,6 @@
 'use client'
 
-import { Suspense, useEffect, useRef, useState } from 'react'
+import { Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -194,7 +194,7 @@ function FoodItemsPageContent() {
     pathScrollRef.current.scrollLeft = pathScrollRef.current.scrollWidth
   }, [currentPathKey])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (currentPath.length !== 0) return
 
     const sentinelKey = '__foodItemsRootBackToFood'
@@ -211,13 +211,14 @@ function FoodItemsPageContent() {
 
     const handlePopState = () => {
       if (window.location.pathname === '/food/items') {
-        router.replace('/food')
+        // Use a browser-level replace so the redirect happens immediately on back-swipe.
+        window.location.replace('/food')
       }
     }
 
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [currentPath.length, router])
+  }, [currentPath.length])
 
   const getFoodItemsUrl = (pathSegments: string[]) => {
     if (pathSegments.length === 0) return '/food/items'
