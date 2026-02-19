@@ -378,9 +378,9 @@ function FoodItemsPageContent() {
             <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
               <div
                 ref={pathScrollRef}
-                className="min-w-0 flex-1 overflow-x-auto overflow-y-hidden touch-pan-y"
+                className="min-w-0 flex-1 overflow-visible sm:overflow-x-auto"
               >
-                <div className="flex w-max items-center gap-1">
+                <div className="flex flex-wrap items-center gap-1 sm:w-max sm:flex-nowrap">
                   {showAllItemsBreadcrumb && (
                     <button
                       type="button"
