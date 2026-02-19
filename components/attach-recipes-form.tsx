@@ -121,6 +121,9 @@ export function AttachRecipesForm({
     attachRecipesMutation.mutate(data)
   }
 
+  const selectedRecipeIds = form.watch('recipeIds')
+  const selectedRecipeCount = selectedRecipeIds.length
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
@@ -240,9 +243,9 @@ export function AttachRecipesForm({
                   <FormMessage />
                   
                   {/* Selected count */}
-                  {form.watch('recipeIds').length > 0 && (
+                  {selectedRecipeCount > 0 && (
                     <div className="mt-2 text-xs text-muted-foreground">
-                      {form.watch('recipeIds').length} recipe{form.watch('recipeIds').length !== 1 ? 's' : ''} selected
+                      {selectedRecipeCount} recipe{selectedRecipeCount !== 1 ? 's' : ''} selected
                     </div>
                   )}
                 </FormItem>
@@ -265,7 +268,7 @@ export function AttachRecipesForm({
               </Button>
               <Button
                 type="submit"
-                disabled={attachRecipesMutation.isPending || form.watch('recipeIds').length === 0}
+                disabled={attachRecipesMutation.isPending || selectedRecipeCount === 0}
                 className="w-full sm:w-auto"
               >
                 {attachRecipesMutation.isPending ? (
@@ -276,7 +279,7 @@ export function AttachRecipesForm({
                 ) : (
                   <>
                     <Plus className="h-4 w-4 mr-2" />
-                    Attach {form.watch('recipeIds').length > 0 ? `(${form.watch('recipeIds').length})` : 'Recipes'}
+                    Attach {selectedRecipeCount > 0 ? `(${selectedRecipeCount})` : 'Recipes'}
                   </>
                 )}
               </Button>
