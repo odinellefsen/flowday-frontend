@@ -211,14 +211,14 @@ function FoodItemsPageContent() {
 
     const handlePopState = () => {
       if (window.location.pathname === '/food/items') {
-        // Use a browser-level replace so the redirect happens immediately on back-swipe.
-        window.location.replace('/food')
+        // Keep this as a client-side route transition to avoid full-page reload flashes.
+        router.replace('/food')
       }
     }
 
     window.addEventListener('popstate', handlePopState)
     return () => window.removeEventListener('popstate', handlePopState)
-  }, [currentPath.length])
+  }, [currentPath.length, router])
 
   const getFoodItemsUrl = (pathSegments: string[]) => {
     if (pathSegments.length === 0) return '/food/items'
