@@ -186,11 +186,6 @@ function FoodItemsPageContent() {
     .map((segment) => normalizeCategorySegment(segment))
     .filter(Boolean)
   const currentPathKey = currentPath.join('\u001F')
-  const maxVisiblePathSegments = 2
-  const hiddenPathCount = Math.max(0, currentPath.length - maxVisiblePathSegments)
-  const hiddenPathSegments = currentPath.slice(0, hiddenPathCount)
-  const visiblePathStartIndex = hiddenPathCount
-  const visiblePath = currentPath.slice(visiblePathStartIndex)
   const showPathNavigation = currentPath.length > 0
   const showAllItemsBreadcrumb = currentPath.length === 1
 
@@ -392,37 +387,20 @@ function FoodItemsPageContent() {
                     </button>
                   )}
 
-                  {hiddenPathSegments.map((pathSegment, index) => (
-                    <div key={`hidden-${pathSegment}-${index}`} className="flex items-center gap-1">
-                      {(showAllItemsBreadcrumb || index > 0) && (
-                        <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => navigateToPath(index)}
-                        className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-                      >
-                        {pathSegment}
-                      </button>
-                    </div>
-                  ))}
-
-                  {visiblePath.map((pathSegment, index) => {
-                    const realPathIndex = visiblePathStartIndex + index
-
+                  {currentPath.map((pathSegment, index) => {
                     return (
-                      <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
-                        {(showAllItemsBreadcrumb || hiddenPathSegments.length > 0 || index > 0) && (
+                      <div key={`${pathSegment}-${index}`} className="flex items-center gap-1">
+                        {(showAllItemsBreadcrumb || index > 0) && (
                           <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
                         )}
-                        {realPathIndex === currentPath.length - 1 ? (
+                        {index === currentPath.length - 1 ? (
                         <span className="rounded-md bg-[var(--flow-accent)]/12 px-2.5 py-1.5 text-xs font-medium text-[var(--flow-accent)]">
                           {pathSegment}
                         </span>
                       ) : (
                         <button
                           type="button"
-                          onClick={() => navigateToPath(realPathIndex)}
+                          onClick={() => navigateToPath(index)}
                           className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
                         >
                           {pathSegment}
