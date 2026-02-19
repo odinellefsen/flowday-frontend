@@ -378,9 +378,10 @@ function FoodItemsPageContent() {
             <div className="flex items-center justify-between gap-3 rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-2 shadow-[var(--flow-shadow)]">
               <div
                 ref={pathScrollRef}
-                className="min-w-0 flex-1 overflow-visible sm:overflow-x-auto"
+                className="min-w-0 flex-1 overflow-x-auto overflow-y-hidden touch-pan-x"
+                style={{ WebkitOverflowScrolling: 'touch' }}
               >
-                <div className="flex flex-wrap items-center gap-1 sm:w-max sm:flex-nowrap">
+                <div className="flex w-max items-center gap-1">
                   {showAllItemsBreadcrumb && (
                     <button
                       type="button"
@@ -396,7 +397,13 @@ function FoodItemsPageContent() {
                       {(showAllItemsBreadcrumb || index > 0) && (
                         <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
                       )}
-                      <span className="text-xs text-[var(--flow-text-muted)]">{pathSegment}</span>
+                      <button
+                        type="button"
+                        onClick={() => navigateToPath(index)}
+                        className="rounded-md px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+                      >
+                        {pathSegment}
+                      </button>
                     </div>
                   ))}
 
@@ -405,7 +412,7 @@ function FoodItemsPageContent() {
 
                     return (
                       <div key={`${pathSegment}-${realPathIndex}`} className="flex items-center gap-1">
-                        {(showAllItemsBreadcrumb || hiddenPathCount > 0 || index > 0) && (
+                        {(showAllItemsBreadcrumb || hiddenPathSegments.length > 0 || index > 0) && (
                           <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
                         )}
                         {realPathIndex === currentPath.length - 1 ? (
