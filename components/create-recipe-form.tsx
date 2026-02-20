@@ -156,7 +156,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
   }, [form])
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
@@ -174,8 +174,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 p-3 pt-2"
-              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+              className="space-y-4 p-3 pt-2 pb-4"
             >
             <FormField
               control={form.control}
