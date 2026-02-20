@@ -207,8 +207,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-6 p-4"
-              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 2rem)' }}
+              className="space-y-6 p-4 pb-6"
             >
               <FormField
                 control={form.control}
