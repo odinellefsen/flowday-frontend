@@ -179,7 +179,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
   }
 
   return (
-    <Drawer open={open} onOpenChange={handleOpenChange}>
+    <Drawer open={open} onOpenChange={handleOpenChange} repositionInputs={false}>
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
