@@ -10,14 +10,14 @@ import { toast } from 'sonner'
 
 import { Button } from '@/components/ui/button'
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from '@/components/ui/dialog'
+  Drawer,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from '@/components/ui/drawer'
 import {
   Form,
   FormControl,
@@ -176,20 +176,21 @@ export function ManageInstructionsForm({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogTrigger asChild>
+    <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
+      <DrawerTrigger asChild>
         {children}
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-[700px] max-h-[90vh] overflow-y-auto animate-scale-in">
-        <DialogHeader className="space-y-3">
-          <DialogTitle className="flex items-center gap-2 text-xl">
+      </DrawerTrigger>
+      <DrawerContent className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden">
+        <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden p-4">
+        <DrawerHeader className="space-y-3 px-0 pt-0 text-left">
+          <DrawerTitle className="flex items-center gap-2 text-xl">
             <BookOpen className="h-5 w-5" />
             Add Instructions
-          </DialogTitle>
-          <DialogDescription>
+          </DrawerTitle>
+          <DrawerDescription>
             Add new step-by-step instructions to {recipeName}. You can attach food units to each step for precise nutrition tracking.
-          </DialogDescription>
-        </DialogHeader>
+          </DrawerDescription>
+        </DrawerHeader>
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -297,7 +298,7 @@ export function ManageInstructionsForm({
               </FormDescription>
             </div>
 
-            <DialogFooter className="flex-col sm:flex-row gap-2">
+            <DrawerFooter className="flex-col sm:flex-row gap-2 px-0">
               <Button
                 type="button"
                 variant="outline"
@@ -324,7 +325,7 @@ export function ManageInstructionsForm({
                   </>
                 )}
               </Button>
-            </DialogFooter>
+            </DrawerFooter>
           </form>
         </Form>
 
@@ -335,7 +336,8 @@ export function ManageInstructionsForm({
             </p>
           </div>
         )}
-      </DialogContent>
-    </Dialog>
+        </div>
+      </DrawerContent>
+    </Drawer>
   )
 }
