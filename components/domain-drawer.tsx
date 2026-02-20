@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { 
   Drawer,
   DrawerContent,
+  DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Badge } from '@/components/ui/badge'
@@ -60,6 +61,7 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
         {children}
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
+        <DrawerTitle className="sr-only">Choose a domain</DrawerTitle>
         <div className="mx-auto w-full max-w-sm pb-8">
           <div className="p-4 pb-0 space-y-3 pb-4">
             {domains.map((domain, index) => (
