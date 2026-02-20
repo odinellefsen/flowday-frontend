@@ -198,8 +198,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 p-3 pt-2"
-              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+              className="space-y-4 p-3 pt-2 pb-4"
             >
             {/* Unit of Measurement */}
             <FormField
