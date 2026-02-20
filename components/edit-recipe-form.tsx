@@ -131,7 +131,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
   }
 
   return (
-    <Drawer open={open} onOpenChange={onOpenChange}>
+    <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent className="data-[vaul-drawer-direction=bottom]:mt-0 max-h-[85dvh] data-[vaul-drawer-direction=bottom]:max-h-[85dvh] overflow-hidden">
         <div className="mx-auto w-full max-w-sm overflow-y-auto overflow-x-hidden">
@@ -145,8 +145,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="space-y-4 p-3 pt-2"
-              style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 1rem)' }}
+              className="space-y-4 p-3 pt-2 pb-4"
             >
               <FormField
                 control={form.control}
