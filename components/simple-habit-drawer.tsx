@@ -119,7 +119,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
       <DrawerTrigger asChild>{children}</DrawerTrigger>
       <DrawerContent
         data-ptr-ignore
