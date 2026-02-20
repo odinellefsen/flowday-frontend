@@ -5,16 +5,11 @@ import { useRouter } from 'next/navigation'
 import { 
   Drawer,
   DrawerContent,
-  DrawerDescription,
-  DrawerHeader,
-  DrawerTitle,
   DrawerTrigger,
 } from '@/components/ui/drawer'
 import { Badge } from '@/components/ui/badge'
 import { 
   UtensilsCrossed, 
-  Dumbbell, 
-  GraduationCap, 
 } from 'lucide-react'
 
 interface Domain {
@@ -33,23 +28,7 @@ const domains: Domain[] = [
     description: 'Manage recipes, meals, and nutrition tracking',
     icon: <UtensilsCrossed className="h-6 w-6" />,
     implemented: true,
-  },
-  {
-    id: 'fitness',
-    name: 'Fitness',
-    description: 'Track workouts, exercises, and fitness goals',
-    icon: <Dumbbell className="h-6 w-6" />,
-    implemented: false,
-    comingSoon: true,
-  },
-  {
-    id: 'school',
-    name: 'School',
-    description: 'Organize assignments, courses, and study schedules',
-    icon: <GraduationCap className="h-6 w-6" />,
-    implemented: false,
-    comingSoon: true,
-  },
+  }
 ]
 
 interface DomainDrawerProps {
@@ -81,8 +60,8 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
         {children}
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
-        <div className="mx-auto w-full max-w-sm">
-          <div className="p-4 pb-0 space-y-3">
+        <div className="mx-auto w-full max-w-sm pb-8">
+          <div className="p-4 pb-0 space-y-3 pb-4">
             {domains.map((domain, index) => (
               <button
                 key={domain.id}
