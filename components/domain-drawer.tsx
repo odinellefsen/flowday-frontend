@@ -60,7 +60,7 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
       <DrawerTrigger asChild>
         {children}
       </DrawerTrigger>
-      <DrawerContent className="max-h-[85vh]">
+      <DrawerContent className="max-h-[85vh] overflow-y-auto [overscroll-behavior-y:contain]">
         <DrawerTitle className="sr-only">Choose a domain</DrawerTitle>
         <div className="mx-auto w-full max-w-sm pb-8">
           <div className="p-4 pb-0 space-y-3 pb-4">
