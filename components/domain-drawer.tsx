@@ -82,15 +82,6 @@ export function DomainDrawer({ children }: DomainDrawerProps) {
       </DrawerTrigger>
       <DrawerContent className="max-h-[85vh]">
         <div className="mx-auto w-full max-w-sm">
-          <DrawerHeader className="text-center">
-            <DrawerTitle className="flex items-center justify-center gap-2">
-              Explore Domains
-            </DrawerTitle>
-            <DrawerDescription>
-              Choose a domain to manage your daily activities
-            </DrawerDescription>
-          </DrawerHeader>
-          
           <div className="p-4 pb-0 space-y-3">
             {domains.map((domain, index) => (
               <button
