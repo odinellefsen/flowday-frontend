@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useAuth, useUser } from '@clerk/nextjs'
 import { SignInButton, SignUpButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
@@ -15,8 +16,10 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Home() {
-  const { isSignedIn, isLoaded, signOut } = useAuth()
+  const { isSignedIn, isLoaded, signOut, getToken } = useAuth()
   const { user } = useUser()
+  const [isPostDebugPending, setIsPostDebugPending] = useState(false)
+  const [postDebugMessage, setPostDebugMessage] = useState<string | null>(null)
   const displayName =
     user?.firstName || user?.emailAddresses[0]?.emailAddress?.split('@')[0] || 'Account'
   const todayLabel = new Date().toLocaleDateString(undefined, {
@@ -24,6 +27,33 @@ export default function Home() {
     month: 'short',
     day: 'numeric',
   })
+
+  const handlePostDebug = async () => {
+    setIsPostDebugPending(true)
+    setPostDebugMessage(null)
+
+    try {
+      const token = await getToken()
+      const response = await fetch('/api/_post-debug', {
+        method: 'POST',
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+      })
+
+      const payload = await response.json().catch(() => null)
+      const details =
+        payload && typeof payload === 'object' && 'message' in payload
+          ? ` - ${String(payload.message)}`
+          : ''
+      setPostDebugMessage(`${response.status} ${response.statusText}${details}`)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Unknown error'
+      setPostDebugMessage(`Request failed: ${message}`)
+    } finally {
+      setIsPostDebugPending(false)
+    }
+  }
 
   // Show loading state while Clerk is initializing
   if (!isLoaded) {
@@ -120,7 +150,27 @@ export default function Home() {
         {/* Main Content */}
         <main>
           {isSignedIn ? (
-            <TodoList />
+            <div className="space-y-4">
+              <div className="rounded-lg border border-dashed border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-4 text-left">
+                <p className="text-xs uppercase tracking-[0.2em] text-[var(--flow-text-muted)]">
+                  Temporary Debug
+                </p>
+                <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handlePostDebug}
+                    disabled={isPostDebugPending}
+                  >
+                    {isPostDebugPending ? 'Posting...' : 'POST /api/_post-debug'}
+                  </Button>
+                  {postDebugMessage && (
+                    <p className="text-sm text-[var(--flow-text-muted)]">{postDebugMessage}</p>
+                  )}
+                </div>
+              </div>
+              <TodoList />
+            </div>
           ) : (
             <div className="text-center space-y-8">
               <div className="space-y-4">
