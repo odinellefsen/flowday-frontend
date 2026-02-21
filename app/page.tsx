@@ -5,6 +5,7 @@ import { useAuth, useUser } from '@clerk/nextjs'
 import { SignInButton, SignUpButton } from '@/components/auth'
 import { TodoList } from '@/components/todo-list'
 import { Button } from '@/components/ui/button'
+import { getApiBaseUrl } from '@/src/lib/api/base-url'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -14,6 +15,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Skeleton } from '@/components/ui/skeleton'
+
+const BASE_URL = getApiBaseUrl()
 
 export default function Home() {
   const { isSignedIn, isLoaded, signOut, getToken } = useAuth()
@@ -34,7 +37,7 @@ export default function Home() {
 
     try {
       const token = await getToken()
-      const response = await fetch('/api/_post-debug', {
+      const response = await fetch(`${BASE_URL}/api/_post-debug`, {
         method: 'POST',
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
