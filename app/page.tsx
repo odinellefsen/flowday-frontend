@@ -37,7 +37,7 @@ export default function Home() {
 
     try {
       const token = await getToken()
-      const response = await fetch(`${BASE_URL}/api/_post-debug`, {
+      const response = await fetch(`${BASE_URL}/api/todo/_post-debug-auth`, {
         method: 'POST',
         headers: {
           ...(token && { Authorization: `Bearer ${token}` }),
