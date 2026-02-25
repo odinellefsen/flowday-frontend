@@ -29,6 +29,8 @@ interface PageProps {
 
 function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
   const [showEditRecipeForm, setShowEditRecipeForm] = useState(false)
+  const hasEstimatedTime = Boolean(recipe.metadata.estimatedTotalTime)
+  const hasConsumptionTimings = Boolean(recipe.whenIsItConsumed && recipe.whenIsItConsumed.length > 0)
 
   const getMealTimingColor = () => {
     return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
@@ -74,16 +76,17 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
           </EditRecipeForm>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 pt-1">
-          {recipe.metadata.estimatedTotalTime && (
+        {(hasEstimatedTime || hasConsumptionTimings) && (
+          <div className="flex flex-wrap items-center gap-2">
+            {hasEstimatedTime && (
             <div className="inline-flex items-center gap-1.5 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-hover)] px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)]">
               <Clock className="h-3.5 w-3.5" />
               {recipe.metadata.estimatedTotalTime} min
             </div>
-          )}
+            )}
 
-          {recipe.whenIsItConsumed && recipe.whenIsItConsumed.length > 0 && (
-            <>
+            {hasConsumptionTimings && (
+              <>
               {recipe.whenIsItConsumed.map((timing) => (
                 <span
                   key={timing}
@@ -92,9 +95,10 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
                   {timing.toLowerCase()}
                 </span>
               ))}
-            </>
-          )}
-        </div>
+              </>
+            )}
+          </div>
+        )}
       </CardHeader>
     </Card>
   )
