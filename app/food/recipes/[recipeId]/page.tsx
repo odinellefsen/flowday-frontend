@@ -46,12 +46,6 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
               <CardTitle className="text-2xl leading-tight text-[var(--flow-text)] sm:text-3xl">
                 {recipe.nameOfTheRecipe}
               </CardTitle>
-              <Badge
-                variant="outline"
-                className="mt-1 border-[color:var(--flow-border)] bg-[var(--flow-hover)] text-xs text-[var(--flow-text-muted)]"
-              >
-                v{recipe.version}
-              </Badge>
             </div>
 
             {recipe.generalDescriptionOfTheRecipe && (
