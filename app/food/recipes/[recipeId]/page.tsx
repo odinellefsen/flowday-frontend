@@ -37,7 +37,7 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
   }
 
   return (
-    <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
+    <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] py-0 shadow-[var(--flow-shadow)]">
       <CardHeader className="gap-5 p-5 sm:p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="min-w-0 flex-1 space-y-3">
