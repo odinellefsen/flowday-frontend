@@ -36,45 +36,28 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
 
   return (
     <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
-      <CardHeader>
-        <div className="flex items-start justify-between">
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
-              <CardTitle className="text-2xl text-[var(--flow-text)]">{recipe.nameOfTheRecipe}</CardTitle>
-              <Badge variant="outline" className="text-xs border-[color:var(--flow-border)] text-[var(--flow-text-muted)]">
+      <CardHeader className="gap-5 p-5 sm:p-6">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1 space-y-3">
+            <div className="flex flex-wrap items-start gap-2">
+              <CardTitle className="text-2xl leading-tight text-[var(--flow-text)] sm:text-3xl">
+                {recipe.nameOfTheRecipe}
+              </CardTitle>
+              <Badge
+                variant="outline"
+                className="mt-1 border-[color:var(--flow-border)] bg-[var(--flow-hover)] text-xs text-[var(--flow-text-muted)]"
+              >
                 v{recipe.version}
               </Badge>
             </div>
-            
+
             {recipe.generalDescriptionOfTheRecipe && (
-              <CardDescription className="text-base mb-3 text-[var(--flow-text-muted)]">
+              <CardDescription className="max-w-3xl text-sm leading-relaxed text-[var(--flow-text-muted)] sm:text-base">
                 {recipe.generalDescriptionOfTheRecipe}
               </CardDescription>
             )}
-            
-            <div className="flex items-center gap-4 text-sm text-[var(--flow-text-muted)]">
-              {recipe.metadata.estimatedTotalTime && (
-                <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
-                  {recipe.metadata.estimatedTotalTime} min
-                </span>
-              )}
-            </div>
-            
-            {recipe.whenIsItConsumed && recipe.whenIsItConsumed.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-3">
-                {recipe.whenIsItConsumed.map((timing) => (
-                  <span
-                    key={timing}
-                    className={`text-xs px-2 py-1 rounded-md ${getMealTimingColor()}`}
-                  >
-                    {timing.toLowerCase()}
-                  </span>
-                ))}
-              </div>
-            )}
           </div>
-          
+
           <EditRecipeForm
             recipe={recipe}
             open={showEditRecipeForm}
@@ -83,12 +66,34 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
             <Button
               variant="outline"
               size="sm"
-              className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
+              className="w-full border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)] hover:bg-[var(--flow-hover)] sm:w-auto"
             >
-              <Edit className="h-4 w-4 mr-2" />
+              <Edit className="mr-2 h-4 w-4" />
               Edit Recipe
             </Button>
           </EditRecipeForm>
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2 pt-1">
+          {recipe.metadata.estimatedTotalTime && (
+            <div className="inline-flex items-center gap-1.5 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-hover)] px-2.5 py-1.5 text-xs font-medium text-[var(--flow-text-muted)]">
+              <Clock className="h-3.5 w-3.5" />
+              {recipe.metadata.estimatedTotalTime} min
+            </div>
+          )}
+
+          {recipe.whenIsItConsumed && recipe.whenIsItConsumed.length > 0 && (
+            <>
+              {recipe.whenIsItConsumed.map((timing) => (
+                <span
+                  key={timing}
+                  className={`rounded-md px-2.5 py-1.5 text-xs font-medium ${getMealTimingColor()}`}
+                >
+                  {timing.toLowerCase()}
+                </span>
+              ))}
+            </>
+          )}
         </div>
       </CardHeader>
     </Card>
