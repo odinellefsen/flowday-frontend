@@ -30,7 +30,8 @@ interface PageProps {
 function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
   const [showEditRecipeForm, setShowEditRecipeForm] = useState(false)
   const hasEstimatedTime = Boolean(recipe.metadata.estimatedTotalTime)
-  const hasConsumptionTimings = Boolean(recipe.whenIsItConsumed && recipe.whenIsItConsumed.length > 0)
+  const consumptionTimings = recipe.whenIsItConsumed ?? []
+  const hasConsumptionTimings = consumptionTimings.length > 0
 
   const getMealTimingColor = () => {
     return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
@@ -87,7 +88,7 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
 
             {hasConsumptionTimings && (
               <>
-              {recipe.whenIsItConsumed.map((timing) => (
+              {consumptionTimings.map((timing) => (
                 <span
                   key={timing}
                   className={`rounded-md px-2.5 py-1.5 text-xs font-medium ${getMealTimingColor()}`}
