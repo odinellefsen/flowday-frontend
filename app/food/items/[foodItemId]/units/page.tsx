@@ -40,112 +40,110 @@ function UnitListItem({ unit }: { unit: FoodItemUnit }) {
   ].filter(Boolean) as Array<{ label: string; value: string }>
 
   return (
-    <div className="flex items-start justify-between gap-3 px-4 py-3 transition-colors hover:bg-[var(--flow-hover)]/60">
-      <div className="min-w-0 flex-1">
+    <div className="px-4 py-3 transition-colors hover:bg-[var(--flow-hover)]/60">
+      <div className="flex items-start justify-between gap-3">
         <h3 className="font-semibold text-lg text-[var(--flow-text)]">{unit.unitOfMeasurement}</h3>
 
-        {unit.unitDescription && (
-          <p className="mb-2 text-sm text-[var(--flow-text-muted)]">
-            {unit.unitDescription}
-          </p>
-        )}
-
-        <div className="text-sm text-[var(--flow-text-muted)]">
-          {formatNutrition(unit)}
-        </div>
-
-        <div className="mt-3">
+        <div className="relative">
           <Button
-            type="button"
             variant="ghost"
             size="sm"
-            className="h-7 px-2 text-xs text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
-            onClick={() => setShowNutritionDetails((prev) => !prev)}
+            className="relative z-20 p-2"
+            onClick={(e) => {
+              e.stopPropagation()
+              setShowActions(!showActions)
+            }}
           >
-            {showNutritionDetails ? (
-              <>
-                <ChevronUp className="mr-1 h-3.5 w-3.5" />
-                Hide nutrition details
-              </>
-            ) : (
-              <>
-                <ChevronDown className="mr-1 h-3.5 w-3.5" />
-                Show nutrition details
-              </>
-            )}
+            <MoreHorizontal className="h-4 w-4" />
           </Button>
 
-          {showNutritionDetails && (
-            <div className="mt-2 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-hover)]/40 p-2.5">
-              <div className="grid gap-1.5 sm:grid-cols-2">
-                {nutritionDetails.map((detail) => (
-                  <div key={detail.label} className="flex items-center justify-between text-xs">
-                    <span className="text-[var(--flow-text-muted)]">{detail.label}</span>
-                    <span className="font-medium text-[var(--flow-text)]">{detail.value}</span>
-                  </div>
-                ))}
+          {showActions && (
+            <>
+              <div
+                className="fixed inset-0 z-10"
+                onPointerDown={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                }}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setShowActions(false)
+                }}
+              />
+              <div className="absolute right-0 top-8 z-20 min-w-[120px] rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-1 shadow-[var(--flow-shadow)]">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-xs"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setShowActions(false)
+                    toast.info('Edit unit coming soon!')
+                  }}
+                >
+                  <Edit className="h-3 w-3 mr-2" />
+                  Edit
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start text-xs text-destructive hover:text-destructive"
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    setShowActions(false)
+                    toast.info('Delete unit coming soon!')
+                  }}
+                >
+                  <Trash2 className="h-3 w-3 mr-2" />
+                  Delete
+                </Button>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
 
-      <div className="relative">
+      {unit.unitDescription && (
+        <p className="mb-2 mt-1 text-sm text-[var(--flow-text-muted)]">
+          {unit.unitDescription}
+        </p>
+      )}
+
+      <div className="text-sm text-[var(--flow-text-muted)]">
+        {formatNutrition(unit)}
+      </div>
+
+      <div className="mt-3">
         <Button
+          type="button"
           variant="ghost"
           size="sm"
-          className="relative z-20 p-2"
-          onClick={(e) => {
-            e.stopPropagation()
-            setShowActions(!showActions)
-          }}
+          className="h-7 px-2 text-xs text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+          onClick={() => setShowNutritionDetails((prev) => !prev)}
         >
-          <MoreHorizontal className="h-4 w-4" />
+          {showNutritionDetails ? (
+            <>
+              <ChevronUp className="mr-1 h-3.5 w-3.5" />
+              Hide nutrition details
+            </>
+          ) : (
+            <>
+              <ChevronDown className="mr-1 h-3.5 w-3.5" />
+              Show nutrition details
+            </>
+          )}
         </Button>
 
-        {showActions && (
-          <>
-            <div
-              className="fixed inset-0 z-10"
-              onPointerDown={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-              }}
-              onClick={(e) => {
-                e.preventDefault()
-                e.stopPropagation()
-                setShowActions(false)
-              }}
-            />
-            <div className="absolute right-0 top-8 z-20 min-w-[120px] rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-1 shadow-[var(--flow-shadow)]">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-xs"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setShowActions(false)
-                  toast.info('Edit unit coming soon!')
-                }}
-              >
-                <Edit className="h-3 w-3 mr-2" />
-                Edit
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="w-full justify-start text-xs text-destructive hover:text-destructive"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setShowActions(false)
-                  toast.info('Delete unit coming soon!')
-                }}
-              >
-                <Trash2 className="h-3 w-3 mr-2" />
-                Delete
-              </Button>
-            </div>
-          </>
+        {showNutritionDetails && (
+          <div className="mt-2 grid w-full gap-1.5 sm:grid-cols-2">
+            {nutritionDetails.map((detail) => (
+              <div key={detail.label} className="flex items-center justify-between border-b border-[color:var(--flow-border)]/60 py-1 text-xs last:border-b-0">
+                <span className="text-[var(--flow-text-muted)]">{detail.label}</span>
+                <span className="font-medium text-[var(--flow-text)]">{detail.value}</span>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
