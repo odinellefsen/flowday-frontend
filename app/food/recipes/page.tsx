@@ -6,11 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ChefHat, Plus, MoreHorizontal, Trash2, Edit, Clock, Users } from 'lucide-react'
+import { ChefHat, Plus, MoreHorizontal, Trash2, Edit } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { CreateRecipeForm } from '@/components/create-recipe-form'
-import { type Recipe, MealTimingEnum } from '@/src/lib/api/types/recipes'
+import { type Recipe } from '@/src/lib/api/types/recipes'
 import { toast } from 'sonner'
 
 function RecipeCard({ recipe }: { recipe: Recipe }) {
@@ -39,7 +39,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
     }
   }
 
-  const getMealTimingColor = (_timing: MealTimingEnum) => {
+  const getMealTimingColor = () => {
     return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
   }
 
@@ -63,25 +63,13 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
                 {recipe.whenIsItConsumed.map((timing) => (
                   <span
                     key={timing}
-                    className={`text-xs px-2 py-1 rounded-md ${getMealTimingColor(timing)}`}
+                    className={`text-xs px-2 py-1 rounded-md ${getMealTimingColor()}`}
                   >
                     {timing.toLowerCase()}
                   </span>
                 ))}
               </div>
             )}
-            
-            <div className="flex items-center gap-4 text-xs text-[var(--flow-text-muted)]">
-              <span className="flex items-center gap-1">
-                <Users className="h-3 w-3" />
-                {recipe.ingredientCount} ingredient{recipe.ingredientCount !== 1 ? 's' : ''}
-              </span>
-              <span className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
-                {recipe.stepCount} step{recipe.stepCount !== 1 ? 's' : ''}
-              </span>
-              <span>v{recipe.version}</span>
-            </div>
           </div>
           
           <div className="relative">
