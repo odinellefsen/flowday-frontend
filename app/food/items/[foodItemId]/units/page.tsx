@@ -21,10 +21,6 @@ interface PageProps {
 function UnitCard({ unit }: { unit: FoodItemUnit }) {
   const [showActions, setShowActions] = useState(false)
 
-  const getSourceColor = () => {
-    return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
-  }
-
   const formatNutrition = (unit: FoodItemUnit) => {
     const parts = []
     if (unit.calories) parts.push(`${unit.calories} cal`)
@@ -39,12 +35,7 @@ function UnitCard({ unit }: { unit: FoodItemUnit }) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
               <h3 className="font-semibold text-lg text-[var(--flow-text)]">{unit.unitOfMeasurement}</h3>
-              <span className={`text-xs px-2 py-1 rounded-md ${getSourceColor()}`}>
-                {unit.source ? unit.source.replace('_', ' ') : 'unknown'}
-              </span>
-            </div>
             
             {unit.unitDescription && (
               <p className="text-sm text-[var(--flow-text-muted)] mb-2">
