@@ -5,7 +5,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { Plus, Scale, MoreHorizontal, Trash2, Edit } from 'lucide-react'
+import { Plus, Scale, MoreHorizontal, Trash2, Edit, ChevronDown, ChevronUp } from 'lucide-react'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import { CreateUnitForm } from '@/components/create-unit-form'
 import type { FoodItemUnit } from '@/src/lib/api/types/food-items'
@@ -19,15 +19,25 @@ interface PageProps {
 
 function UnitListItem({ unit }: { unit: FoodItemUnit }) {
   const [showActions, setShowActions] = useState(false)
+  const [showNutritionDetails, setShowNutritionDetails] = useState(false)
 
   const formatNutrition = (unit: FoodItemUnit) => {
     const parts = []
-    if (unit.calories) parts.push(`${unit.calories} cal`)
+    parts.push(`${unit.calories} kcal`)
     if (unit.proteinInGrams) parts.push(`${unit.proteinInGrams}g protein`)
     if (unit.carbohydratesInGrams) parts.push(`${unit.carbohydratesInGrams}g carbs`)
     if (unit.fatInGrams) parts.push(`${unit.fatInGrams}g fat`)
     return parts.join(' • ')
   }
+
+  const nutritionDetails = [
+    { label: 'Calories', value: `${unit.calories} kcal` },
+    unit.proteinInGrams !== undefined ? { label: 'Protein', value: `${unit.proteinInGrams} g` } : null,
+    unit.carbohydratesInGrams !== undefined ? { label: 'Carbs', value: `${unit.carbohydratesInGrams} g` } : null,
+    unit.fatInGrams !== undefined ? { label: 'Fat', value: `${unit.fatInGrams} g` } : null,
+    unit.fiberInGrams !== undefined ? { label: 'Fiber', value: `${unit.fiberInGrams} g` } : null,
+    unit.sugarInGrams !== undefined ? { label: 'Sugar', value: `${unit.sugarInGrams} g` } : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>
 
   return (
     <div className="flex items-start justify-between gap-3 px-4 py-3 transition-colors hover:bg-[var(--flow-hover)]/60">
@@ -42,6 +52,41 @@ function UnitListItem({ unit }: { unit: FoodItemUnit }) {
 
         <div className="text-sm text-[var(--flow-text-muted)]">
           {formatNutrition(unit)}
+        </div>
+
+        <div className="mt-3">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 px-2 text-xs text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+            onClick={() => setShowNutritionDetails((prev) => !prev)}
+          >
+            {showNutritionDetails ? (
+              <>
+                <ChevronUp className="mr-1 h-3.5 w-3.5" />
+                Hide nutrition details
+              </>
+            ) : (
+              <>
+                <ChevronDown className="mr-1 h-3.5 w-3.5" />
+                Show nutrition details
+              </>
+            )}
+          </Button>
+
+          {showNutritionDetails && (
+            <div className="mt-2 rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-hover)]/40 p-2.5">
+              <div className="grid gap-1.5 sm:grid-cols-2">
+                {nutritionDetails.map((detail) => (
+                  <div key={detail.label} className="flex items-center justify-between text-xs">
+                    <span className="text-[var(--flow-text-muted)]">{detail.label}</span>
+                    <span className="font-medium text-[var(--flow-text)]">{detail.value}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 
