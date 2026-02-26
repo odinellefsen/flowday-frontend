@@ -4,9 +4,8 @@ import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ChefHat, Plus, MoreHorizontal, Trash2, Edit } from 'lucide-react'
+import { ChefHat, Plus, MoreHorizontal, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { useAuthenticatedRecipesAPI } from '@/src/lib/api/recipes'
 import { CreateRecipeForm } from '@/components/create-recipe-form'
@@ -87,19 +86,6 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
             
             {showActions && (
               <div className="absolute right-0 top-8 bg-popover border rounded-md shadow-lg p-1 z-10 min-w-[120px]">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start text-xs"
-                  onClick={(e) => {
-                    e.stopPropagation()
-                    setShowActions(false)
-                    toast.info('Edit recipe coming soon!')
-                  }}
-                >
-                  <Edit className="h-3 w-3 mr-2" />
-                  Edit
-                </Button>
                 <Button
                   variant="ghost"
                   size="sm"
@@ -232,16 +218,7 @@ export default function RecipesPage() {
               </Card>
             ) : (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-[var(--flow-text)]">Your Recipes</h2>
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
-                  >
-                    {recipesList.length} recipe{recipesList.length !== 1 ? 's' : ''}
-                  </Badge>
-                </div>
-                
+                <h2 className="text-lg font-semibold text-[var(--flow-text)]">Your Recipes</h2>
                 {recipesList.map((recipe) => (
                   <RecipeCard key={recipe.id} recipe={recipe} />
                 ))}
