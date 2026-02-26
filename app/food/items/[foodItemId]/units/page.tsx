@@ -4,7 +4,6 @@ import { useState, use } from 'react'
 import { useQuery } from '@tanstack/react-query'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Plus, Scale, MoreHorizontal, Trash2, Edit } from 'lucide-react'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
@@ -218,16 +217,7 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
               </Card>
             ) : (
               <div className="space-y-4 animate-fade-in">
-                <div className="flex items-center justify-between">
                   <h2 className="text-lg font-semibold text-[var(--flow-text)]">Measurement Units</h2>
-                  <Badge
-                    variant="outline"
-                    className="text-xs border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text-muted)]"
-                  >
-                    {units.length} unit{units.length !== 1 ? 's' : ''}
-                  </Badge>
-                </div>
-                
                 {units.map((unit) => (
                   <UnitCard 
                     key={unit.id} 
