@@ -239,7 +239,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
               name="unitDescription"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Description (Optional)</FormLabel>
+                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="e.g., Medium-sized slice, Large apple, etc."
@@ -247,20 +247,14 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription className="text-xs text-[var(--flow-text-muted)]">
-                    Describe this specific unit measurement
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
             {/* Nutrition Information */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
+            <div className="space-y-4 mt-6">
                 <h3 className="text-sm font-medium text-[var(--flow-text)]">Nutritional Information</h3>
-                <Info className="h-4 w-4 text-[var(--flow-text-muted)]" />
-              </div>
               
               {/* Calories (Required) */}
               <FormField
@@ -443,34 +437,6 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                 )}
               </div>
             </div>
-
-            {/* Data Source */}
-            <FormField
-              control={form.control}
-              name="source"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-sm font-medium text-[var(--flow-text)]">Data Source</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]">
-                        <SelectValue />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="user_measured">User Measured</SelectItem>
-                      <SelectItem value="package_label">Package Label</SelectItem>
-                      <SelectItem value="database">Database</SelectItem>
-                      <SelectItem value="estimated">Estimated</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormDescription className="text-xs text-[var(--flow-text-muted)]">
-                    How was this nutritional information obtained?
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
               <DrawerFooter className="px-0 pt-1">
                 <div className="flex justify-end gap-3">
