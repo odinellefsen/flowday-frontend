@@ -21,7 +21,7 @@ interface PageProps {
 function UnitCard({ unit }: { unit: FoodItemUnit }) {
   const [showActions, setShowActions] = useState(false)
 
-  const getSourceColor = (_source: string) => {
+  const getSourceColor = () => {
     return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
   }
 
@@ -41,7 +41,7 @@ function UnitCard({ unit }: { unit: FoodItemUnit }) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <h3 className="font-semibold text-lg text-[var(--flow-text)]">{unit.unitOfMeasurement}</h3>
-              <span className={`text-xs px-2 py-1 rounded-md ${getSourceColor(unit.source || 'unknown')}`}>
+              <span className={`text-xs px-2 py-1 rounded-md ${getSourceColor()}`}>
                 {unit.source ? unit.source.replace('_', ' ') : 'unknown'}
               </span>
             </div>
@@ -61,39 +61,58 @@ function UnitCard({ unit }: { unit: FoodItemUnit }) {
             <Button
               variant="ghost"
               size="sm"
-              className="p-2"
-              onClick={() => setShowActions(!showActions)}
+              className="relative z-20 p-2"
+              onClick={(e) => {
+                e.stopPropagation()
+                setShowActions(!showActions)
+              }}
             >
               <MoreHorizontal className="h-4 w-4" />
             </Button>
             
             {showActions && (
-              <div className="absolute right-0 top-8 bg-[var(--flow-surface)] border-[color:var(--flow-border)] rounded-md shadow-[var(--flow-shadow)] p-1 z-10 min-w-[120px]">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start text-xs"
-                  onClick={() => {
-                    setShowActions(false)
-                    toast.info('Edit unit coming soon!')
+              <>
+                <div
+                  className="fixed inset-0 z-10"
+                  onPointerDown={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
                   }}
-                >
-                  <Edit className="h-3 w-3 mr-2" />
-                  Edit
-                </Button>
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="w-full justify-start text-xs text-destructive hover:text-destructive"
-                  onClick={() => {
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
                     setShowActions(false)
-                    toast.info('Delete unit coming soon!')
                   }}
-                >
-                  <Trash2 className="h-3 w-3 mr-2" />
-                  Delete
-                </Button>
-              </div>
+                />
+                <div className="absolute right-0 top-8 z-20 min-w-[120px] rounded-md border border-[color:var(--flow-border)] bg-[var(--flow-surface)] p-1 shadow-[var(--flow-shadow)]">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-xs"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowActions(false)
+                      toast.info('Edit unit coming soon!')
+                    }}
+                  >
+                    <Edit className="h-3 w-3 mr-2" />
+                    Edit
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="w-full justify-start text-xs text-destructive hover:text-destructive"
+                    onClick={(e) => {
+                      e.stopPropagation()
+                      setShowActions(false)
+                      toast.info('Delete unit coming soon!')
+                    }}
+                  >
+                    <Trash2 className="h-3 w-3 mr-2" />
+                    Delete
+                  </Button>
+                </div>
+              </>
             )}
           </div>
         </div>
