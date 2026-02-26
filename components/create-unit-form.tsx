@@ -4,7 +4,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Scale, Plus, Info, ChevronDown, ChevronUp } from 'lucide-react'
+import { Scale, Plus, ChevronDown, ChevronUp } from 'lucide-react'
 import { toast } from 'sonner'
 import { useState } from 'react'
 
@@ -21,7 +21,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -109,19 +108,24 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
   const queryClient = useQueryClient()
   const apiClient = useAuthenticatedFoodItemsAPI()
   const [showAdvancedNutrition, setShowAdvancedNutrition] = useState(false)
+  const parseNumberInput = (value: string): number | undefined => {
+    if (value === '') return undefined
+    const parsed = Number(value)
+    return Number.isNaN(parsed) ? undefined : parsed
+  }
 
   const form = useForm<CreateUnitFormData>({
     resolver: zodResolver(createUnitSchema),
     defaultValues: {
       unitOfMeasurement: UnitOfMeasurementEnum.PIECE,
       unitDescription: '',
-      calories: 0,
-      proteinInGrams: 0,
-      carbohydratesInGrams: 0,
-      fatInGrams: 0,
-      fiberInGrams: 0,
-      sugarInGrams: 0,
-      sodiumInMilligrams: 0,
+      calories: undefined,
+      proteinInGrams: undefined,
+      carbohydratesInGrams: undefined,
+      fatInGrams: undefined,
+      fiberInGrams: undefined,
+      sugarInGrams: undefined,
+      sodiumInMilligrams: undefined,
       source: 'user_measured',
     },
   })
@@ -272,7 +276,10 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                         placeholder="0"
                         className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                         {...field}
-                        onChange={(e) => field.onChange(parseFloat(e.target.value) || 0)}
+                        value={field.value ?? ''}
+                        onChange={(e) => {
+                          field.onChange(parseNumberInput(e.target.value))
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
@@ -311,7 +318,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               placeholder="0"
                               className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(parseNumberInput(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -334,7 +342,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               placeholder="0"
                               className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(parseNumberInput(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -357,7 +366,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               placeholder="0"
                               className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(parseNumberInput(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -380,7 +390,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               placeholder="0"
                               className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(parseNumberInput(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -403,7 +414,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               placeholder="0"
                               className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(parseNumberInput(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -426,7 +438,8 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
                               placeholder="0"
                               className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] text-[var(--flow-text)]"
                               {...field}
-                              onChange={(e) => field.onChange(parseFloat(e.target.value) || undefined)}
+                              value={field.value ?? ''}
+                              onChange={(e) => field.onChange(parseNumberInput(e.target.value))}
                             />
                           </FormControl>
                           <FormMessage />
