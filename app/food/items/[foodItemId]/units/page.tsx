@@ -115,25 +115,18 @@ function UnitListItem({ unit }: { unit: FoodItemUnit }) {
       </div>
 
       <div className="mt-3">
-        <Button
+        <button
           type="button"
-          variant="ghost"
-          size="sm"
-          className="h-7 px-2 text-xs text-[var(--flow-text-muted)] hover:bg-[var(--flow-hover)] hover:text-[var(--flow-text)]"
+          className="inline-flex items-center gap-1 text-xs font-medium text-[var(--flow-text-muted)] transition-colors hover:text-[var(--flow-text)]"
           onClick={() => setShowNutritionDetails((prev) => !prev)}
         >
+          <span>{showNutritionDetails ? 'Hide nutrition details' : 'Show nutrition details'}</span>
           {showNutritionDetails ? (
-            <>
-              <ChevronUp className="mr-1 h-3.5 w-3.5" />
-              Hide nutrition details
-            </>
+            <ChevronUp className="h-3.5 w-3.5" />
           ) : (
-            <>
-              <ChevronDown className="mr-1 h-3.5 w-3.5" />
-              Show nutrition details
-            </>
+            <ChevronDown className="h-3.5 w-3.5" />
           )}
-        </Button>
+        </button>
 
         {showNutritionDetails && (
           <div className="mt-2 grid w-full gap-1.5 sm:grid-cols-2">
