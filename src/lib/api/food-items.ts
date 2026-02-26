@@ -6,7 +6,6 @@
 import { useAuth } from '@clerk/nextjs'
 import type { ApiResponse } from './types'
 import type {
-  FoodItem,
   FoodItemUnit,
   CreateFoodItemRequest,
   CreateFoodItemUnitRequest,
@@ -115,6 +114,8 @@ export const foodItemsAPI = {
     foodItemId: string,
     unitsData: CreateFoodItemUnitRequest
   ): Promise<ApiResponse<CreateFoodItemUnitsResponse['data']>> => {
+    console.log('unitsData', unitsData)
+    console.log('foodItemId', foodItemId)
     const response = await fetch(`${BASE_URL}/api/food-item/${foodItemId}/units`, {
       method: 'POST',
       headers: {

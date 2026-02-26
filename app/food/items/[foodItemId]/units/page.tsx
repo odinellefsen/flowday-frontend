@@ -138,8 +138,14 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
     queryFn: () => apiClient.getUnits(foodItemId),
   })
 
+  const { data: foodItemsData } = useQuery({
+    queryKey: ['foodItems'],
+    queryFn: () => apiClient.list(),
+  })
+
   const units = unitsData?.data || []
-  const foodItemName = units[0]?.foodItemName || 'Food Item'
+  const foodItemNameFromList = foodItemsData?.data?.find((item) => item.id === foodItemId)?.name
+  const foodItemName = units[0]?.foodItemName || foodItemNameFromList || 'Food Item'
   
   return (
     <div className="min-h-screen bg-[var(--flow-background)]">
