@@ -211,7 +211,7 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
             ) : (
               <div className="space-y-4 animate-fade-in">
                 <h2 className="text-lg font-semibold text-[var(--flow-text)]">Measurement Units</h2>
-                <div className="overflow-hidden rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
+                <div className="rounded-xl border border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                   {units.map((unit, index) => (
                     <div
                       key={unit.id}
