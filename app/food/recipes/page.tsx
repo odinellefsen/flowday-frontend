@@ -51,16 +51,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
       <CardContent className="p-4">
         <div className="flex items-start justify-between">
           <div className="flex-1">
-            <div className="flex items-center gap-2 mb-2">
               <h3 className="font-semibold text-lg text-[var(--flow-text)]">{recipe.nameOfTheRecipe}</h3>
-              <Badge
-                variant="outline"
-                className="text-xs border-[color:var(--flow-border)] text-[var(--flow-text-muted)]"
-              >
-                {recipe.completeness}
-              </Badge>
-            </div>
-            
             {recipe.generalDescriptionOfTheRecipe && (
               <p className="text-sm text-[var(--flow-text-muted)] mb-2">
                 {recipe.generalDescriptionOfTheRecipe}
