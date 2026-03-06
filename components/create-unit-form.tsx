@@ -139,12 +139,12 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
           unitDescription: data.unitDescription || undefined,
           nutritionPerOfThisUnit: {
             calories: data.calories,
-            proteinInGrams: data.proteinInGrams || undefined,
-            carbohydratesInGrams: data.carbohydratesInGrams || undefined,
-            fatInGrams: data.fatInGrams || undefined,
-            fiberInGrams: data.fiberInGrams || undefined,
-            sugarInGrams: data.sugarInGrams || undefined,
-            sodiumInMilligrams: data.sodiumInMilligrams || undefined,
+            proteinInGrams: data.proteinInGrams ?? undefined,
+            carbohydratesInGrams: data.carbohydratesInGrams ?? undefined,
+            fatInGrams: data.fatInGrams ?? undefined,
+            fiberInGrams: data.fiberInGrams ?? undefined,
+            sugarInGrams: data.sugarInGrams ?? undefined,
+            sodiumInMilligrams: data.sodiumInMilligrams ?? undefined,
           },
           source: data.source,
         }]
