@@ -32,6 +32,7 @@ import {
   ChevronRight, 
   Apple,
   Scale,
+  X,
 } from 'lucide-react'
 import { useAuthenticatedFoodItemsAPI } from '@/src/lib/api/food-items'
 import type { FoodItem, FoodItemUnit } from '@/src/lib/api/types/food-items'
@@ -497,22 +498,3 @@ export function AttachedUnitBadge({
   )
 }
 
-function X({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      fill="none"
-      height="24"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth="2"
-      viewBox="0 0 24 24"
-      width="24"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path d="m18 6-12 12" />
-      <path d="m6 6 12 12" />
-    </svg>
-  )
-}
