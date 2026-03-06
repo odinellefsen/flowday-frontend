@@ -68,7 +68,7 @@ function FoodItemBrowser({
     queryFn: apiClient.list,
   })
 
-  const foodItemsList = foodItems?.data || []
+  const foodItemsList = foodItems?.data ?? []
 
   // Same logic as food items page for category navigation
   const getCurrentLevelData = () => {
@@ -291,7 +291,7 @@ function UnitSelector({
     queryFn: () => apiClient.getUnits(foodItem.id),
   })
 
-  const units = unitsData?.data || []
+  const units = unitsData?.data ?? []
 
   if (isLoading) {
     return (
