@@ -106,7 +106,7 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
               className="relative z-20 p-2"
               onClick={(e) => {
                 e.stopPropagation() // Prevent card click when clicking menu
-                setShowActions(!showActions)
+                setShowActions((prev) => !prev)
               }}
             >
               <MoreHorizontal className="h-4 w-4" />

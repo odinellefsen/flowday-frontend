@@ -51,7 +51,7 @@ function UnitListItem({ unit }: { unit: FoodItemUnit }) {
             className="relative z-20 p-2"
             onClick={(e) => {
               e.stopPropagation()
-              setShowActions(!showActions)
+              setShowActions((prev) => !prev)
             }}
           >
             <MoreHorizontal className="h-4 w-4" />
