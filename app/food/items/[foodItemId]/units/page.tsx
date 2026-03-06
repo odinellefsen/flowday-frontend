@@ -181,7 +181,7 @@ export default function FoodItemUnitsPage({ params }: PageProps) {
     queryFn: () => apiClient.list(),
   })
 
-  const units = unitsData?.data || []
+  const units = unitsData?.data ?? []
   const foodItemNameFromList = foodItemsData?.data?.find((item) => item.id === foodItemId)?.name
   const foodItemName = units[0]?.foodItemName || foodItemNameFromList || 'Food Item'
   
