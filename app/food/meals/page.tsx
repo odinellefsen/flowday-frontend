@@ -94,7 +94,7 @@ export default function MealsPage() {
     queryFn: apiClient.list,
   })
 
-  const mealsList = meals?.data || []
+  const mealsList = meals?.data ?? []
 
   return (
     <div className="min-h-screen bg-[var(--flow-background)]">
