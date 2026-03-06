@@ -232,7 +232,7 @@ function FoodItemsPageContent() {
     queryFn: apiClient.list,
   })
 
-  const foodItemsList = foodItems?.data || []
+  const foodItemsList = foodItems?.data ?? []
 
   // Get items and subcategories at the current path level
   const getCurrentLevelData = () => {
