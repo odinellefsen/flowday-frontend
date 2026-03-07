@@ -76,7 +76,7 @@ export function AttachRecipesForm({
     enabled: open, // Only fetch when dialog is open
   })
 
-  const recipes = recipesData?.data || []
+  const recipes = recipesData?.data ?? []
 
   // Filter recipes based on search query
   const filteredRecipes = recipes.filter((recipe) =>
