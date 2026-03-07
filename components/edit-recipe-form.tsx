@@ -182,7 +182,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
                       />
                     </FormControl>
                     <FormDescription className="text-xs text-[var(--flow-text-muted)]">
-                      {field.value?.length || 0}/250 characters
+                      {field.value?.length ?? 0}/250 characters
                     </FormDescription>
                     <FormMessage />
                   </FormItem>
