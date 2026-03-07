@@ -355,7 +355,7 @@ export function TodoList() {
     )
   }
 
-  const todos = data?.todos || []
+  const todos = data?.todos ?? []
   const completingTodoId = completeTodoMutation.isPending ? completeTodoMutation.variables : null
   const cancellingTodoId = cancelTodoMutation.isPending ? cancelTodoMutation.variables : null
   const stoppingHabitTodoId = deleteHabitMutation.isPending ? deleteHabitMutation.variables : null
