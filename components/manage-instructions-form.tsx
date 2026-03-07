@@ -101,7 +101,7 @@ export function ManageInstructionsForm({
   const handleAttachUnit = (stepIndex: number, unit: AttachedFoodUnit) => {
     setAttachedUnits(prev => ({
       ...prev,
-      [stepIndex]: [...(prev[stepIndex] || []), unit]
+      [stepIndex]: [...(prev[stepIndex] ?? []), unit]
     }))
   }
 
