@@ -108,7 +108,7 @@ export function ManageInstructionsForm({
   const handleRemoveUnit = (stepIndex: number, unitIndex: number) => {
     setAttachedUnits(prev => ({
       ...prev,
-      [stepIndex]: prev[stepIndex]?.filter((_, i) => i !== unitIndex) || []
+      [stepIndex]: prev[stepIndex]?.filter((_, i) => i !== unitIndex) ?? []
     }))
   }
 
