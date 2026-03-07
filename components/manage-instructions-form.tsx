@@ -244,7 +244,7 @@ export function ManageInstructionsForm({
                             />
                           </FormControl>
                           <FormDescription className="text-xs text-muted-foreground">
-                            {inputField.value?.length || 0}/250 characters
+                            {inputField.value?.length ?? 0}/250 characters
                           </FormDescription>
                           <FormMessage />
                         </FormItem>
