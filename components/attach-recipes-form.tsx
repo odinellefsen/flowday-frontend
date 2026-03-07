@@ -207,7 +207,7 @@ export function AttachRecipesForm({
                                     checked={field.value?.includes(recipe.id)}
                                     onCheckedChange={(checked) => {
                                       return checked
-                                        ? field.onChange([...(field.value || []), recipe.id])
+                                        ? field.onChange([...(field.value ?? []), recipe.id])
                                         : field.onChange(
                                             field.value?.filter((value) => value !== recipe.id)
                                           )
