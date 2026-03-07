@@ -244,7 +244,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
                                   checked={field.value?.includes(option.value)}
                                   onCheckedChange={(checked) => {
                                     return checked
-                                      ? field.onChange([...(field.value || []), option.value])
+                                      ? field.onChange([...(field.value ?? []), option.value])
                                       : field.onChange(
                                           field.value?.filter(
                                             (value) => value !== option.value
