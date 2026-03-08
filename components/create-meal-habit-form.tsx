@@ -316,7 +316,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
                       variant="ghost"
                       size="sm"
                       className="text-[var(--flow-text-muted)] hover:text-[var(--flow-text)] hover:bg-[var(--flow-hover)]"
-                      onClick={() => setShowAdvanced(!showAdvanced)}
+                      onClick={() => setShowAdvanced((prev) => !prev)}
                     >
                       {showAdvanced ? (
                         <>
