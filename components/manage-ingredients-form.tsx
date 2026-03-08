@@ -78,12 +78,12 @@ export function ManageIngredientsForm({
   })
 
   const createIngredientsMutation = useMutation({
-    mutationFn: async (data: IngredientsFormData) => {
+    mutationFn: (data: IngredientsFormData) => {
       const ingredientsData: CreateRecipeIngredientsRequest = {
         recipeId,
         ingredients: data.ingredients,
       }
-      
+
       return apiClient.createIngredients(ingredientsData)
     },
     onSuccess: () => {
