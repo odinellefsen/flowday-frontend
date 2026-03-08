@@ -128,9 +128,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
   }
 
   const createHabitMutation = useMutation({
-    mutationFn: async (data: CreateHabitBatchRequest) => {
-      return habitsAPI.createBatch(data)
-    },
+    mutationFn: (data: CreateHabitBatchRequest) => habitsAPI.createBatch(data),
     onSuccess: () => {
       toast.success('Meal habit created successfully! Todos will appear on the scheduled days.')
       queryClient.invalidateQueries({ queryKey: ['todos'] })
