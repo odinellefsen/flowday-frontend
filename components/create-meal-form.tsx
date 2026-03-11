@@ -63,7 +63,7 @@ export function CreateMealForm({ children, open, onOpenChange }: CreateMealFormP
   })
 
   const createMealMutation = useMutation({
-    mutationFn: async (data: CreateMealFormData) => {
+    mutationFn: (data: CreateMealFormData) => {
       // Build the meal data object
       const mealData: CreateMealRequest = {
         mealName: data.mealName,
