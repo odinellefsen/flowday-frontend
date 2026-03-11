@@ -93,7 +93,7 @@ export function EditRecipeForm({ children, open, onOpenChange, recipe }: EditRec
   }, [open, recipe, form])
 
   const updateRecipeMutation = useMutation({
-    mutationFn: async (data: EditRecipeFormData) => {
+    mutationFn: (data: EditRecipeFormData) => {
       const recipeData: UpdateRecipeRequest = {
         recipeId: recipe.id,
         nameOfTheRecipe: data.nameOfTheRecipe.trim(),
