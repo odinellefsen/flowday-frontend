@@ -79,7 +79,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
   })
 
   const createRecipeMutation = useMutation({
-    mutationFn: async (data: CreateRecipeFormData) => {
+    mutationFn: (data: CreateRecipeFormData) => {
       // Build the recipe data object carefully
       const recipeData: CreateRecipeRequest = {
         nameOfTheRecipe: data.nameOfTheRecipe,
