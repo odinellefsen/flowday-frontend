@@ -131,7 +131,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
   })
 
   const createUnitMutation = useMutation({
-    mutationFn: async (data: CreateUnitFormData) => {
+    mutationFn: (data: CreateUnitFormData) => {
       const unitData: CreateFoodItemUnitRequest = {
         foodItemName,
         units: [{
