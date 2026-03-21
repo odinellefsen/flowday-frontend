@@ -113,7 +113,7 @@ export function ManageInstructionsForm({
   }
 
   const createInstructionsMutation = useMutation({
-    mutationFn: async (data: InstructionsFormData) => {
+    mutationFn: (data: InstructionsFormData) => {
       const instructionsData: CreateRecipeInstructionsRequest = {
         recipeId,
         stepByStepInstructions: data.instructions.map((instruction, index) => ({
