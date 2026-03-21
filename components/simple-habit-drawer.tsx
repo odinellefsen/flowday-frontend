@@ -106,7 +106,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
     const basePayload = {
       description: trimmedDescription,
       recurrenceType,
-      targetTime: targetTime || undefined,
+      targetTime: targetTime ?? undefined,
       startDate,
     }
 
