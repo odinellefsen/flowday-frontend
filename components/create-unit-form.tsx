@@ -136,7 +136,7 @@ export function CreateUnitForm({ children, foodItemId, foodItemName, open, onOpe
         foodItemName,
         units: [{
           unitOfMeasurement: data.unitOfMeasurement,
-          unitDescription: data.unitDescription || undefined,
+          unitDescription: data.unitDescription ?? undefined,
           nutritionPerOfThisUnit: {
             calories: data.calories,
             proteinInGrams: data.proteinInGrams ?? undefined,
