@@ -193,12 +193,11 @@ export function useToggleTodo() {
   const updateTodo = useUpdateTodo();
 
   return useMutation({
-    mutationFn: async ({ todoId, completed }: { todoId: string; completed: boolean }) => {
-      return updateTodo.mutateAsync({
+    mutationFn: ({ todoId, completed }: { todoId: string; completed: boolean }) =>
+      updateTodo.mutateAsync({
         todoId,
         updateData: { completed },
-      });
-    },
+      }),
     onError: (error) => {
       console.error('Failed to toggle todo:', error);
     },
