@@ -84,7 +84,7 @@ export function AttachRecipesForm({
   )
 
   const attachRecipesMutation = useMutation({
-    mutationFn: async (data: AttachRecipesFormData) => {
+    mutationFn: (data: AttachRecipesFormData) => {
       const attachData: AttachRecipesToMealRequest = {
         recipeIds: data.recipeIds,
       }
