@@ -66,7 +66,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
   })
 
   const createFoodItemMutation = useMutation({
-    mutationFn: async (data: CreateFoodItemFormData) => {
+    mutationFn: (data: CreateFoodItemFormData) => {
       const foodItemData: CreateFoodItemRequest = {
         foodItemName: data.foodItemName,
         categoryHierarchy: selectedCategories.length > 0 ? selectedCategories : undefined,
