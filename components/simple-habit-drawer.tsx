@@ -68,7 +68,7 @@ export function SimpleHabitDrawer({ children }: SimpleHabitDrawerProps) {
   const [startDate, setStartDate] = useState(new Date().toISOString().split('T')[0])
 
   const createSimpleHabitMutation = useMutation({
-    mutationFn: async (habitData: CreateSimpleHabitRequest) => habitsAPI.createSimple(habitData),
+    mutationFn: (habitData: CreateSimpleHabitRequest) => habitsAPI.createSimple(habitData),
     onSuccess: () => {
       toast.success('Simple habit created successfully')
       queryInvalidation.invalidateTodayTodos(queryClient)
