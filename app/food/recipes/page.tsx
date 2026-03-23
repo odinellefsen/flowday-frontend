@@ -55,9 +55,9 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
               </p>
             )}
             
-            {recipe.whenIsItConsumed && recipe.whenIsItConsumed.length > 0 && (
+            {(recipe.whenIsItConsumed?.length ?? 0) > 0 && (
               <div className="flex flex-wrap gap-1 mb-2">
-                {recipe.whenIsItConsumed.map((timing) => (
+                {(recipe.whenIsItConsumed ?? []).map((timing) => (
                   <span
                     key={timing}
                     className={`text-xs px-2 py-1 rounded-md ${getMealTimingColor()}`}
