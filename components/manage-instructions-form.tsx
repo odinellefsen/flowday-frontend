@@ -274,7 +274,7 @@ export function ManageInstructionsForm({
                       
                       {/* Display attached food units */}
                       <div className="mt-2 flex flex-wrap gap-1">
-                        {attachedUnits[index] && attachedUnits[index].length > 0 ? (
+                        {attachedUnits[index]?.length > 0 ? (
                           attachedUnits[index].map((unit, unitIndex) => (
                             <AttachedUnitBadge
                               key={`${unit.foodItemUnitId}-${unitIndex}`}
