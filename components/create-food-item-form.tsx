@@ -285,7 +285,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
                           <div className="space-y-1 text-xs text-[var(--flow-text-muted)]">
                             <p><strong>Format:</strong> Use commas to separate hierarchy levels</p>
 
-                            {field.value && field.value.trim() && (
+                            {field.value?.trim() && (
                               <div className="rounded border border-[color:var(--flow-border)] bg-[var(--flow-hover)] p-2">
                                 <p className="mb-1 font-medium">Preview:</p>
                                 <div className="flex flex-wrap items-center gap-1">
