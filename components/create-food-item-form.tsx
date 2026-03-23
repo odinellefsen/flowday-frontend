@@ -173,7 +173,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
 
   const addNewCategory = () => {
     const newCategory = form.getValues('newCategory')
-    if (newCategory && newCategory.trim()) {
+    if (newCategory?.trim()) {
       // Parse comma-separated hierarchy
       const hierarchyParts = newCategory
         .split(',')
