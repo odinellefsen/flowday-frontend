@@ -118,7 +118,7 @@ export function ManageInstructionsForm({
         recipeId,
         stepByStepInstructions: data.instructions.map((instruction, index) => ({
           stepInstruction: instruction.stepInstruction,
-          foodItemUnitsUsedInStep: attachedUnits[index] && attachedUnits[index].length > 0 
+          foodItemUnitsUsedInStep: attachedUnits[index]?.length > 0 
             ? attachedUnits[index].map(unit => ({
                 foodItemUnitId: unit.foodItemUnitId,
                 quantityOfFoodItemUnit: unit.quantityOfFoodItemUnit,
