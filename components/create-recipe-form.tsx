@@ -86,7 +86,7 @@ export function CreateRecipeForm({ children, open, onOpenChange }: CreateRecipeF
       }
 
       // Only add optional fields if they have values
-      if (data.generalDescriptionOfTheRecipe && data.generalDescriptionOfTheRecipe.trim().length > 0) {
+      if (data.generalDescriptionOfTheRecipe?.trim().length) {
         recipeData.generalDescriptionOfTheRecipe = data.generalDescriptionOfTheRecipe.trim()
       }
       
