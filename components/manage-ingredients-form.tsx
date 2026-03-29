@@ -78,7 +78,7 @@ export function ManageIngredientsForm({
   })
 
   const createIngredientsMutation = useMutation({
-    mutationFn: (data: IngredientsFormData) => {
+    mutationFn: async (data: IngredientsFormData) => {
       const ingredientsData: CreateRecipeIngredientsRequest = {
         recipeId,
         ingredients: data.ingredients,
