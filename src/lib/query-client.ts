@@ -29,11 +29,10 @@ export const queryInvalidation = {
   /**
    * Invalidate all todo-related queries
    */
-  invalidateTodoQueries: (queryClient: QueryClient) => {
-    return queryClient.invalidateQueries({
+  invalidateTodoQueries: (queryClient: QueryClient) =>
+    queryClient.invalidateQueries({
       queryKey: queryKeys.todos.all,
-    });
-  },
+    }),
 
   /**
    * Invalidate today's todos specifically
