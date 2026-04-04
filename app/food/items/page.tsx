@@ -388,8 +388,7 @@ function FoodItemsPageContent() {
                     </button>
                   )}
 
-                  {currentPath.map((pathSegment, index) => {
-                    return (
+                  {currentPath.map((pathSegment, index) => (
                       <div key={`${pathSegment}-${index}`} className="flex items-center gap-1">
                         {(showAllItemsBreadcrumb || index > 0) && (
                           <span className="text-[10px] text-[var(--flow-text-muted)]">/</span>
@@ -408,8 +407,7 @@ function FoodItemsPageContent() {
                         </button>
                       )}
                       </div>
-                    )
-                  })}
+                    ))}
                 </div>
               </div>
             </div>
