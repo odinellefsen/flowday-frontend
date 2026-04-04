@@ -165,7 +165,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
     }
 
     // Add custom instruction schedules if customization is enabled
-    if (values.customizeInstructions && instructionSchedules.length > 0) {
+    if (values.customizeInstructions && instructionSchedules.length) {
       const customSchedules = instructionSchedules
         .filter((schedule) => {
           // Only include instructions that have valid UUIDs
