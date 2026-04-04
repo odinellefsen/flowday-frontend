@@ -227,7 +227,7 @@ function InstructionsSection({ recipe }: { recipe: RecipeWithDetails }) {
                     <p className="text-sm leading-relaxed text-[var(--flow-text)]">{step.instruction}</p>
                     
                     {/* Food Item Units Attached to this step */}
-                    {step.foodItemUnits && step.foodItemUnits.length > 0 && (
+                    {step.foodItemUnits?.length > 0 && (
                       <div className="mt-3 border-t border-[color:var(--flow-border)] pt-2">
                         <p className="mb-2 text-xs font-medium text-[var(--flow-text-muted)]">Attached Food Units:</p>
                         <div className="flex flex-wrap gap-1">
