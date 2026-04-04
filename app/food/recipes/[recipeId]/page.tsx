@@ -33,9 +33,7 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
   const consumptionTimings = recipe.whenIsItConsumed ?? []
   const hasConsumptionTimings = consumptionTimings.length > 0
 
-  const getMealTimingColor = () => {
-    return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
-  }
+  const getMealTimingColor = () => 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
 
   return (
     <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] py-0 shadow-[var(--flow-shadow)]">
