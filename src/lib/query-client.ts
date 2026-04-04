@@ -37,11 +37,10 @@ export const queryInvalidation = {
   /**
    * Invalidate today's todos specifically
    */
-  invalidateTodayTodos: (queryClient: QueryClient) => {
-    return queryClient.invalidateQueries({
+  invalidateTodayTodos: (queryClient: QueryClient) =>
+    queryClient.invalidateQueries({
       queryKey: queryKeys.todos.today(),
-    });
-  },
+    }),
 
   /**
    * Invalidate a specific todo by ID
