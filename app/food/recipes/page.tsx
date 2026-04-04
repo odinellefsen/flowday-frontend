@@ -38,9 +38,7 @@ function RecipeCard({ recipe }: { recipe: Recipe }) {
     }
   }
 
-  const getMealTimingColor = () => {
-    return 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
-  }
+  const getMealTimingColor = () => 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
 
   return (
     <Card 
