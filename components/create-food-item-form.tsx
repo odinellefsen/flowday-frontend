@@ -69,7 +69,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
     mutationFn: async (data: CreateFoodItemFormData) => {
       const foodItemData: CreateFoodItemRequest = {
         foodItemName: data.foodItemName,
-        categoryHierarchy: selectedCategories.length > 0 ? selectedCategories : undefined,
+        categoryHierarchy: selectedCategories.length ? selectedCategories : undefined,
       }
       return apiClient.create(foodItemData)
     },
