@@ -79,7 +79,6 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
             )}
 
             {hasConsumptionTimings && (
-              <>
               {consumptionTimings.map((timing) => (
                 <span
                   key={timing}
@@ -88,7 +87,6 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
                   {timing.toLowerCase()}
                 </span>
               ))}
-              </>
             )}
           </div>
         )}
