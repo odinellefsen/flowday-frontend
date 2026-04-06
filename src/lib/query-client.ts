@@ -53,11 +53,10 @@ export const queryInvalidation = {
   /**
    * Invalidate user session data
    */
-  invalidateUserQueries: (queryClient: QueryClient) => {
-    return queryClient.invalidateQueries({
+  invalidateUserQueries: (queryClient: QueryClient) =>
+    queryClient.invalidateQueries({
       queryKey: queryKeys.user.all,
-    });
-  },
+    }),
 };
 
 export const queryClient = new QueryClient({
