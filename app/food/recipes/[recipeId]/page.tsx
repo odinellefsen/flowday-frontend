@@ -31,7 +31,7 @@ function RecipeHeader({ recipe }: { recipe: RecipeWithDetails }) {
   const [showEditRecipeForm, setShowEditRecipeForm] = useState(false)
   const hasEstimatedTime = Boolean(recipe.metadata.estimatedTotalTime)
   const consumptionTimings = recipe.whenIsItConsumed ?? []
-  const hasConsumptionTimings = consumptionTimings.length > 0
+  const hasConsumptionTimings = Boolean(consumptionTimings.length)
 
   const getMealTimingColor = () => 'bg-[var(--flow-accent)]/12 text-[var(--flow-accent)]'
 
