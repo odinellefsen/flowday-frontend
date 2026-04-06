@@ -62,9 +62,7 @@ function FoodItemCard({ foodItem }: { foodItem: FoodItem }) {
   const router = useRouter()
 
   const deleteMutation = useMutation({
-    mutationFn: async () => {
-      return apiClient.delete(foodItem.name)
-    },
+    mutationFn: async () => apiClient.delete(foodItem.name),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['foodItems'] })
       toast.success(`${foodItem.name} deleted successfully`)
