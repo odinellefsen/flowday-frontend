@@ -45,11 +45,10 @@ export const queryInvalidation = {
   /**
    * Invalidate a specific todo by ID
    */
-  invalidateTodoById: (queryClient: QueryClient, todoId: string) => {
-    return queryClient.invalidateQueries({
+  invalidateTodoById: (queryClient: QueryClient, todoId: string) =>
+    queryClient.invalidateQueries({
       queryKey: queryKeys.todos.byId(todoId),
-    });
-  },
+    }),
 
   /**
    * Invalidate user session data
