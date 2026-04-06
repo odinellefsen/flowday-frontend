@@ -178,7 +178,7 @@ export function CreateFoodItemForm({ children, open, onOpenChange }: CreateFoodI
       const hierarchyParts = newCategory
         .split(',')
         .map(part => part.trim())
-        .filter(part => part.length > 0)
+        .filter(Boolean)
 
       if (hierarchyParts.length > 0) {
         setSelectedCategories(hierarchyParts)
