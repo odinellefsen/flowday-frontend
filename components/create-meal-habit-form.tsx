@@ -182,7 +182,7 @@ export function CreateMealHabitForm({ meal, onSuccess, onCancel }: CreateMealHab
         }))
       
       // If we have valid custom schedules, use them; otherwise keep the default
-      if (customSchedules.length > 0) {
+      if (customSchedules.length) {
         habitData.subEntities = customSchedules
       }
     }
