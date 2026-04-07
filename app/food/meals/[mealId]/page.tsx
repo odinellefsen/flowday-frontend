@@ -36,7 +36,7 @@ function MealHeader({ meal }: { meal: MealWithDetails }) {
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <CardTitle className="text-2xl text-[var(--flow-text)]">{meal.mealName}</CardTitle>
-              {meal.recipes.length > 0 ? (
+              {meal.recipes.length ? (
                 <Badge
                   variant="default"
                   className="text-xs bg-[var(--flow-accent)]/15 text-[var(--flow-accent)] hover:bg-[var(--flow-accent)]/20"
