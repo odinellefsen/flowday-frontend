@@ -428,7 +428,7 @@ function FoodItemsPageContent() {
 
         {!isLoading && !error && (
           <>
-            {foodItemsList.length === 0 ? (
+            {!foodItemsList.length ? (
               <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                 <CardContent className="p-8 text-center">
                   <Apple className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
