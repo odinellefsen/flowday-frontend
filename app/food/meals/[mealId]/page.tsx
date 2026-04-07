@@ -106,7 +106,7 @@ function RecipesSection({
         </div>
       </CardHeader>
       <CardContent>
-        {meal.recipes.length === 0 ? (
+        {!meal.recipes.length ? (
           <div className="text-center py-8">
             <ChefHat className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Recipes Attached</h3>
