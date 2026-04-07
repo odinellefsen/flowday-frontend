@@ -143,7 +143,7 @@ export default function MealsPage() {
 
         {!isLoading && !error && (
           <>
-            {mealsList.length === 0 ? (
+            {!mealsList.length ? (
               <Card className="animate-fade-in border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                 <CardContent className="p-8 text-center">
                   <UtensilsCrossed className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
