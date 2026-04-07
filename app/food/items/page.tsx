@@ -480,7 +480,7 @@ function FoodItemsPageContent() {
                 )}
 
                 {/* Show message if current level is empty */}
-                {visibleSubcategories.length === 0 && currentItems.length === 0 && (
+                {!visibleSubcategories.length && !currentItems.length && (
                   <Card className="border-[color:var(--flow-border)] bg-[var(--flow-surface)] shadow-[var(--flow-shadow)]">
                     <CardContent className="p-8 text-center">
                       <Folder className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
