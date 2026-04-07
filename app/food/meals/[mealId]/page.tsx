@@ -243,7 +243,7 @@ function InstructionsSection({ meal }: { meal: MealWithDetails }) {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {meal.instructions.length === 0 ? (
+        {!meal.instructions.length ? (
           <div className="text-center py-8">
             <BookOpen className="h-12 w-12 text-[var(--flow-text-muted)] mx-auto mb-4" />
             <h3 className="text-lg font-semibold mb-2 text-[var(--flow-text)]">No Instructions Yet</h3>
